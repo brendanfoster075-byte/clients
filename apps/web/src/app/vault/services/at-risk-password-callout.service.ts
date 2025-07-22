@@ -2,13 +2,14 @@ import { Injectable } from "@angular/core";
 import { combineLatest, map, Observable } from "rxjs";
 
 import {
+  SingleUserState,
   StateProvider,
   UserKeyDefinition,
   VAULT_AT_RISK_PASSWORDS_DISK,
 } from "@bitwarden/common/platform/state";
-import { UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { SecurityTask, SecurityTaskType, TaskService } from "@bitwarden/common/vault/tasks";
+import { UserId } from "@bitwarden/user-core";
 
 export type AtRiskPasswordCalloutData = {
   hadPendingTasks: boolean;
@@ -52,7 +53,7 @@ export class AtRiskPasswordCalloutService {
     );
   }
 
-  atRiskPasswordState(userId: UserId) {
+  atRiskPasswordState(userId: UserId): SingleUserState<AtRiskPasswordCalloutData> {
     return this.stateProvider.getUser(userId, AT_RISK_PASSWORD_CALLOUT_KEY);
   }
 
