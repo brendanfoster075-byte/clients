@@ -57,12 +57,12 @@ import { OrganizationId } from "@bitwarden/common/types/guid";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
 import { DialogService, SimpleDialogOptions, ToastService } from "@bitwarden/components";
 import { KeyService } from "@bitwarden/key-management";
+import { OrganizationWarningsService } from "@bitwarden/web-vault/app/billing/organizations/warnings/services";
 
 import {
   ChangePlanDialogResultType,
   openChangePlanDialog,
 } from "../../../billing/organizations/change-plan-dialog.component";
-import { OrganizationWarningsService } from "@bitwarden/web-vault/app/billing/organizations/warnings/services";
 import { BaseMembersComponent } from "../../common/base-members.component";
 import { PeopleTableDataSource } from "../../common/people-table-data-source";
 import { GroupApiService } from "../core";
@@ -254,19 +254,16 @@ export class MembersComponent extends BaseMembersComponent<OrganizationUserView>
       map((organization) => organization.canManageUsers),
     );
 
-    merge(
-      organization$.pipe(
+    organization$
+      .pipe(
         switchMap((organization) =>
-          this.organizationWarningsService.showInactiveSubscriptionDialog$(organization),
+          merge(
+            this.organizationWarningsService.showInactiveSubscriptionDialog$(organization),
+            this.organizationWarningsService.showSubscribeBeforeFreeTrialEndsDialog$(organization),
+          ),
         ),
-      ),
-      organization$.pipe(
-        switchMap((organization) =>
-          this.organizationWarningsService.showSubscribeBeforeFreeTrialEndsDialog$(organization),
-        ),
-      ),
-    )
-      .pipe(takeUntilDestroyed())
+        takeUntilDestroyed(),
+      )
       .subscribe();
   }
 
