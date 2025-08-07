@@ -12,4 +12,6 @@ config.content = [
   "../../bitwarden_license/bit-web/src/**/*.{html,ts}",
 ];
 
+config.plugins = [...config.plugins, require("@tailwindcss/container-queries")];
+
 module.exports = config;
