@@ -3,12 +3,12 @@ import { of } from "rxjs";
 
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { KdfRequest } from "@bitwarden/common/models/request/kdf.request";
-import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { UserId } from "@bitwarden/common/types/guid";
 import { UserKey } from "@bitwarden/common/types/key";
 // eslint-disable-next-line no-restricted-imports
 import { KdfConfigService, KeyService, PBKDF2KdfConfig } from "@bitwarden/key-management";
+import { LogService } from "@bitwarden/logging";
 
 import { makeEncString } from "../../../../spec";
 import { EncString } from "../../crypto/models/enc-string";
@@ -26,7 +26,7 @@ describe("ChangeKdfService", () => {
   const masterPasswordService = mock<InternalMasterPasswordServiceAbstraction>();
   const keyService = mock<KeyService>();
   const kdfConfigService = mock<KdfConfigService>();
-  const configService = mock<ConfigService>();
+  const logService = mock<LogService>();
 
   let sut: ChangeKdfService = mock<ChangeKdfService>();
 
@@ -45,7 +45,7 @@ describe("ChangeKdfService", () => {
       masterPasswordService,
       keyService,
       kdfConfigService,
-      configService,
+      logService,
     );
   });
 
