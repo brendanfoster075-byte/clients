@@ -346,11 +346,11 @@ export const ButtonInputGroup: Story = {
             <i class="bwi bwi-question-circle" aria-hidden="true"></i>
           </a>
         </bit-label>
-        <button bitPrefix bitIconButton="bwi-star" [label]="'Favorite Label'"></button>
+        <button type="button" bitPrefix bitIconButton="bwi-star" [label]="'Favorite Label'"></button>
         <input bitInput placeholder="Placeholder" />
-        <button bitSuffix bitIconButton="bwi-eye" [label]="'Hide Label'"></button>
-        <button bitSuffix bitIconButton="bwi-clone" [label]="'Clone Label'"></button>
-        <button bitSuffix bitIconButton="bwi-ellipsis-v" disabled [label]="'Menu Label'"></button>
+        <button type="button" bitSuffix bitIconButton="bwi-eye" [label]="'Hide Label'"></button>
+        <button type="button" bitSuffix bitIconButton="bwi-clone" [label]="'Clone Label'"></button>
+        <button type="button" bitSuffix bitIconButton="bwi-ellipsis-v" [label]="'Menu Label'"></button>
       </bit-form-field>
     `,
   }),
@@ -363,11 +363,12 @@ export const DisabledButtonInputGroup: Story = {
     template: /*html*/ `
       <bit-form-field>
         <bit-label>Label</bit-label>
-        <button bitPrefix bitIconButton="bwi-star" disabled [label]="'Favorite Label'"></button>
+        <button type="button" bitPrefix bitIconButton="bwi-star" disabled [label]="'Favorite Label'"></button>
         <input bitInput placeholder="Placeholder" disabled />
-        <button bitSuffix bitIconButton="bwi-eye" disabled [label]="'Hide Label'"></button>
-        <button bitSuffix bitIconButton="bwi-clone" disabled [label]="'Clone Label'"></button>
-         <button bitSuffix bitIconButton="bwi-ellipsis-v" disabled [label]="'Menu Label'"></button>
+        <button type="button" bitSuffix bitIconButton="bwi-eye" disabled [label]="'Hide Label'"></button>
+        <button type="button" bitSuffix bitIconButton="bwi-clone" disabled [label]="'Clone Label'"></button>
+        <button type="button" bitSuffix bitIconButton="bwi-ellipsis-v" disabled [label]="'Menu Label'"></button>
+
       </bit-form-field>
     `,
   }),
@@ -381,9 +382,9 @@ export const PartiallyDisabledButtonInputGroup: Story = {
       <bit-form-field>
         <bit-label>Label</bit-label>
         <input bitInput placeholder="Placeholder" disabled />
-        <button bitSuffix bitIconButton="bwi-eye" [label]="'Hide Label'"></button>
-        <button bitSuffix bitIconButton="bwi-clone" [label]="'Clone Label'"></button>
-        <button bitSuffix bitIconButton="bwi-ellipsis-v" disabled [label]="'Menu Label'"></button>
+        <button type="button" bitSuffix bitIconButton="bwi-eye" [label]="'Hide Label'"></button>
+        <button type="button" bitSuffix bitIconButton="bwi-clone" [label]="'Clone Label'"></button>
+        <button type="button" bitSuffix bitIconButton="bwi-ellipsis-v" disabled [label]="'Menu Label'"></button>
       </bit-form-field>
     `,
   }),
