@@ -168,6 +168,6 @@ export class BitIconButtonComponent implements ButtonLikeAbstraction, FocusableE
 
   constructor() {
     const element = this.elementRef.nativeElement;
-    ariaDisableElement(element, this.disabledAttr());
+    ariaDisableElement(element, !!this.disabledAttr());
   }
 }

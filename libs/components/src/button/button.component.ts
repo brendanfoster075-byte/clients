@@ -145,6 +145,6 @@ export class ButtonComponent implements ButtonLikeAbstraction {
   private el = inject(ElementRef<HTMLButtonElement>);
 
   constructor() {
-    ariaDisableElement(this.el.nativeElement, this.disabledAttr());
+    ariaDisableElement(this.el.nativeElement, !!this.disabledAttr());
   }
 }
