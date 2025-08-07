@@ -96,7 +96,7 @@ export class ButtonComponent implements ButtonLikeAbstraction {
             ]
           : [],
       )
-      .concat(buttonStyles[this.buttonType() ?? "secondary"])
+      .concat(buttonStyles[this.buttonType()])
       .concat(buttonSizeStyles[this.size() || "default"]);
   }
 
