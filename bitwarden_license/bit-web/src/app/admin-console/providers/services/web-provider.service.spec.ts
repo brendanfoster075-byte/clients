@@ -8,11 +8,11 @@ import { PlanType } from "@bitwarden/common/billing/enums";
 import { EncryptService } from "@bitwarden/common/key-management/crypto/abstractions/encrypt.service";
 import { EncString } from "@bitwarden/common/key-management/crypto/models/enc-string";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { StateProvider } from "@bitwarden/common/platform/state";
 import { OrgKey, ProviderKey } from "@bitwarden/common/types/key";
 import { SyncService } from "@bitwarden/common/vault/abstractions/sync/sync.service.abstraction";
+import { newGuid } from "@bitwarden/guid";
 import { KeyService } from "@bitwarden/key-management";
 import { UserId } from "@bitwarden/user-core";
 
@@ -52,7 +52,7 @@ describe("WebProviderService", () => {
   });
 
   describe("createClientOrganization", () => {
-    const activeUserId = Utils.newGuid() as UserId;
+    const activeUserId = newGuid() as UserId;
     const providerId = "provider-123";
     const name = "Test Org";
     const ownerEmail = "owner@example.com";

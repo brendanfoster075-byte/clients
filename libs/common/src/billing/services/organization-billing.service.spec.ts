@@ -16,6 +16,7 @@ import { EncryptService } from "@bitwarden/common/key-management/crypto/abstract
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { SyncService } from "@bitwarden/common/platform/sync";
+import { newGuid } from "@bitwarden/guid";
 // This import has been flagged as unallowed for this class. It may be involved in a circular dependency loop.
 // eslint-disable-next-line no-restricted-imports
 import { KeyService } from "@bitwarden/key-management";
@@ -24,7 +25,6 @@ import { UserId } from "@bitwarden/user-core";
 import { OrganizationKeysRequest } from "../../admin-console/models/request/organization-keys.request";
 import { OrganizationResponse } from "../../admin-console/models/response/organization.response";
 import { EncString } from "../../key-management/crypto/models/enc-string";
-import { Utils } from "../../platform/misc/utils";
 import { SymmetricCryptoKey } from "../../platform/models/domain/symmetric-crypto-key";
 import { OrgKey } from "../../types/key";
 
@@ -162,7 +162,7 @@ describe("BillingAccountProfileStateService", () => {
   });
 
   describe("organization key creation methods", () => {
-    const mockUserId = Utils.newGuid() as UserId;
+    const mockUserId = newGuid() as UserId;
     const organizationKeys = {
       orgKey: new SymmetricCryptoKey(new Uint8Array(64)) as OrgKey,
       publicKeyEncapsulatedOrgKey: new EncString("encryptedOrgKey"),
@@ -185,6 +185,20 @@ describe("BillingAccountProfileStateService", () => {
       },
     } as SubscriptionInformation;
     const mockResponse = { id: "org-id" } as OrganizationResponse;
+
+    const expectedRequestObject = {
+      name: "Test Org",
+      businessName: "Test Business",
+      billingEmail: "test@example.com",
+      initiationPath: "Registration form",
+      planType: 0,
+      key: organizationKeys.publicKeyEncapsulatedOrgKey.encryptedString,
+      keys: new OrganizationKeysRequest(
+        organizationKeys.publicKey,
+        organizationKeys.encryptedPrivateKey.encryptedString!,
+      ),
+      collectionName: encryptedCollectionName.encryptedString,
+    };
 
     beforeEach(() => {
       keyService.makeOrgKey.mockResolvedValue([
@@ -222,19 +236,7 @@ describe("BillingAccountProfileStateService", () => {
           organizationKeys.orgKey,
         );
         expect(organizationApiService.create).toHaveBeenCalledWith(
-          expect.objectContaining({
-            name: "Test Org",
-            businessName: "Test Business",
-            billingEmail: "test@example.com",
-            initiationPath: "Registration form",
-            planType: 0,
-            key: organizationKeys.publicKeyEncapsulatedOrgKey.encryptedString,
-            keys: new OrganizationKeysRequest(
-              organizationKeys.publicKey,
-              organizationKeys.encryptedPrivateKey.encryptedString!,
-            ),
-            collectionName: encryptedCollectionName.encryptedString,
-          }),
+          expect.objectContaining(expectedRequestObject),
         );
         expect(apiService.refreshIdentityToken).toHaveBeenCalled();
         expect(syncService.fullSync).toHaveBeenCalledWith(true);
@@ -255,19 +257,7 @@ describe("BillingAccountProfileStateService", () => {
           organizationKeys.orgKey,
         );
         expect(organizationApiService.createWithoutPayment).toHaveBeenCalledWith(
-          expect.objectContaining({
-            name: "Test Org",
-            businessName: "Test Business",
-            billingEmail: "test@example.com",
-            initiationPath: "Registration form",
-            planType: 0,
-            key: organizationKeys.publicKeyEncapsulatedOrgKey.encryptedString,
-            keys: new OrganizationKeysRequest(
-              organizationKeys.publicKey,
-              organizationKeys.encryptedPrivateKey.encryptedString!,
-            ),
-            collectionName: encryptedCollectionName.encryptedString,
-          }),
+          expect.objectContaining(expectedRequestObject),
         );
         expect(apiService.refreshIdentityToken).toHaveBeenCalled();
         expect(syncService.fullSync).toHaveBeenCalledWith(true);
@@ -286,19 +276,7 @@ describe("BillingAccountProfileStateService", () => {
           organizationKeys.orgKey,
         );
         expect(organizationApiService.create).toHaveBeenCalledWith(
-          expect.objectContaining({
-            name: "Test Org",
-            businessName: "Test Business",
-            billingEmail: "test@example.com",
-            initiationPath: "Registration form",
-            planType: 0,
-            key: organizationKeys.publicKeyEncapsulatedOrgKey.encryptedString,
-            keys: new OrganizationKeysRequest(
-              organizationKeys.publicKey,
-              organizationKeys.encryptedPrivateKey.encryptedString!,
-            ),
-            collectionName: encryptedCollectionName.encryptedString,
-          }),
+          expect.objectContaining(expectedRequestObject),
         );
         expect(apiService.refreshIdentityToken).toHaveBeenCalled();
         expect(syncService.fullSync).toHaveBeenCalledWith(true);
@@ -329,19 +307,7 @@ describe("BillingAccountProfileStateService", () => {
         );
         expect(billingApiService.restartSubscription).toHaveBeenCalledWith(
           "org-id",
-          expect.objectContaining({
-            name: "Test Org",
-            businessName: "Test Business",
-            billingEmail: "test@example.com",
-            initiationPath: "Registration form",
-            planType: 0,
-            key: organizationKeys.publicKeyEncapsulatedOrgKey.encryptedString,
-            keys: new OrganizationKeysRequest(
-              organizationKeys.publicKey,
-              organizationKeys.encryptedPrivateKey.encryptedString!,
-            ),
-            collectionName: encryptedCollectionName.encryptedString,
-          }),
+          expect.objectContaining(expectedRequestObject),
         );
       });
     });

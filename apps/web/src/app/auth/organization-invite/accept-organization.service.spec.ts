@@ -21,6 +21,7 @@ import { EncString } from "@bitwarden/common/key-management/crypto/models/enc-st
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { Utils } from "@bitwarden/common/platform/misc/utils";
 import { OrgKey } from "@bitwarden/common/types/key";
+import { newGuid } from "@bitwarden/guid";
 import { KeyService } from "@bitwarden/key-management";
 import { UserId } from "@bitwarden/user-core";
 
@@ -74,7 +75,7 @@ describe("AcceptOrganizationInviteService", () => {
   });
 
   describe("validateAndAcceptInvite", () => {
-    const activeUserId = Utils.newGuid() as UserId;
+    const activeUserId = newGuid() as UserId;
 
     it("initializes an organization when given an invite where initOrganization is true", async () => {
       const mockOrgKey = "orgPrivateKey" as unknown as OrgKey;
