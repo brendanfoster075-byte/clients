@@ -6,11 +6,11 @@ import { toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { debounce, interval } from "rxjs";
 
 import { AriaDisableDirective } from "../a11y";
-import { ButtonLikeAbstraction, ButtonType } from "../shared/button-like.abstraction";
+import { ButtonLikeAbstraction } from "../shared/button-like.abstraction";
 import { FocusableElement } from "../shared/focusable-element";
 import { ariaDisableElement } from "../utils";
 
-export type IconButtonType = ButtonType | "contrast" | "main" | "muted" | "light";
+export type IconButtonType = "primary" | "danger" | "contrast" | "main" | "muted" | "nav-contrast";
 
 const focusRing = [
   // Workaround for box-shadow with transparent offset issue:
@@ -22,7 +22,7 @@ const focusRing = [
   "before:tw-content-['']",
   "before:tw-block",
   "before:tw-absolute",
-  "before:-tw-inset-[2px]",
+  "before:-tw-inset-[1px]",
   "before:tw-rounded-lg",
   "before:tw-transition",
   "before:tw-ring-2",
@@ -32,122 +32,38 @@ const focusRing = [
 
 const styles: Record<IconButtonType, string[]> = {
   contrast: [
-    "tw-bg-transparent",
     "!tw-text-contrast",
     "tw-border-transparent",
-    "hover:tw-bg-transparent-hover",
-    "hover:tw-border-text-contrast",
+    "hover:!tw-bg-hover-contrast",
     "focus-visible:before:tw-ring-text-contrast",
     ...focusRing,
   ],
-  main: [
-    "tw-bg-transparent",
-    "!tw-text-main",
-    "tw-border-transparent",
-    "hover:tw-bg-transparent-hover",
-    "hover:tw-border-primary-600",
-    "focus-visible:before:tw-ring-primary-600",
-    ...focusRing,
-  ],
+  main: ["!tw-text-main", "focus-visible:before:tw-ring-primary-600", ...focusRing],
   muted: [
-    "tw-bg-transparent",
     "!tw-text-muted",
     "tw-border-transparent",
     "aria-expanded:tw-bg-text-muted",
     "aria-expanded:!tw-text-contrast",
-    "hover:tw-bg-transparent-hover",
-    "hover:tw-border-primary-600",
     "focus-visible:before:tw-ring-primary-600",
     "aria-expanded:hover:tw-bg-secondary-700",
     "aria-expanded:hover:tw-border-secondary-700",
     ...focusRing,
   ],
-  primary: [
-    "tw-bg-primary-600",
-    "!tw-text-contrast",
-    "tw-border-primary-600",
-    "hover:tw-bg-primary-600",
-    "hover:tw-border-primary-600",
-    "focus-visible:before:tw-ring-primary-600",
-    ...focusRing,
-  ],
-  secondary: [
-    "tw-bg-transparent",
-    "!tw-text-muted",
-    "tw-border-text-muted",
-    "hover:!tw-text-contrast",
-    "hover:tw-bg-text-muted",
-    "focus-visible:before:tw-ring-primary-600",
-    ...focusRing,
-  ],
-  danger: [
-    "tw-bg-transparent",
-    "!tw-text-danger-600",
-    "tw-border-transparent",
-    "hover:!tw-text-danger-600",
-    "hover:tw-bg-transparent",
-    "hover:tw-border-primary-600",
-    "focus-visible:before:tw-ring-primary-600",
-    ...focusRing,
-  ],
-  light: [
-    "tw-bg-transparent",
+  primary: ["!tw-text-primary-600", "focus-visible:before:tw-ring-primary-600", ...focusRing],
+  danger: ["!tw-text-danger-600", "focus-visible:before:tw-ring-primary-600", ...focusRing],
+  "nav-contrast": [
     "!tw-text-alt2",
-    "tw-border-transparent",
-    "hover:tw-bg-transparent-hover",
-    "hover:tw-border-text-alt2",
+    "hover:!tw-bg-hover-contrast",
     "focus-visible:before:tw-ring-text-alt2",
     ...focusRing,
   ],
-  unstyled: [],
-};
-
-const disabledStyles: Record<IconButtonType, string[]> = {
-  contrast: [
-    "aria-disabled:tw-opacity-60",
-    "aria-disabled:hover:tw-border-transparent",
-    "aria-disabled:hover:tw-bg-transparent",
-  ],
-  main: [
-    "aria-disabled:!tw-text-secondary-300",
-    "aria-disabled:hover:tw-border-transparent",
-    "aria-disabled:hover:tw-bg-transparent",
-  ],
-  muted: [
-    "aria-disabled:!tw-text-secondary-300",
-    "aria-disabled:hover:tw-border-transparent",
-    "aria-disabled:hover:tw-bg-transparent",
-  ],
-  primary: [
-    "aria-disabled:tw-opacity-60",
-    "aria-disabled:hover:tw-border-primary-600",
-    "aria-disabled:hover:tw-bg-primary-600",
-  ],
-  secondary: [
-    "aria-disabled:tw-opacity-60",
-    "aria-disabled:hover:tw-border-text-muted",
-    "aria-disabled:hover:tw-bg-transparent",
-    "aria-disabled:hover:!tw-text-muted",
-  ],
-  danger: [
-    "aria-disabled:!tw-text-secondary-300",
-    "aria-disabled:hover:tw-border-transparent",
-    "aria-disabled:hover:tw-bg-transparent",
-    "aria-disabled:hover:!tw-text-secondary-300",
-  ],
-  light: [
-    "aria-disabled:tw-opacity-60",
-    "aria-disabled:hover:tw-border-transparent",
-    "aria-disabled:hover:tw-bg-transparent",
-  ],
-  unstyled: [],
 };
 
 export type IconButtonSize = "default" | "small";
 
 const sizes: Record<IconButtonSize, string[]> = {
-  default: ["tw-px-2.5", "tw-py-1.5"],
-  small: ["tw-leading-none", "tw-text-base", "tw-p-1"],
+  default: ["tw-text-xl", "tw-p-2.5", "tw-rounded-md"],
+  small: ["tw-text-base", "tw-p-2", "tw-rounded"],
 };
 /**
   * Icon buttons are used when no text accompanies the button. It consists of an icon that may be updated to any icon in the `bwi-font`, a `title` attribute, and an `aria-label`.
@@ -165,7 +81,14 @@ const sizes: Record<IconButtonSize, string[]> = {
   ],
   imports: [NgClass],
   host: {
-    "[attr.aria-disabled]": "disabledAttr()",
+    "[attr.disabled]": "disabledAttr()",
+    /**
+     * When the `bitIconButton` input is dynamic from a consumer, Angular doesn't put the
+     * `bitIconButton` attribute into the DOM. We use the attribute as a css selector in
+     * a number of components, so this manual attr binding makes sure that the css selector
+     * works when the input is dynamic.
+     */
+    "[attr.bitIconButton]": "icon()",
   },
   hostDirectives: [AriaDisableDirective],
 })
@@ -179,17 +102,20 @@ export class BitIconButtonComponent implements ButtonLikeAbstraction, FocusableE
   @HostBinding("class") get classList() {
     return [
       "tw-font-semibold",
-      "tw-border",
-      "tw-border-solid",
-      "tw-rounded-lg",
+      "tw-leading-[0px]",
+      "tw-border-none",
       "tw-transition",
+      "tw-bg-transparent",
       "hover:tw-no-underline",
+      "hover:tw-bg-hover-default",
       "focus:tw-outline-none",
     ]
       .concat(styles[this.buttonType()])
       .concat(sizes[this.size()])
       .concat(
-        this.showDisabledStyles() || this.disabled() ? disabledStyles[this.buttonType()] : [],
+        this.showDisabledStyles() || this.disabled()
+          ? ["disabled:tw-opacity-60", "disabled:hover:!tw-bg-transparent"]
+          : [],
       );
   }
 
