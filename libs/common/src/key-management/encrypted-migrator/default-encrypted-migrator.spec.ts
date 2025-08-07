@@ -7,6 +7,7 @@ import { KdfConfigService } from "@bitwarden/key-management";
 import { LogService } from "@bitwarden/logging";
 
 import { ChangeKdfServiceAbstraction } from "../kdf/abstractions/change-kdf-service";
+import { MasterPasswordServiceAbstraction } from "../master-password/abstractions/master-password.service.abstraction";
 
 import { DefaultEncryptedMigrator } from "./default-encrypted-migrator";
 import { EncryptedMigration } from "./migrations/encrypted-migration";
@@ -19,6 +20,7 @@ describe("EncryptedMigrator", () => {
   const mockChangeKdfService = mock<ChangeKdfServiceAbstraction>();
   const mockLogService = mock<LogService>();
   const configService = mock<ConfigService>();
+  const masterPasswordService = mock<MasterPasswordServiceAbstraction>();
 
   let sut: DefaultEncryptedMigrator;
   let mockMigration: jest.Mocked<MinimumKdfMigration>;
@@ -45,6 +47,7 @@ describe("EncryptedMigrator", () => {
       mockChangeKdfService,
       mockLogService,
       configService,
+      masterPasswordService,
     );
   });
 
