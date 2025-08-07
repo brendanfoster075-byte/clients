@@ -80,6 +80,7 @@ export class ButtonComponent implements ButtonLikeAbstraction {
       "focus:tw-outline-none",
     ]
       .concat(this.block() ? ["tw-w-full", "tw-block"] : ["tw-inline-block"])
+      .concat(buttonStyles[this.buttonType() ?? "secondary"])
       .concat(
         this.showDisabledStyles() || this.disabled()
           ? [
@@ -95,7 +96,6 @@ export class ButtonComponent implements ButtonLikeAbstraction {
             ]
           : [],
       )
-      .concat(buttonStyles[this.buttonType()])
       .concat(buttonSizeStyles[this.size() || "default"]);
   }
 
