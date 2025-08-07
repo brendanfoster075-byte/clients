@@ -10,7 +10,7 @@ export class AriaDisabledClickCaptureService implements OnDestroy {
     private ngZone: NgZone,
   ) {
     this.ngZone.runOutsideAngular(() => {
-      this.listener = (e: MouseEvent) => {
+      this.listener = (e: MouseEvent | KeyboardEvent) => {
         const btn = (e.target as HTMLElement).closest(
           '[aria-disabled="true"][bit-aria-disable="true"]',
         );
