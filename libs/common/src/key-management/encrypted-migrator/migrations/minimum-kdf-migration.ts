@@ -16,7 +16,6 @@ import { MasterPasswordServiceAbstraction } from "../../master-password/abstract
 
 import { EncryptedMigration, MigrationRequirement } from "./encrypted-migration";
 
-
 /**
  * This migrator ensures the user's account has a minimum PBKDF2 iteration count.
  * It will update the entire account, logging out old clients if necessary.
@@ -28,9 +27,9 @@ export class MinimumKdfMigration implements EncryptedMigration {
     private readonly logService: LogService,
     private readonly configService: ConfigService,
     private readonly masterPasswordService: MasterPasswordServiceAbstraction,
-  ) { }
+  ) {}
 
-  async runMigrations(userId: UserId, masterPassword?: string): Promise<void> {
+  async runMigrations(userId: UserId, masterPassword: string | null): Promise<void> {
     assertNonNullish(userId, "userId");
     assertNonNullish(masterPassword, "masterPassword");
 
@@ -38,7 +37,7 @@ export class MinimumKdfMigration implements EncryptedMigration {
       `[MinimumKdfMigration] Updating user ${userId} to minimum PBKDF2 iteration count ${MINIMUM_PBKDF2_ITERATIONS_FOR_UPGRADE}`,
     );
     await this.changeKdfService.updateUserKdfParams(
-      masterPassword,
+      masterPassword!,
       new PBKDF2KdfConfig(MINIMUM_PBKDF2_ITERATIONS_FOR_UPGRADE),
       userId,
     );
@@ -47,7 +46,7 @@ export class MinimumKdfMigration implements EncryptedMigration {
   async needsMigration(userId: UserId): Promise<MigrationRequirement> {
     assertNonNullish(userId, "userId");
 
-    if (!await this.masterPasswordService.userHasMasterPassword(userId)) {
+    if (!(await this.masterPasswordService.userHasMasterPassword(userId))) {
       return "noMigrationNeeded";
     }
 
