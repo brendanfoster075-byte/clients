@@ -49,7 +49,11 @@ export class CriticalAppsService {
   ) {}
 
   // Get a list of critical apps for a given organization
-  getAppsListForOrg(orgId: string): Observable<PasswordHealthReportApplicationsResponse[]> {
+  getAppsListForOrg(orgId: OrganizationId): Observable<PasswordHealthReportApplicationsResponse[]> {
+    if (orgId != this.orgId.value) {
+      throw new Error("Organization ID mismatch");
+    }
+
     return this.criticalAppsList
       .asObservable()
       .pipe(map((apps) => apps.filter((app) => app.organizationId === orgId)));
@@ -61,7 +65,11 @@ export class CriticalAppsService {
   }
 
   // Save the selected critical apps for a given organization
-  async setCriticalApps(orgId: string, selectedUrls: string[]) {
+  async setCriticalApps(orgId: OrganizationId, selectedUrls: string[]) {
+    if (orgId != this.orgId.value) {
+      throw new Error("Organization ID mismatch");
+    }
+
     const orgKey = await firstValueFrom(this.orgKey$);
 
     if (orgKey == null) {
@@ -71,7 +79,7 @@ export class CriticalAppsService {
     // only save records that are not already in the database
     const newEntries = await this.filterNewEntries(orgId as OrganizationId, selectedUrls);
     const criticalAppsRequests = await this.encryptNewEntries(
-      orgId as OrganizationId,
+      this.orgId.value as OrganizationId,
       orgKey,
       newEntries,
     );
@@ -110,6 +118,10 @@ export class CriticalAppsService {
   // Drop a critical app for a given organization
   // Only one app may be dropped at a time
   async dropCriticalApp(orgId: OrganizationId, selectedUrl: string) {
+    if (orgId != this.orgId.value) {
+      throw new Error("Organization ID mismatch");
+    }
+
     const app = this.criticalAppsList.value.find(
       (f) => f.organizationId === orgId && f.uri === selectedUrl,
     );
@@ -131,6 +143,10 @@ export class CriticalAppsService {
   ): Observable<PasswordHealthReportApplicationsResponse[]> {
     if (orgId === null) {
       return of([]);
+    }
+
+    if (orgId != this.orgId.value) {
+      throw new Error("Organization ID mismatch");
     }
 
     const result$ = zip(this.criticalAppsApiService.getCriticalApps(orgId), this.orgKey$).pipe(
