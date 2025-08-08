@@ -58,6 +58,17 @@ describe("Menu", () => {
 
     expect(getBitMenuPanel()).toBeFalsy();
   });
+
+  it("should not open when the trigger button is disabled", () => {
+    getMenuTriggerDirective().toggleMenu();
+
+    const buttonDebugElement = fixture.debugElement.query(By.directive(MenuTriggerForDirective));
+    buttonDebugElement.nativeElement.setAttribute("disabled", "true");
+    fixture.detectChanges();
+    (buttonDebugElement.nativeElement as HTMLButtonElement).click();
+
+    expect(getBitMenuPanel()).toBeFalsy();
+  });
 });
 
 @Component({
