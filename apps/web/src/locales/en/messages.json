@@ -11009,6 +11009,12 @@
   "providersubCanceledmessage": {
     "message" : "To resubscribe, contact Bitwarden Customer Support."
   },
+  "showMore": {
+    "message": "Show more"
+  },
+  "showLess": {
+    "message": "Show less"
+  },
   "moreBreadcrumbs": {
     "message": "More breadcrumbs",
     "description": "This is used in the context of a breadcrumb navigation, indicating that there are more items in the breadcrumb trail that are not currently displayed."
