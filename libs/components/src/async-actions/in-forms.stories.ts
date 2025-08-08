@@ -36,7 +36,7 @@ const template = `
     <button class="tw-me-2" type="button" buttonType="secondary" bitButton bitFormButton>Cancel</button>
     <button class="tw-me-2" type="button" buttonType="danger" bitButton bitFormButton [bitAction]="delete">Delete</button>
     <button class="tw-me-2" type="button" buttonType="secondary" bitButton bitFormButton [disabled]="true">Disabled</button>
-    <button class="tw-me-2" type="button" buttonType="secondary" bitIconButton="bwi-star" label="Delete" bitFormButton [bitAction]="delete">Delete</button>
+    <button class="tw-me-2" type="button" buttonType="muted" bitIconButton="bwi-star" label="Delete" bitFormButton [bitAction]="delete">Delete</button>
   </form>`;
 
 @Component({
