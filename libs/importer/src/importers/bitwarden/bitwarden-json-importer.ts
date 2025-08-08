@@ -1,10 +1,10 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { firstValueFrom, map, switchMap } from "rxjs";
+import { firstValueFrom, map } from "rxjs";
 
 // This import has been flagged as unallowed for this class. It may be involved in a circular dependency loop.
 // eslint-disable-next-line no-restricted-imports
-import { CollectionView } from "@bitwarden/admin-console/common";
+import { Collection, CollectionView } from "@bitwarden/admin-console/common";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { EncryptService } from "@bitwarden/common/key-management/crypto/abstractions/encrypt.service";
 import { EncString } from "@bitwarden/common/key-management/crypto/models/enc-string";
@@ -15,7 +15,7 @@ import {
 } from "@bitwarden/common/models/export";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
-import { CollectionId, OrganizationId } from "@bitwarden/common/types/guid";
+import { OrganizationId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
 import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
 import { KeyService } from "@bitwarden/key-management";
@@ -206,31 +206,26 @@ export class BitwardenJsonImporter extends BaseImporter implements Importer {
     for (const c of data.collections) {
       let collectionView: CollectionView;
       if (data.encrypted) {
-        collectionView = await firstValueFrom(
-          this.keyService.activeUserOrgKeys$.pipe(
-            switchMap((orgKeys) =>
-              this.encryptService.decryptString(
-                new EncString(c.name),
-                orgKeys[c.organizationId as OrganizationId],
-              ),
-            ),
-            map((name) => {
-              return new CollectionView({
-                ...c,
-                id: c.id as CollectionId,
-                name,
-              });
-            }),
-          ),
-        );
-      } else {
-        collectionView = CollectionWithIdExport.toView(
+        const collection = CollectionWithIdExport.toDomain(
           c,
-          new CollectionView({
-            ...c,
-            id: c.id as CollectionId,
+          new Collection({
+            id: c.id,
+            name: new EncString(c.name),
+            organizationId: this.organizationId,
           }),
         );
+        const orgKey = await firstValueFrom(
+          this.keyService.activeUserOrgKeys$.pipe(
+            map((orgKeys) => orgKeys[c.organizationId as OrganizationId]),
+          ),
+        );
+        collectionView = await CollectionView.fromCollection(
+          collection,
+          this.encryptService,
+          orgKey,
+        );
+      } else {
+        collectionView = CollectionWithIdExport.toView(c);
         collectionView.organizationId = null;
       }
 

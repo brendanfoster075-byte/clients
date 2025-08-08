@@ -47,7 +47,7 @@ function cloneCollection(
   if (collection instanceof CollectionAdminView) {
     cloned = Object.assign(new CollectionAdminView({ ...collection }), collection);
   } else {
-    cloned = new CollectionView({ ...collection });
+    cloned = Object.assign(new CollectionView({ ...collection }), collection);
   }
   return cloned;
 }

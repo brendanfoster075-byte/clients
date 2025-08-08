@@ -10,9 +10,8 @@ import { CollectionExport } from "./collection.export";
 export class CollectionWithIdExport extends CollectionExport {
   id: CollectionId;
 
-  static toView(req: CollectionWithIdExport, view: CollectionView) {
-    view.id = req.id as CollectionId;
-    return super.toView(req, view);
+  static toView(req: CollectionWithIdExport) {
+    return super.toView(req, req.id);
   }
 
   static toDomain(req: CollectionWithIdExport, domain: CollectionDomain) {

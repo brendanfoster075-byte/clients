@@ -28,18 +28,6 @@ export class CollectionView implements View, ITreeNodeObject {
     this.id = c.id;
     this.organizationId = c.organizationId;
     this.name = c.name;
-
-    //this.externalId = c.externalId;
-    //if (c instanceof Collection) {
-    //  this.readOnly = c.readOnly;
-    //  this.hidePasswords = c.hidePasswords;
-    //  this.manage = c.manage;
-    //  this.assigned = true;
-    //}
-    //if (c instanceof CollectionAccessDetailsResponse) {
-    //  this.assigned = c.assigned;
-    //}
-    //this.type = c.type;
   }
 
   canEditItems(org: Organization): boolean {
@@ -109,13 +97,22 @@ export class CollectionView implements View, ITreeNodeObject {
   }
 
   static fromCollectionAccessDetails(collection: CollectionAccessDetailsResponse): CollectionView {
-    return new CollectionView({
+    const view = new CollectionView({
       ...collection,
     });
+
+    view.externalId = collection.externalId;
+    view.type = collection.type;
+    view.assigned = collection.assigned;
+    return view;
   }
 
   static vaultFilterHead(): CollectionView {
-    return {} as CollectionView;
+    return new CollectionView({
+      id: "" as CollectionId,
+      organizationId: "" as OrganizationId,
+      name: "",
+    });
   }
 
   static fromJSON(obj: Jsonify<CollectionView>) {

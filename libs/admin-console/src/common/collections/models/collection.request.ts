@@ -7,12 +7,24 @@ export class CollectionRequest {
   groups: SelectionReadOnlyRequest[] = [];
   users: SelectionReadOnlyRequest[] = [];
 
-  constructor(c: { name: EncString; externalId?: string }) {
+  constructor(c: {
+    name: EncString;
+    users?: SelectionReadOnlyRequest[];
+    groups?: SelectionReadOnlyRequest[];
+    externalId?: string;
+  }) {
     if (!c.name || !c.name.encryptedString) {
       throw new Error("Name not provided for CollectionRequest.");
     }
 
     this.name = c.name.encryptedString;
     this.externalId = c.externalId;
+
+    if (c.groups) {
+      this.groups = c.groups;
+    }
+    if (c.users) {
+      this.users = c.users;
+    }
   }
 }

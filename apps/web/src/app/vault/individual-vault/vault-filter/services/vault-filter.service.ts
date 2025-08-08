@@ -249,7 +249,7 @@ export class VaultFilterService implements VaultFilterServiceAbstraction {
     }
 
     collections.forEach((c) => {
-      const collectionCopy = new CollectionView({ ...c }) as CollectionFilter;
+      const collectionCopy = Object.assign(new CollectionView({ ...c }), c) as CollectionFilter;
       const parts = c.name != null ? c.name.replace(/^\/+|\/+$/g, "").split(NestingDelimiter) : [];
       ServiceUtils.nestedTraverse(nodes, 0, parts, collectionCopy, null, NestingDelimiter);
     });
