@@ -1,7 +1,4 @@
-import {
-  MasterPasswordUnlockData,
-  process_master_password_unlock_response,
-} from "@bitwarden/sdk-internal";
+import { MasterPasswordUnlockData, UserDecryption } from "@bitwarden/sdk-internal";
 
 import { BaseResponse } from "../../../../models/response/base.response";
 
@@ -40,7 +37,8 @@ export class UserDecryptionOptionsResponse extends BaseResponse {
 
     const masterPasswordUnlock = this.getResponseProperty("MasterPasswordUnlock");
     if (masterPasswordUnlock != null) {
-      this.masterPasswordUnlock = process_master_password_unlock_response(masterPasswordUnlock);
+      this.masterPasswordUnlock =
+        UserDecryption.get_master_password_unlock_data(masterPasswordUnlock);
     }
 
     if (response.TrustedDeviceOption) {
