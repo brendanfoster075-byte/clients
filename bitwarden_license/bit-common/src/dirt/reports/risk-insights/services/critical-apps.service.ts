@@ -145,10 +145,6 @@ export class CriticalAppsService {
       return of([]);
     }
 
-    if (orgId != this.orgId.value) {
-      throw new Error("Organization ID mismatch");
-    }
-
     const result$ = zip(this.criticalAppsApiService.getCriticalApps(orgId), this.orgKey$).pipe(
       switchMap(([response, key]) => {
         if (key == null) {
