@@ -1,4 +1,12 @@
-import { input, HostBinding, Directive, inject, ElementRef, booleanAttribute } from "@angular/core";
+import {
+  input,
+  HostBinding,
+  Directive,
+  inject,
+  ElementRef,
+  booleanAttribute,
+  DestroyRef,
+} from "@angular/core";
 
 import { AriaDisableDirective } from "../a11y";
 import { ariaDisableElement } from "../utils";
@@ -109,7 +117,6 @@ export class ButtonLinkDirective extends LinkDirective {
 
   constructor() {
     super();
-
-    ariaDisableElement(this.el.nativeElement, this.disabled());
+    ariaDisableElement(this.el.nativeElement, this.disabled, inject(DestroyRef));
   }
 }

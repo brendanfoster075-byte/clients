@@ -8,6 +8,7 @@ import {
   booleanAttribute,
   inject,
   ElementRef,
+  DestroyRef,
 } from "@angular/core";
 import { toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { debounce, interval } from "rxjs";
@@ -61,9 +62,6 @@ const buttonStyles: Record<ButtonType, string[]> = {
   templateUrl: "button.component.html",
   providers: [{ provide: ButtonLikeAbstraction, useExisting: ButtonComponent }],
   imports: [NgClass],
-  host: {
-    "[attr.aria-disabled]": "disabledAttr()",
-  },
   hostDirectives: [AriaDisableDirective],
 })
 export class ButtonComponent implements ButtonLikeAbstraction {
@@ -144,6 +142,6 @@ export class ButtonComponent implements ButtonLikeAbstraction {
   private el = inject(ElementRef<HTMLButtonElement>);
 
   constructor() {
-    ariaDisableElement(this.el.nativeElement, !!this.disabledAttr());
+    ariaDisableElement(this.el.nativeElement, this.disabledAttr, inject(DestroyRef));
   }
 }
