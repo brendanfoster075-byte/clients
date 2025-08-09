@@ -411,7 +411,7 @@ export class SearchService implements SearchServiceAbstraction {
 
       let uri = u.uri;
 
-      if (u.hostname) {
+      if (u.hostname !== null) {
         uris.push(u.hostname);
         if (port) {
           uris.push(`${u.hostname}:${port}`);
