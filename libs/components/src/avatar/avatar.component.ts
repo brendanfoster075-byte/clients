@@ -1,5 +1,3 @@
-// FIXME: Update this file to be type safe and remove this and next line
-// @ts-strict-ignore
 import { NgClass } from "@angular/common";
 import { Component, computed, input } from "@angular/core";
 
@@ -74,11 +72,11 @@ export class AvatarComponent {
     const upperCaseText = this.text()?.toUpperCase() ?? "";
 
     if (!Utils.isNullOrWhitespace(this.color())) {
-      return this.color();
+      return this.color()!;
     }
 
     if (!Utils.isNullOrWhitespace(id)) {
-      return Utils.stringToColor(id.toString());
+      return Utils.stringToColor(id!.toString());
     }
 
     return Utils.stringToColor(upperCaseText);
@@ -92,20 +90,20 @@ export class AvatarComponent {
     const upperCaseText = this.text()?.toUpperCase() ?? "";
 
     let chars = this.getFirstLetters(upperCaseText, this.svgCharCount);
-
     if (chars == null) {
       chars = this.unicodeSafeSubstring(upperCaseText, this.svgCharCount);
     }
 
     // If the chars contain an emoji, only show it.
-    if (chars?.match(Utils.regexpEmojiPresentation)) {
-      chars = chars.match(Utils.regexpEmojiPresentation)[0];
+    const emojiMatch = chars.match(Utils.regexpEmojiPresentation);
+    if (emojiMatch) {
+      chars = emojiMatch[0];
     }
 
     return chars;
   });
 
-  private getFirstLetters(data: string, count: number): string {
+  private getFirstLetters(data: string, count: number): string | undefined {
     const parts = data.split(" ");
     if (parts.length > 1) {
       let text = "";
@@ -114,7 +112,7 @@ export class AvatarComponent {
       }
       return text;
     }
-    return null;
+    return undefined;
   }
 
   private unicodeSafeSubstring(str: string, count: number) {
