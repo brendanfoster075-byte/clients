@@ -50,6 +50,26 @@ export class Collection extends Domain {
     return collection;
   }
 
+  static async fromCollectionView(
+    view: CollectionView,
+    encryptService: EncryptService,
+    orgKey: OrgKey,
+  ): Promise<Collection> {
+    const collection = Object.assign(
+      new Collection({
+        name: await encryptService.encryptString(view.name, orgKey),
+        id: view.id,
+        organizationId: view.organizationId,
+      }),
+      view,
+    );
+
+    collection.readOnly = view.readOnly;
+    collection.externalId = view.externalId;
+
+    return collection;
+  }
+
   decrypt(orgKey: OrgKey, encryptService: EncryptService): Promise<CollectionView> {
     return CollectionView.fromCollection(this, encryptService, orgKey);
   }

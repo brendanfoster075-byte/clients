@@ -117,8 +117,7 @@ export class DefaultCollectionAdminService implements CollectionAdminService {
 
     const promises = collections.map(async (c) => {
       if (isCollectionAccessDetailsResponse(c)) {
-        c.name = await this.encryptService.decryptString(new EncString(c.name), orgKey);
-        return CollectionAdminView.fromCollectionAccessDetails(c);
+        return CollectionAdminView.fromCollectionAccessDetails(c, this.encryptService, orgKey);
       }
 
       const collectionAdminView = new CollectionAdminView({

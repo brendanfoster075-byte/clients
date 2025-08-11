@@ -219,11 +219,7 @@ export class BitwardenJsonImporter extends BaseImporter implements Importer {
             map((orgKeys) => orgKeys[c.organizationId as OrganizationId]),
           ),
         );
-        collectionView = await CollectionView.fromCollection(
-          collection,
-          this.encryptService,
-          orgKey,
-        );
+        collectionView = await collection.decrypt(orgKey, this.encryptService);
       } else {
         collectionView = CollectionWithIdExport.toView(c);
         collectionView.organizationId = null;

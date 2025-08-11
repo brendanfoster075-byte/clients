@@ -241,7 +241,6 @@ export class CreateCommand {
       });
       const response = await this.apiService.postCollection(req.organizationId, request);
       const view = CollectionExport.toView(req, response.id);
-      view.externalId = request.externalId;
       const res = new OrganizationCollectionResponse(view, groups, users);
       return Response.success(res);
     } catch (e) {

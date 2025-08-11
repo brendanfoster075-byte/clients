@@ -46,10 +46,10 @@ export class PadlockCsvImporter extends BaseImporter implements Importer {
             }
 
             if (addCollection) {
+              // @TODO use a different model if ID is not required.
+              // @ts-expect-error current functionality creates this view with no Id since its being imported.
               const collection = new CollectionView({
                 name: tag,
-                organizationId: this.organizationId,
-                id: null,
               });
               result.collections.push(collection);
             }

@@ -47,9 +47,9 @@ export class PasspackCsvImporter extends BaseImporter implements Importer {
           }
 
           if (addCollection) {
-            //@ts-expect-error current functionality creates this view with no Id since its being imported, @TODO a better initial value for Id.
+            // @TODO use a different model if ID is not required.
+            // @ts-expect-error current functionality creates this view with no Id since its being imported.
             const collection = new CollectionView({
-              organizationId: this.organizationId,
               name: tag,
             });
             result.collections.push(collection);

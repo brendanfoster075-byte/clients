@@ -1,7 +1,10 @@
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
+import { EncryptService } from "@bitwarden/common/key-management/crypto/abstractions/encrypt.service";
+import { EncString } from "@bitwarden/common/key-management/crypto/models/enc-string";
+import { OrgKey } from "@bitwarden/common/types/key";
 
 import { CollectionAccessSelectionView } from "./collection-access-selection.view";
-import { CollectionAccessDetailsResponse } from "./collection.response";
+import { CollectionAccessDetailsResponse, CollectionResponse } from "./collection.response";
 import { CollectionView } from "./collection.view";
 
 // TODO: this is used to represent the pseudo "Unassigned" collection as well as
@@ -98,22 +101,41 @@ export class CollectionAdminView extends CollectionView {
     return this.id === Unassigned;
   }
 
-  static fromCollectionAccessDetails(
+  static async fromCollectionAccessDetails(
     collection: CollectionAccessDetailsResponse,
-  ): CollectionAdminView {
-    const v = new CollectionAdminView({ ...collection });
+    encryptService: EncryptService,
+    orgKey: OrgKey,
+  ): Promise<CollectionAdminView> {
+    const view = (await super.fromCollectionAccessDetails(
+      collection,
+      encryptService,
+      orgKey,
+    )) as CollectionAdminView;
 
-    v.groups = collection.groups
+    view.groups = collection.groups
       ? collection.groups.map((g) => new CollectionAccessSelectionView(g))
       : [];
 
-    v.users = collection.users
+    view.users = collection.users
       ? collection.users.map((g) => new CollectionAccessSelectionView(g))
       : [];
 
-    v.assigned = collection.assigned;
-    v.externalId = collection.externalId;
+    return view;
+  }
 
-    return v;
+  static async fromCollectionResponse(
+    collection: CollectionResponse,
+    encryptService: EncryptService,
+    orgKey: OrgKey,
+  ): Promise<CollectionAdminView> {
+    const collectionAdminView = new CollectionAdminView({
+      id: collection.id,
+      name: await encryptService.decryptString(new EncString(collection.name), orgKey),
+      organizationId: collection.organizationId,
+    });
+
+    collectionAdminView.externalId = collection.externalId;
+
+    return collectionAdminView;
   }
 }

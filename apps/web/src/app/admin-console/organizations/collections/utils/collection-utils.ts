@@ -37,9 +37,9 @@ export function getNestedCollectionTree(
   return nodes;
 }
 
-function cloneCollection(collection: CollectionView): CollectionView;
-function cloneCollection(collection: CollectionAdminView): CollectionAdminView;
-function cloneCollection(
+export function cloneCollection(collection: CollectionView): CollectionView;
+export function cloneCollection(collection: CollectionAdminView): CollectionAdminView;
+export function cloneCollection(
   collection: CollectionView | CollectionAdminView,
 ): CollectionView | CollectionAdminView {
   let cloned;

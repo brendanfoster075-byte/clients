@@ -2,6 +2,7 @@ import { Jsonify } from "type-fest";
 
 import { Organization } from "@bitwarden/common/admin-console/models/domain/organization";
 import { EncryptService } from "@bitwarden/common/key-management/crypto/abstractions/encrypt.service";
+import { EncString } from "@bitwarden/common/key-management/crypto/models/enc-string";
 import { View } from "@bitwarden/common/models/view/view";
 import { CollectionId, OrganizationId } from "@bitwarden/common/types/guid";
 import { OrgKey } from "@bitwarden/common/types/key";
@@ -82,6 +83,20 @@ export class CollectionView implements View, ITreeNodeObject {
     return false;
   }
 
+  get isDefaultCollection() {
+    return this.type == CollectionTypes.DefaultUserCollection;
+  }
+
+  // FIXME: we should not use a CollectionView object for the vault filter header because it is not a real
+  // CollectionView and this violates ts-strict rules.
+  static vaultFilterHead(): CollectionView {
+    return new CollectionView({
+      id: "" as CollectionId,
+      organizationId: "" as OrganizationId,
+      name: "",
+    });
+  }
+
   static async fromCollection(
     collection: Collection,
     encryptService: EncryptService,
@@ -96,30 +111,27 @@ export class CollectionView implements View, ITreeNodeObject {
     return view;
   }
 
-  static fromCollectionAccessDetails(collection: CollectionAccessDetailsResponse): CollectionView {
+  static async fromCollectionAccessDetails(
+    collection: CollectionAccessDetailsResponse,
+    encryptService: EncryptService,
+    orgKey: OrgKey,
+  ): Promise<CollectionView> {
     const view = new CollectionView({
       ...collection,
     });
 
+    view.name = await encryptService.decryptString(new EncString(collection.name), orgKey);
     view.externalId = collection.externalId;
     view.type = collection.type;
     view.assigned = collection.assigned;
     return view;
   }
 
-  static vaultFilterHead(): CollectionView {
-    return new CollectionView({
-      id: "" as CollectionId,
-      organizationId: "" as OrganizationId,
-      name: "",
-    });
-  }
-
   static fromJSON(obj: Jsonify<CollectionView>) {
     return Object.assign(new CollectionView({ ...obj }), obj);
   }
 
-  get isDefaultCollection() {
-    return this.type == CollectionTypes.DefaultUserCollection;
+  encrypt(orgKey: OrgKey, encryptService: EncryptService): Promise<Collection> {
+    return Collection.fromCollectionView(this, encryptService, orgKey);
   }
 }

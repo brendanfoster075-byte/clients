@@ -108,10 +108,8 @@ export class DefaultCollectionService implements CollectionService {
       if (collections == null) {
         collections = {};
       }
-      if (toUpdate.id) {
-        collections[toUpdate.id] = toUpdate;
-      }
 
+      collections[toUpdate.id] = toUpdate;
       return collections;
     });
 
@@ -184,14 +182,7 @@ export class DefaultCollectionService implements CollectionService {
       ),
     );
 
-    const encryptedName = await this.encryptService.encryptString(model.name, key);
-    const collection = new Collection({
-      name: encryptedName,
-      id: model.id,
-      organizationId: model.organizationId as OrganizationId,
-    });
-
-    return collection;
+    return await model.encrypt(key, this.encryptService);
   }
 
   // TODO: this should be private.
@@ -225,7 +216,8 @@ export class DefaultCollectionService implements CollectionService {
   getAllNested(collections: CollectionView[]): TreeNode<CollectionView>[] {
     const nodes: TreeNode<CollectionView>[] = [];
     collections.forEach((c) => {
-      const collectionCopy = structuredClone(c);
+      const collectionCopy = Object.assign(new CollectionView({ ...c }), c);
+
       const parts = c.name != null ? c.name.replace(/^\/+|\/+$/g, "").split(NestingDelimiter) : [];
       ServiceUtils.nestedTraverse(nodes, 0, parts, collectionCopy, undefined, NestingDelimiter);
     });

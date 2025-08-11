@@ -34,6 +34,7 @@ import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
 import { ServiceUtils } from "@bitwarden/common/vault/service-utils";
 import { COLLAPSED_GROUPINGS } from "@bitwarden/common/vault/services/key-state/collapsed-groupings.state";
 import { CipherListView } from "@bitwarden/sdk-internal";
+import { cloneCollection } from "@bitwarden/web-vault/app/admin-console/organizations/collections";
 
 import {
   CipherTypeFilter,
@@ -249,7 +250,7 @@ export class VaultFilterService implements VaultFilterServiceAbstraction {
     }
 
     collections.forEach((c) => {
-      const collectionCopy = Object.assign(new CollectionView({ ...c }), c) as CollectionFilter;
+      const collectionCopy = cloneCollection(new CollectionView({ ...c }));
       const parts = c.name != null ? c.name.replace(/^\/+|\/+$/g, "").split(NestingDelimiter) : [];
       ServiceUtils.nestedTraverse(nodes, 0, parts, collectionCopy, null, NestingDelimiter);
     });
