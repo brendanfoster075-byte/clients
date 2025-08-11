@@ -178,36 +178,39 @@ export class VaultComponent implements OnInit, OnDestroy {
   protected performingInitialLoad = true;
   protected refreshing = false;
   protected processingEvent = false;
-  protected filter: RoutedVaultFilterModel = {};
   protected organization$: Observable<Organization>;
-  protected allCollections: CollectionAdminView[];
   protected allGroups: GroupView[];
   protected ciphers: CipherView[];
-  protected collections: CollectionAdminView[];
-  protected selectedCollection: TreeNode<CollectionAdminView> | undefined;
   protected isEmpty: boolean;
-  protected showCollectionAccessRestricted: boolean;
   private hasSubscription$ = new BehaviorSubject<boolean>(false);
-  protected currentSearchText$: Observable<string>;
   protected useOrganizationWarningsService$: Observable<boolean>;
   protected freeTrialWhenWarningsServiceDisabled$: Observable<FreeTrial>;
   protected resellerWarningWhenWarningsServiceDisabled$: Observable<ResellerWarning | null>;
   protected prevCipherId: string | null = null;
   protected userId$: Observable<UserId>;
-  /**
-   * A list of collections that the user can assign items to and edit those items within.
-   * @protected
-   */
-  protected editableCollections$: Observable<CollectionAdminView[]>;
-  protected allCollectionsWithoutUnassigned$: Observable<CollectionAdminView[]>;
 
+  protected filter: RoutedVaultFilterModel = {};
   protected hideVaultFilter$: Observable<boolean>;
+  protected currentSearchText$: Observable<string>;
+  private filter$: Observable<RoutedVaultFilterModel>;
 
   private searchText$ = new Subject<string>();
   private refresh$ = new BehaviorSubject<void>(null);
   private destroy$ = new Subject<void>();
   protected addAccessStatus$ = new BehaviorSubject<AddAccessStatusType>(0);
   private vaultItemDialogRef?: DialogRef<VaultItemDialogResult> | undefined;
+
+  /**
+   * A list of collections that the user can assign items to and edit those items within.
+   * @protected
+   */
+  protected editableCollections$: Observable<CollectionAdminView[]>;
+  protected allCollectionsWithoutUnassigned$: Observable<CollectionAdminView[]>;
+  protected allCollections$: Observable<CollectionAdminView[]>;
+  protected showCollectionAccessRestricted: boolean;
+  protected collections: CollectionAdminView[];
+  protected selectedCollection: TreeNode<CollectionAdminView> | undefined;
+  private nestedCollections$: Observable<TreeNode<CollectionAdminView>[]>;
 
   @ViewChild("vaultItems", { static: false }) vaultItemsComponent: VaultItemsComponent<CipherView>;
 
@@ -293,9 +296,34 @@ export class VaultComponent implements OnInit, OnDestroy {
     this.hideVaultFilter$ = this.organization$.pipe(
       map((organization) => organization.isProviderUser && !organization.isMember),
     );
-  }
 
-  filter$: Observable<RoutedVaultFilterModel>;
+    this.allCollectionsWithoutUnassigned$ = this.refresh$.pipe(
+      switchMap(() => this.getOrganizationId()),
+      switchMap((orgId) => this.collectionAdminService.getAll(orgId)),
+      shareReplay({ refCount: false, bufferSize: 1 }),
+    );
+
+    this.allCollections$ = combineLatest([
+      this.getOrganizationId(),
+      this.allCollectionsWithoutUnassigned$,
+    ]).pipe(
+      map(([organizationId, allCollections]) => {
+        // FIXME: We should not assert that the Unassigned type is a CollectionId.
+        // Instead we should consider representing the Unassigned collection as a different object, given that
+        // it is not actually a collection.
+        const noneCollection = new CollectionAdminView();
+        noneCollection.name = this.i18nService.t("unassigned");
+        noneCollection.id = Unassigned as CollectionId;
+        noneCollection.organizationId = organizationId;
+        return allCollections.concat(noneCollection);
+      }),
+    );
+
+    this.nestedCollections$ = this.allCollections$.pipe(
+      map((collections) => getNestedCollectionTree(collections)),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+  }
 
   getOrganizationId(): Observable<OrganizationId> {
     // FIXME: The RoutedVaultFilterModel uses `organizationId: Unassigned` to represent the individual vault,
@@ -362,12 +390,6 @@ export class VaultComponent implements OnInit, OnDestroy {
 
     this.currentSearchText$ = this.route.queryParams.pipe(map((queryParams) => queryParams.search));
 
-    this.allCollectionsWithoutUnassigned$ = this.refresh$.pipe(
-      switchMap(() => this.getOrganizationId()),
-      switchMap((orgId) => this.collectionAdminService.getAll(orgId)),
-      shareReplay({ refCount: false, bufferSize: 1 }),
-    );
-
     this.editableCollections$ = combineLatest([
       this.allCollectionsWithoutUnassigned$,
       this.organization$,
@@ -380,22 +402,6 @@ export class VaultComponent implements OnInit, OnDestroy {
         return collections.filter((c) => c.assigned);
       }),
       shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
-    const allCollections$ = combineLatest([
-      this.getOrganizationId(),
-      this.allCollectionsWithoutUnassigned$,
-    ]).pipe(
-      map(([organizationId, allCollections]) => {
-        // FIXME: We should not assert that the Unassigned type is a CollectionId.
-        // Instead we should consider representing the Unassigned collection as a different object, given that
-        // it is not actually a collection.
-        const noneCollection = new CollectionAdminView();
-        noneCollection.name = this.i18nService.t("unassigned");
-        noneCollection.id = Unassigned as CollectionId;
-        noneCollection.organizationId = organizationId;
-        return allCollections.concat(noneCollection);
-      }),
     );
 
     const allGroups$ = this.getOrganizationId().pipe(
@@ -438,13 +444,8 @@ export class VaultComponent implements OnInit, OnDestroy {
       }),
     );
 
-    const nestedCollections$ = allCollections$.pipe(
-      map((collections) => getNestedCollectionTree(collections)),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
     const collections$ = combineLatest([
-      nestedCollections$,
+      this.nestedCollections$,
       this.filter$,
       this.currentSearchText$,
       this.addAccessStatus$,
@@ -513,7 +514,7 @@ export class VaultComponent implements OnInit, OnDestroy {
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
-    const selectedCollection$ = combineLatest([nestedCollections$, this.filter$]).pipe(
+    const selectedCollection$ = combineLatest([this.nestedCollections$, this.filter$]).pipe(
       filter(([collections, filter]) => collections != undefined && filter != undefined),
       map(([collections, filter]) => {
         if (
@@ -739,7 +740,7 @@ export class VaultComponent implements OnInit, OnDestroy {
         tap(() => (this.refreshing = true)),
         switchMap(() =>
           combineLatest([
-            allCollections$,
+            this.allCollections$,
             allGroups$,
             ciphers$,
             collections$,
@@ -758,7 +759,6 @@ export class VaultComponent implements OnInit, OnDestroy {
           selectedCollection,
           showCollectionAccessRestricted,
         ]) => {
-          this.allCollections = allCollections;
           this.allGroups = allGroups;
           this.ciphers = ciphers;
           this.collections = collections;

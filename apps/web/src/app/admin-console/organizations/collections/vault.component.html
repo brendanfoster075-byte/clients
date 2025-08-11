@@ -89,7 +89,7 @@
       #vaultItems
       [ciphers]="ciphers"
       [collections]="collections"
-      [allCollections]="allCollections"
+      [allCollections]="allCollections$ | async"
       [allOrganizations]="organization ? [organization] : []"
       [allGroups]="allGroups"
       [disabled]="loading"
