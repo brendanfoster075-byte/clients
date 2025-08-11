@@ -28,7 +28,7 @@ const SizeClasses: Record<SizeTypes, string[]> = {
         pointer-events="none"
         [style.backgroundColor]="backgroundColor()"
         [ngClass]="classList()"
-        [attr.viewBox]="'0 0 ' + svgSize + ' ' + svgSize"
+        attr.viewBox="0 0 {{ svgSize }} {{ svgSize }}"
       >
         <text
           text-anchor="middle"
