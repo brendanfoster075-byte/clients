@@ -1,15 +1,12 @@
-import { combineLatest, distinctUntilChanged, map, mergeMap, of, Subject, switchMap } from "rxjs";
+import { combineLatest, distinctUntilChanged, mergeMap, of, Subject, switchMap } from "rxjs";
 
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { BadgeSettingsServiceAbstraction } from "@bitwarden/common/autofill/services/badge-settings.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { UserId } from "@bitwarden/common/types/guid";
 import { CipherService } from "@bitwarden/common/vault/abstractions/cipher.service";
-import { SecurityTask, SecurityTaskType, TaskService } from "@bitwarden/common/vault/tasks";
-import { filterOutNullish } from "@bitwarden/common/vault/utils/observable-utilities";
 
 import { BadgeService } from "../../platform/badge/badge.service";
-import { BadgeIcon } from "../../platform/badge/icon";
 import { BadgeStatePriority } from "../../platform/badge/priority";
 import { BrowserApi } from "../../platform/browser/browser-api";
 
@@ -20,26 +17,12 @@ export class AutofillBadgeUpdaterService {
   private tabUpdated$ = new Subject<chrome.tabs.Tab>();
   private tabRemoved$ = new Subject<number>();
 
-  private activeAccount$ = this.accountService.activeAccount$;
-
-  private pendingTasks$ = this.activeAccount$.pipe(
-    filterOutNullish(),
-    switchMap((account) =>
-      this.taskService
-        .pendingTasks$(account.id)
-        .pipe(
-          map((tasks) => tasks.filter((t) => t.type === SecurityTaskType.UpdateAtRiskCredential)),
-        ),
-    ),
-  );
-
   constructor(
     private badgeService: BadgeService,
     private accountService: AccountService,
     private cipherService: CipherService,
     private badgeSettingsService: BadgeSettingsServiceAbstraction,
     private logService: LogService,
-    private taskService: TaskService,
   ) {
     const cipherViews$ = this.accountService.activeAccount$.pipe(
       switchMap((account) => (account?.id ? this.cipherService.cipherViews$(account?.id) : of([]))),
@@ -50,10 +33,9 @@ export class AutofillBadgeUpdaterService {
       enableBadgeCounter:
         this.badgeSettingsService.enableBadgeCounter$.pipe(distinctUntilChanged()),
       ciphers: cipherViews$,
-      pendingTasks: this.pendingTasks$,
     })
       .pipe(
-        mergeMap(async ({ account, enableBadgeCounter, pendingTasks }) => {
+        mergeMap(async ({ account, enableBadgeCounter }) => {
           if (!account) {
             return;
           }
@@ -65,8 +47,8 @@ export class AutofillBadgeUpdaterService {
             }
 
             // When the badge counter is disabled, a tab state may be applicable based on the pending tasks.
-            if (enableBadgeCounter || pendingTasks.length > 0) {
-              await this.setTabState(tab, account.id, enableBadgeCounter, pendingTasks);
+            if (enableBadgeCounter) {
+              await this.setTabState(tab, account.id, enableBadgeCounter);
             } else {
               await this.clearTabState(tab.id);
             }
@@ -80,16 +62,15 @@ export class AutofillBadgeUpdaterService {
       enableBadgeCounter: this.badgeSettingsService.enableBadgeCounter$,
       replaced: this.tabReplaced$,
       ciphers: cipherViews$,
-      pendingTasks: this.pendingTasks$,
     })
       .pipe(
-        mergeMap(async ({ account, enableBadgeCounter, replaced, pendingTasks }) => {
+        mergeMap(async ({ account, enableBadgeCounter, replaced }) => {
           if (!account) {
             return;
           }
 
           await this.clearTabState(replaced.removedTabId);
-          await this.setTabState(replaced.addedTab, account.id, enableBadgeCounter, pendingTasks);
+          await this.setTabState(replaced.addedTab, account.id, enableBadgeCounter);
         }),
       )
       .subscribe();
@@ -99,15 +80,14 @@ export class AutofillBadgeUpdaterService {
       enableBadgeCounter: this.badgeSettingsService.enableBadgeCounter$,
       tab: this.tabUpdated$,
       ciphers: cipherViews$,
-      pendingTasks: this.pendingTasks$,
     })
       .pipe(
-        mergeMap(async ({ account, enableBadgeCounter, tab, pendingTasks }) => {
+        mergeMap(async ({ account, enableBadgeCounter, tab }) => {
           if (!account) {
             return;
           }
 
-          await this.setTabState(tab, account.id, enableBadgeCounter, pendingTasks);
+          await this.setTabState(tab, account.id, enableBadgeCounter);
         }),
       )
       .subscribe();
@@ -153,12 +133,7 @@ export class AutofillBadgeUpdaterService {
     BrowserApi.addListener(chrome.tabs.onRemoved, (tabId, _) => this.tabRemoved$.next(tabId));
   }
 
-  private async setTabState(
-    tab: chrome.tabs.Tab,
-    userId: UserId,
-    enableBadgeCounter: boolean,
-    pendingTasks?: SecurityTask[],
-  ) {
+  private async setTabState(tab: chrome.tabs.Tab, userId: UserId, enableBadgeCounter: boolean) {
     if (!tab.id) {
       this.logService.warning("Tab event received but tab id is undefined");
       return;
@@ -167,26 +142,8 @@ export class AutofillBadgeUpdaterService {
     const ciphers = tab.url ? await this.cipherService.getAllDecryptedForUrl(tab.url, userId) : [];
     const cipherCount = ciphers.length;
 
-    const hasPendingTasksForTab = (pendingTasks ?? []).some((task) =>
-      ciphers.some((cipher) => cipher.id === task.cipherId && !cipher.isDeleted),
-    );
-
-    const skipBadgeUpdate = !enableBadgeCounter && !hasPendingTasksForTab;
-
-    if (cipherCount === 0 || skipBadgeUpdate) {
+    if (cipherCount === 0 || !enableBadgeCounter) {
       await this.clearTabState(tab.id);
-      return;
-    }
-
-    if (hasPendingTasksForTab) {
-      await this.badgeService.setState(
-        StateName(tab.id),
-        BadgeStatePriority.High,
-        {
-          icon: BadgeIcon.Berry,
-        },
-        tab.id,
-      );
       return;
     }
 
