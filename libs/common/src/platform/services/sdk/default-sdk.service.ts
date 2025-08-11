@@ -255,9 +255,9 @@ export class DefaultSdkService implements SdkService {
       FeatureFlag.CipherKeyEncryption,
     );
 
-    client.platform().load_flags({
-      enableCipherKeyEncryption: cipherKeyEncryptionEnabled,
-    });
+    client
+      .platform()
+      .load_flags(new Map([["enableCipherKeyEncryption", cipherKeyEncryptionEnabled]]));
   }
 
   private toSettings(env: Environment): ClientSettings {
