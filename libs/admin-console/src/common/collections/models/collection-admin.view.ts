@@ -117,14 +117,14 @@ export class CollectionAdminView extends CollectionView {
   }
 
   /**
-   * Returns true if the collection can be edited and does not have a {@link userDefaultCollectionEmail}.
-   * When an organization user is offboarded with the Enforce Organization Data Ownership policy enabled,
-   * their "My items" collection will transfer ownership to the organization and the collection name becomes
-   * read only, replaced by the new {@link userDefaultCollectionEmail} to be able to identify the offboarded user's
-   * data moving forward. To enforce this rule, this function will be used to prevent encrypting and
-   * saving a new name when editing a collection.
+   * Returns true if the collection name can be edited. Editing the collection name is restricted for collections
+   * that were DefaultUserCollections but where the relevant user has been offboarded.
+   * When this occurs, the offboarded user's email is treated as the collection name, and cannot be edited.
+   * This is important for security so that the server cannot ask the client to encrypt arbitrary data.
+   * WARNING! This is an IMPORTANT restriction that MUST be maintained for security purposes.
+   * Do not edit or remove this unless you understand why.
    */
   override canEditName(org: Organization): boolean {
-    return this.canEdit(org) && super.canEditName(org);
+    return (this.canEdit(org) && !this.userDefaultCollectionEmail) || super.canEditName(org);
   }
 }
