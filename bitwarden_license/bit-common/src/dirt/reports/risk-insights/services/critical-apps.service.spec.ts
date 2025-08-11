@@ -152,8 +152,10 @@ describe("CriticalAppsService", () => {
       { id: "id4", organizationId: "another organization", uri: "https://example.org" },
     ] as PasswordHealthReportApplicationsResponse[];
 
+    const orgKey$ = new BehaviorSubject(OrgRecords);
+    keyService.orgKeys$.mockReturnValue(orgKey$);
+    service.setOrganizationId(SomeOrganization, SomeUser);
     service.setAppsInListForOrg(response);
-
     service.getAppsListForOrg(orgId as OrganizationId).subscribe((res) => {
       expect(res).toHaveLength(2);
     });
@@ -161,26 +163,30 @@ describe("CriticalAppsService", () => {
 
   it("should drop a critical app", async () => {
     // arrange
-    const orgId = "org1" as OrganizationId;
     const selectedUrl = "https://example.com";
 
     const initialList = [
-      { id: "id1", organizationId: "org1", uri: "https://example.com" },
-      { id: "id2", organizationId: "org1", uri: "https://example.org" },
+      { id: "id1", organizationId: SomeOrganization, uri: "https://example.com" },
+      { id: "id2", organizationId: SomeOrganization, uri: "https://example.org" },
     ] as PasswordHealthReportApplicationsResponse[];
+
+    const orgKey$ = new BehaviorSubject(OrgRecords);
+    keyService.orgKeys$.mockReturnValue(orgKey$);
+
+    service.setOrganizationId(SomeOrganization, SomeUser);
 
     service.setAppsInListForOrg(initialList);
 
     // act
-    await service.dropCriticalApp(orgId, selectedUrl);
+    await service.dropCriticalApp(SomeOrganization, selectedUrl);
 
     // expectations
     expect(criticalAppsApiService.dropCriticalApp).toHaveBeenCalledWith({
-      organizationId: orgId,
+      organizationId: SomeOrganization,
       passwordHealthReportApplicationIds: ["id1"],
     });
-    expect(service.getAppsListForOrg(orgId)).toBeTruthy();
-    service.getAppsListForOrg(orgId).subscribe((res) => {
+    expect(service.getAppsListForOrg(SomeOrganization)).toBeTruthy();
+    service.getAppsListForOrg(SomeOrganization).subscribe((res) => {
       expect(res).toHaveLength(1);
       expect(res[0].uri).toBe("https://example.org");
     });
@@ -188,23 +194,27 @@ describe("CriticalAppsService", () => {
 
   it("should not drop a critical app if it does not exist", async () => {
     // arrange
-    const orgId = "org1" as OrganizationId;
     const selectedUrl = "https://nonexistent.com";
 
     const initialList = [
-      { id: "id1", organizationId: "org1", uri: "https://example.com" },
-      { id: "id2", organizationId: "org1", uri: "https://example.org" },
+      { id: "id1", organizationId: SomeOrganization, uri: "https://example.com" },
+      { id: "id2", organizationId: SomeOrganization, uri: "https://example.org" },
     ] as PasswordHealthReportApplicationsResponse[];
+
+    const orgKey$ = new BehaviorSubject(OrgRecords);
+    keyService.orgKeys$.mockReturnValue(orgKey$);
+
+    service.setOrganizationId(SomeOrganization, SomeUser);
 
     service.setAppsInListForOrg(initialList);
 
     // act
-    await service.dropCriticalApp(orgId, selectedUrl);
+    await service.dropCriticalApp(SomeOrganization, selectedUrl);
 
     // expectations
     expect(criticalAppsApiService.dropCriticalApp).not.toHaveBeenCalled();
-    expect(service.getAppsListForOrg(orgId)).toBeTruthy();
-    service.getAppsListForOrg(orgId).subscribe((res) => {
+    expect(service.getAppsListForOrg(SomeOrganization)).toBeTruthy();
+    service.getAppsListForOrg(SomeOrganization).subscribe((res) => {
       expect(res).toHaveLength(2);
     });
   });
