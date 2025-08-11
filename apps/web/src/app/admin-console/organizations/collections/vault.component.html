@@ -91,7 +91,7 @@
       [collections]="collections"
       [allCollections]="allCollections$ | async"
       [allOrganizations]="organization ? [organization] : []"
-      [allGroups]="allGroups"
+      [allGroups]="allGroups$ | async"
       [disabled]="loading"
       [showOwner]="false"
       [showPermissionsColumn]="true"

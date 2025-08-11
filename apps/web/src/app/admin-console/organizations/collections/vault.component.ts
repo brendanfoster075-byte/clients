@@ -179,7 +179,7 @@ export class VaultComponent implements OnInit, OnDestroy {
   protected refreshing = false;
   protected processingEvent = false;
   protected organization$: Observable<Organization>;
-  protected allGroups: GroupView[];
+  protected allGroups$: Observable<GroupView[]>;
   protected ciphers: CipherView[];
   protected isEmpty: boolean;
   private hasSubscription$ = new BehaviorSubject<boolean>(false);
@@ -323,6 +323,11 @@ export class VaultComponent implements OnInit, OnDestroy {
       map((collections) => getNestedCollectionTree(collections)),
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
+
+    this.allGroups$ = this.getOrganizationId().pipe(
+      switchMap((organizationId) => this.groupService.getAll(organizationId)),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
   }
 
   getOrganizationId(): Observable<OrganizationId> {
@@ -401,11 +406,6 @@ export class VaultComponent implements OnInit, OnDestroy {
         }
         return collections.filter((c) => c.assigned);
       }),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
-    const allGroups$ = this.getOrganizationId().pipe(
-      switchMap((organizationId) => this.groupService.getAll(organizationId)),
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
@@ -741,7 +741,6 @@ export class VaultComponent implements OnInit, OnDestroy {
         switchMap(() =>
           combineLatest([
             this.allCollections$,
-            allGroups$,
             ciphers$,
             collections$,
             selectedCollection$,
@@ -753,13 +752,11 @@ export class VaultComponent implements OnInit, OnDestroy {
       .subscribe(
         ([
           allCollections,
-          allGroups,
           ciphers,
           collections,
           selectedCollection,
           showCollectionAccessRestricted,
         ]) => {
-          this.allGroups = allGroups;
           this.ciphers = ciphers;
           this.collections = collections;
           this.selectedCollection = selectedCollection;
