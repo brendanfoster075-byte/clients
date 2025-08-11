@@ -1,11 +1,11 @@
 import { Opaque } from "type-fest";
 
-import { SignedSecurityState as SdkSignedSecurityState } from "@bitwarden/sdk-internal";
+import { EncString, SignedSecurityState as SdkSignedSecurityState } from "@bitwarden/sdk-internal";
 
 /**
  * A private key, encrypted with a symmetric key.
  */
-export type WrappedPrivateKey = Opaque<string, "WrappedPrivateKey">;
+export type WrappedPrivateKey = Opaque<EncString, "WrappedPrivateKey">;
 
 /**
  * A public key, signed with the accounts signature key.
@@ -19,7 +19,7 @@ export type UnsignedPublicKey = Opaque<Uint8Array, "UnsignedPublicKey">;
 /**
  * A signature key encrypted with a symmetric key.
  */
-export type WrappedSigningKey = Opaque<string, "WrappedSigningKey">;
+export type WrappedSigningKey = Opaque<EncString, "WrappedSigningKey">;
 /**
  * A signature public key (verifying key) in base64 encoded CoseKey format
  */
