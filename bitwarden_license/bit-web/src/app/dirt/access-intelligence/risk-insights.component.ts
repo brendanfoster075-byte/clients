@@ -86,7 +86,7 @@ export class RiskInsightsComponent implements OnInit {
       this.tabIndex = !isNaN(Number(tabIndex)) ? Number(tabIndex) : RiskInsightsTabType.AllApps;
     });
     const orgId = this.route.snapshot.paramMap.get("organizationId") ?? "";
-    this.criticalApps$ = this.criticalAppsService.getAppsListForOrg(orgId);
+    this.criticalApps$ = this.criticalAppsService.getAppsListForOrg(orgId as OrganizationId);
   }
 
   async ngOnInit() {
