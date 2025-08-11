@@ -28,12 +28,9 @@ const SizeClasses: Record<SizeTypes, string[]> = {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         pointer-events="none"
-        [attr.width]="svgSize"
-        [attr.height]="svgSize"
         [style.backgroundColor]="backgroundColor()"
-        [style.width.px]="svgSize"
-        [style.height.px]="svgSize"
         [ngClass]="classList()"
+        [attr.viewBox]="'0 0 ' + svgSize + ' ' + svgSize"
       >
         <text
           text-anchor="middle"
@@ -61,10 +58,10 @@ export class AvatarComponent {
   readonly title = input<string>();
   readonly size = input<SizeTypes>("default");
 
-  protected svgCharCount = 2;
-  protected svgFontSize = 20;
-  protected svgFontWeight = 300;
-  protected svgSize = 48;
+  protected readonly svgCharCount = 2;
+  protected readonly svgFontSize = 20;
+  protected readonly svgFontWeight = 300;
+  protected readonly svgSize = 48;
 
   protected readonly classList = computed(() => {
     return ["tw-rounded-full"]
@@ -78,11 +75,13 @@ export class AvatarComponent {
 
     if (!Utils.isNullOrWhitespace(this.color())) {
       return this.color();
-    } else if (!Utils.isNullOrWhitespace(id)) {
-      return Utils.stringToColor(id.toString());
-    } else {
-      return Utils.stringToColor(upperCaseText);
     }
+
+    if (!Utils.isNullOrWhitespace(id)) {
+      return Utils.stringToColor(id.toString());
+    }
+
+    return Utils.stringToColor(upperCaseText);
   });
 
   protected readonly textColor = computed(() => {
