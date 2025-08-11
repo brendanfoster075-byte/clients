@@ -35,7 +35,7 @@ export class AutofillBadgeUpdaterService {
       ciphers: cipherViews$,
     })
       .pipe(
-        mergeMap(async ({ account, enableBadgeCounter }) => {
+        mergeMap(async ({ account, enableBadgeCounter, ciphers }) => {
           if (!account) {
             return;
           }
@@ -46,9 +46,8 @@ export class AutofillBadgeUpdaterService {
               continue;
             }
 
-            // When the badge counter is disabled, a tab state may be applicable based on the pending tasks.
             if (enableBadgeCounter) {
-              await this.setTabState(tab, account.id, enableBadgeCounter);
+              await this.setTabState(tab, account.id);
             } else {
               await this.clearTabState(tab.id);
             }
@@ -65,12 +64,12 @@ export class AutofillBadgeUpdaterService {
     })
       .pipe(
         mergeMap(async ({ account, enableBadgeCounter, replaced }) => {
-          if (!account) {
+          if (!account || !enableBadgeCounter) {
             return;
           }
 
           await this.clearTabState(replaced.removedTabId);
-          await this.setTabState(replaced.addedTab, account.id, enableBadgeCounter);
+          await this.setTabState(replaced.addedTab, account.id);
         }),
       )
       .subscribe();
@@ -83,11 +82,11 @@ export class AutofillBadgeUpdaterService {
     })
       .pipe(
         mergeMap(async ({ account, enableBadgeCounter, tab }) => {
-          if (!account) {
+          if (!account || !enableBadgeCounter) {
             return;
           }
 
-          await this.setTabState(tab, account.id, enableBadgeCounter);
+          await this.setTabState(tab, account.id);
         }),
       )
       .subscribe();
@@ -133,7 +132,7 @@ export class AutofillBadgeUpdaterService {
     BrowserApi.addListener(chrome.tabs.onRemoved, (tabId, _) => this.tabRemoved$.next(tabId));
   }
 
-  private async setTabState(tab: chrome.tabs.Tab, userId: UserId, enableBadgeCounter: boolean) {
+  private async setTabState(tab: chrome.tabs.Tab, userId: UserId) {
     if (!tab.id) {
       this.logService.warning("Tab event received but tab id is undefined");
       return;
@@ -142,7 +141,7 @@ export class AutofillBadgeUpdaterService {
     const ciphers = tab.url ? await this.cipherService.getAllDecryptedForUrl(tab.url, userId) : [];
     const cipherCount = ciphers.length;
 
-    if (cipherCount === 0 || !enableBadgeCounter) {
+    if (cipherCount === 0) {
       await this.clearTabState(tab.id);
       return;
     }
