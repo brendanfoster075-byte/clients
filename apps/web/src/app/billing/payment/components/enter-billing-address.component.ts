@@ -12,7 +12,6 @@ import {
 import { SharedModule } from "../../../shared";
 import { BillingAddress, getTaxIdTypeForCountry, selectableCountries, taxIdTypes } from "../types";
 
-
 export interface BillingAddressControls {
   country: string;
   postalCode: string;
