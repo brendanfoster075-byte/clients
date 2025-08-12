@@ -1,6 +1,7 @@
 import { mock } from "jest-mock-extended";
 import { of } from "rxjs";
 
+import { KdfRequest } from "@bitwarden/common/models/request/kdf.request";
 import { SymmetricCryptoKey } from "@bitwarden/common/platform/models/domain/symmetric-crypto-key";
 import { UserId } from "@bitwarden/common/types/guid";
 import { UserKey } from "@bitwarden/common/types/key";
@@ -98,6 +99,7 @@ describe("ChangeKdfService", () => {
         sut.updateUserKdfParams("masterPassword", mockNewKdfConfig, mockUserId),
       ).rejects.toThrow();
     });
+
     it("should throw an error if salt is null", async () => {
       keyService.userKey$.mockReturnValueOnce(of(mockUserKey));
       masterPasswordService.saltForUser$.mockReturnValueOnce(of(null));
@@ -106,6 +108,7 @@ describe("ChangeKdfService", () => {
         sut.updateUserKdfParams("masterPassword", mockNewKdfConfig, mockUserId),
       ).rejects.toThrow("Failed to get salt");
     });
+
     it("should throw an error if oldKdfConfig is null", async () => {
       keyService.userKey$.mockReturnValueOnce(of(mockUserKey));
       masterPasswordService.saltForUser$.mockReturnValueOnce(of(mockSalt));
@@ -114,6 +117,7 @@ describe("ChangeKdfService", () => {
         sut.updateUserKdfParams("masterPassword", mockNewKdfConfig, mockUserId),
       ).rejects.toThrow("Failed to get oldKdfConfig");
     });
+
     it("should call apiService.send with correct parameters", async () => {
       keyService.userKey$.mockReturnValueOnce(of(mockUserKey));
       masterPasswordService.saltForUser$.mockReturnValueOnce(of(mockSalt));
@@ -139,7 +143,7 @@ describe("ChangeKdfService", () => {
 
       await sut.updateUserKdfParams("masterPassword", mockNewKdfConfig, mockUserId);
 
-      expect(changeKdfApiService.updateUserKdfParams).toHaveBeenCalledWith(
+      const expected = new KdfRequest(
         {
           salt: mockSalt,
           kdf: mockNewKdfConfig,
@@ -150,12 +154,13 @@ describe("ChangeKdfService", () => {
           salt: mockSalt,
           masterKeyWrappedUserKey: mockWrappedUserKey.encryptedString as MasterKeyWrappedUserKey,
         },
-        {
-          salt: mockSalt,
-          kdf: mockOldKdfConfig,
-          masterPasswordAuthenticationHash: mockOldHash,
-        },
-      );
+      ).authenticateWith({
+        salt: mockSalt,
+        kdf: mockOldKdfConfig,
+        masterPasswordAuthenticationHash: mockOldHash,
+      });
+
+      expect(changeKdfApiService.updateUserKdfParams).toHaveBeenCalledWith(expected);
     });
   });
 });
