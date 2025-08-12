@@ -1,6 +1,3 @@
-// import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-// import { fromEvent } from "rxjs";
-
 import { Signal, DestroyRef } from "@angular/core";
 import { toObservable, takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
@@ -15,8 +12,8 @@ export function ariaDisableElement(
 ) {
   toObservable(disabled)
     .pipe(takeUntilDestroyed(destroyRef))
-    .subscribe((v) => {
-      if (v) {
+    .subscribe((isDisabled) => {
+      if (isDisabled) {
         el.removeAttribute("disabled");
         el.setAttribute("aria-disabled", "true");
       } else {
