@@ -9,8 +9,7 @@ import { ProductTierType } from "@bitwarden/common/billing/enums";
 import { BillingCustomerDiscount } from "@bitwarden/common/billing/models/response/organization-subscription.response";
 import { PlanResponse } from "@bitwarden/common/billing/models/response/plan.response";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-
-import { SecretsManagerLogo } from "../../layouts/secrets-manager-logo";
+import { SecretsManagerAlt } from "@bitwarden/icons";
 
 export interface SecretsManagerSubscription {
   enabled: boolean;
@@ -42,7 +41,7 @@ export class SecretsManagerSubscribeComponent implements OnInit, OnDestroy {
   @Input() selectedPlan: PlanResponse;
   @Input() customerDiscount: BillingCustomerDiscount;
 
-  logo = SecretsManagerLogo;
+  logo = SecretsManagerAlt;
   productTypes = ProductTierType;
 
   private destroy$ = new Subject<void>();

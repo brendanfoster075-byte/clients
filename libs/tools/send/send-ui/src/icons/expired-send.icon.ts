@@ -1,4 +1,4 @@
-import { svgIcon } from "@bitwarden/components";
+import { svgIcon } from "@bitwarden/icons";
 
 export const ExpiredSendIcon = svgIcon`
     <svg xmlns="http://www.w3.org/2000/svg" width="130" height="130" fill="none">

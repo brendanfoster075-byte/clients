@@ -1,4 +1,4 @@
-import { svgIcon } from "@bitwarden/components";
+import { svgIcon } from "@bitwarden/icons";
 
 export const ActiveSendIcon = svgIcon`
 <svg width="96" height="95" viewBox="0 0 96 95" fill="none" xmlns="http://www.w3.org/2000/svg">

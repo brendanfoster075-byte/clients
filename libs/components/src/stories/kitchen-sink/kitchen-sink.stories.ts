@@ -12,8 +12,8 @@ import {
 } from "@storybook/test";
 
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { PasswordManagerLogo } from "@bitwarden/icons";
 
-import { PasswordManagerLogo } from "../../icon";
 import { LayoutComponent } from "../../layout";
 import { I18nMockService } from "../../utils/i18n-mock.service";
 import { positionFixedWrapperDecorator } from "../storybook-decorators";

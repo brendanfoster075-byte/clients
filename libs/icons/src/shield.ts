@@ -1,4 +1,4 @@
-import { svgIcon } from "../../icon";
+import { svgIcon } from "./icon-service";
 
 /**
  * Shield logo with extra space in the viewbox.

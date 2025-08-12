@@ -1,4 +1,4 @@
-import { svgIcon } from "@bitwarden/components";
+import { svgIcon } from "@bitwarden/icons";
 
 export const Party = svgIcon`
   <svg width="90" height="89" viewBox="0 0 90 89" fill="none" xmlns="http://www.w3.org/2000/svg">

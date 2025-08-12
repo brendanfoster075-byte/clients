@@ -1,4 +1,4 @@
-import { svgIcon } from "@bitwarden/components";
+import { svgIcon } from "@bitwarden/icons";
 
 export const NoCredentialsIcon = svgIcon`
   <svg xmlns="http://www.w3.org/2000/svg" width="119" height="114" viewBox="0 0 119 114" fill="none">

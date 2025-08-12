@@ -1,4 +1,4 @@
-import { svgIcon } from "../icon";
+import { svgIcon } from "@bitwarden/icons";
 
 export const Search = svgIcon`
 <svg width="120" height="120" fill="none" xmlns="http://www.w3.org/2000/svg">

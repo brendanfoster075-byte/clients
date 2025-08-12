@@ -1,4 +1,4 @@
-import { svgIcon } from "@bitwarden/components";
+import { svgIcon } from "@bitwarden/icons";
 
 export const EmptyTrash = svgIcon`
 <svg width="174" height="100" viewBox="0 0 174 100" fill="none" xmlns="http://www.w3.org/2000/svg">

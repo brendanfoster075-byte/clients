@@ -26,6 +26,7 @@ import { ConfigService } from "@bitwarden/common/platform/abstractions/config/co
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { DialogService, ToastService } from "@bitwarden/components";
+import { SubscriptionHiddenIcon } from "@bitwarden/icons";
 
 import {
   AdjustStorageDialogComponent,
@@ -39,7 +40,6 @@ import {
 import { BillingSyncApiKeyComponent } from "./billing-sync-api-key.component";
 import { ChangePlanDialogResultType, openChangePlanDialog } from "./change-plan-dialog.component";
 import { DownloadLicenceDialogComponent } from "./download-license.component";
-import { SubscriptionHiddenIcon } from "./icons/subscription-hidden.icon";
 import { SecretsManagerSubscriptionOptions } from "./sm-adjust-subscription.component";
 
 @Component({

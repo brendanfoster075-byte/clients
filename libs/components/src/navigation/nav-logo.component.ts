@@ -5,9 +5,9 @@ import { CommonModule } from "@angular/common";
 import { Component, input } from "@angular/core";
 import { RouterLinkActive, RouterLink } from "@angular/router";
 
-import { Icon } from "../icon";
+import { BitwardenShield, Icon } from "@bitwarden/icons";
+
 import { BitIconComponent } from "../icon/icon.component";
-import { BitwardenShield } from "../icon/logos";
 
 import { SideNavService } from "./side-nav.service";
 

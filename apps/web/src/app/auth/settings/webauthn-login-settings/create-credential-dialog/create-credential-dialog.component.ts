@@ -10,14 +10,11 @@ import { ErrorResponse } from "@bitwarden/common/models/response/error.response"
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { DialogConfig, DialogRef, DialogService, ToastService } from "@bitwarden/components";
+import { DialogConfig, DialogRef, DialogService, Icons, ToastService } from "@bitwarden/components";
 
 import { WebauthnLoginAdminService } from "../../../core";
 import { CredentialCreateOptionsView } from "../../../core/views/credential-create-options.view";
 import { PendingWebauthnLoginCredentialView } from "../../../core/views/pending-webauthn-login-credential.view";
-
-import { CreatePasskeyFailedIcon } from "./create-passkey-failed.icon";
-import { CreatePasskeyIcon } from "./create-passkey.icon";
 
 // FIXME: update to use a const object instead of a typescript enum
 // eslint-disable-next-line @bitwarden/platform/no-enums
@@ -38,7 +35,10 @@ type Step =
 export class CreateCredentialDialogComponent implements OnInit {
   protected readonly NameMaxCharacters = 50;
   protected readonly CreateCredentialDialogResult = CreateCredentialDialogResult;
-  protected readonly Icons = { CreatePasskeyIcon, CreatePasskeyFailedIcon };
+  protected readonly Icons = {
+    CreatePasskeyIcon: Icons.CreatePasskeyIcon,
+    CreatePasskeyFailedIcon: Icons.CreatePasskeyFailedIcon,
+  };
 
   protected currentStep: Step = "userVerification";
   protected invalidSecret = false;

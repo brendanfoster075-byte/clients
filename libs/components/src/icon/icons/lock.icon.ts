@@ -1,4 +1,4 @@
-import { svgIcon } from "../icon";
+import { svgIcon } from "@bitwarden/icons";
 
 export const LockIcon = svgIcon`
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100" fill="none">

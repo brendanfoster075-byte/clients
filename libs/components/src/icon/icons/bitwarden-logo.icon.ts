@@ -1,4 +1,4 @@
-import { svgIcon } from "../icon";
+import { svgIcon } from "@bitwarden/icons";
 
 export const BitwardenLogo = svgIcon`
   <svg viewBox="0 0 290 45" xmlns="http://www.w3.org/2000/svg">

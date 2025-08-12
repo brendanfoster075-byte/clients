@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 
-import { svgIcon } from "@bitwarden/components";
+import { svgIcon } from "@bitwarden/icons";
 
 const partnerTrustIcon = svgIcon`
 <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">

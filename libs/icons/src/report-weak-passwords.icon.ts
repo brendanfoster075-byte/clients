@@ -1,4 +1,4 @@
-import { svgIcon } from "@bitwarden/components";
+import { svgIcon } from "./icon-service";
 
 export const ReportWeakPasswords = svgIcon`
   <svg width="78" height="78" fill="none" xmlns="http://www.w3.org/2000/svg">

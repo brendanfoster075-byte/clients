@@ -1,4 +1,4 @@
-import { svgIcon } from "@bitwarden/components";
+import { svgIcon } from "./icon-service";
 
 export const ReportBreach = svgIcon`
   <svg width="58" height="75" fill="none" xmlns="http://www.w3.org/2000/svg">

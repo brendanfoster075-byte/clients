@@ -1,4 +1,4 @@
-import { svgIcon } from "../icon";
+import { svgIcon } from "@bitwarden/icons";
 
 export const Security = svgIcon`
 <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
