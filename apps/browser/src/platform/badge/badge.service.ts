@@ -20,7 +20,7 @@ interface StateSetting {
 }
 
 const BADGE_STATES = new KeyDefinition(BADGE_MEMORY, "badgeStates", {
-  deserializer: (value: Record<string, StateSetting>) => value ?? { states: {} },
+  deserializer: (value: Record<string, StateSetting>) => value ?? {},
 });
 
 export class BadgeService {
