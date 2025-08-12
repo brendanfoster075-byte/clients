@@ -17,8 +17,8 @@ import {
   MasterPasswordSalt,
 } from "../master-password/types/master-password.types";
 
-import { ChangeKdfApiService } from "./change-kdf-api.service";
-import { ChangeKdfService } from "./change-kdf-service";
+import { ChangeKdfApiService } from "./change-kdf-api.service.abstraction";
+import { DefaultChangeKdfService } from "./change-kdf-service";
 
 describe("ChangeKdfService", () => {
   const changeKdfApiService = mock<ChangeKdfApiService>();
@@ -26,7 +26,7 @@ describe("ChangeKdfService", () => {
   const keyService = mock<KeyService>();
   const kdfConfigService = mock<KdfConfigService>();
 
-  let sut: ChangeKdfService = mock<ChangeKdfService>();
+  let sut: DefaultChangeKdfService = mock<DefaultChangeKdfService>();
 
   const mockUserKey = new SymmetricCryptoKey(new Uint8Array(64)) as UserKey;
   const mockOldKdfConfig = new PBKDF2KdfConfig(100000);
@@ -38,7 +38,7 @@ describe("ChangeKdfService", () => {
   const mockWrappedUserKey: EncString = makeEncString("wrappedUserKey");
 
   beforeEach(() => {
-    sut = new ChangeKdfService(
+    sut = new DefaultChangeKdfService(
       masterPasswordService,
       keyService,
       kdfConfigService,

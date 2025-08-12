@@ -7,9 +7,10 @@ import { KdfConfig, KdfConfigService, KeyService } from "@bitwarden/key-manageme
 import { MasterPasswordServiceAbstraction } from "../master-password/abstractions/master-password.service.abstraction";
 import { firstValueFromOrThrow } from "../utils";
 
-import { ChangeKdfApiService } from "./change-kdf-api.service";
+import { ChangeKdfApiService } from "./change-kdf-api.service.abstraction";
+import { ChangeKdfService } from "./change-kdf-service.abstraction";
 
-export class ChangeKdfService {
+export class DefaultChangeKdfService implements ChangeKdfService {
   constructor(
     private masterPasswordService: MasterPasswordServiceAbstraction,
     private keyService: KeyService,
@@ -17,15 +18,6 @@ export class ChangeKdfService {
     private changeKdfApiService: ChangeKdfApiService,
   ) {}
 
-  /**
-   * Updates the user's KDF parameters
-   * @param masterPassword The user's current master password
-   * @param kdf The new KDF configuration to apply
-   * @param userId The ID of the user whose KDF parameters are being updated
-   * @throws If any of the parameters is null
-   * @throws If the user is locked or logged out
-   * @throws If the kdf change request fails
-   */
   async updateUserKdfParams(masterPassword: string, kdf: KdfConfig, userId: UserId): Promise<void> {
     assertNonNullish(masterPassword, "masterPassword");
     assertNonNullish(kdf, "kdf");
