@@ -241,6 +241,9 @@ export class MasterPasswordService implements InternalMasterPasswordServiceAbstr
     assertNonNullish(password, "password");
     assertNonNullish(kdf, "kdf");
     assertNonNullish(salt, "salt");
+    if (password === "") {
+      throw new Error("Master password cannot be empty.");
+    }
 
     // We don't trust callers to use masterpasswordsalt correctly. They may type assert incorrectly.
     salt = salt.toLowerCase().trim() as MasterPasswordSalt;
@@ -279,6 +282,9 @@ export class MasterPasswordService implements InternalMasterPasswordServiceAbstr
     assertNonNullish(kdf, "kdf");
     assertNonNullish(salt, "salt");
     assertNonNullish(userKey, "userKey");
+    if (password === "") {
+      throw new Error("Master password cannot be empty.");
+    }
 
     // We don't trust callers to use masterpasswordsalt correctly. They may type assert incorrectly.
     salt = salt.toLowerCase().trim() as MasterPasswordSalt;
