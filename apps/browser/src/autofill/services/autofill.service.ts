@@ -2459,25 +2459,25 @@ export default class AutofillService implements AutofillServiceInterface {
         break;
       }
 
+      const includesUsernameFieldName =
+        this.findMatchingFieldIndex(f, AutoFillConstants.UsernameFieldNames) > -1;
+
       if (
         !f.disabled &&
         (canBeReadOnly || !f.readonly) &&
-        (withoutForm || f.form === passwordField.form) &&
+        (withoutForm || f.form === passwordField.form || includesUsernameFieldName) &&
         (canBeHidden || f.viewable) &&
         (f.type === "text" || f.type === "email" || f.type === "tel")
       ) {
         usernameField = f;
-
-        if (this.findMatchingFieldIndex(f, AutoFillConstants.UsernameFieldNames) > -1) {
-          // We found an exact match. No need to keep looking.
+        // We found an exact match. No need to keep looking.
+        if (includesUsernameFieldName) {
           break;
         }
       }
     }
-
     return usernameField;
   }
-
   /**
    * Accepts a pageDetails object with a list of fields and returns a list of
    * fields that are likely to be TOTP fields.
