@@ -586,8 +586,12 @@ export class TokenService implements TokenServiceAbstraction {
           // TODO: PM-6408
           // 2024-02-20: Remove refresh token from memory and disk so that we migrate to secure storage over time.
           // Remove these 2 calls to remove the refresh token from memory and disk after 3 months.
-          await this.singleUserStateProvider.get(userId, REFRESH_TOKEN_DISK).update((_) => null);
-          await this.singleUserStateProvider.get(userId, REFRESH_TOKEN_MEMORY).update((_) => null);
+          await this.singleUserStateProvider.get(userId, REFRESH_TOKEN_DISK).update(() => null, {
+            shouldUpdate: (previousValue) => previousValue !== null,
+          });
+          await this.singleUserStateProvider.get(userId, REFRESH_TOKEN_MEMORY).update(() => null, {
+            shouldUpdate: (previousValue) => previousValue !== null,
+          });
         } catch (error) {
           // This case could be hit for both Linux users who don't have secure storage configured
           // or for Windows users who have intermittent issues with secure storage.
@@ -599,7 +603,9 @@ export class TokenService implements TokenServiceAbstraction {
           // Fall back to disk storage for refresh token
           decryptedRefreshToken = await this.singleUserStateProvider
             .get(userId, REFRESH_TOKEN_DISK)
-            .update((_) => refreshToken);
+            .update(() => refreshToken, {
+              shouldUpdate: (previousValue) => previousValue !== refreshToken,
+            });
         }
 
         return decryptedRefreshToken;
@@ -607,12 +613,16 @@ export class TokenService implements TokenServiceAbstraction {
       case TokenStorageLocation.Disk:
         return await this.singleUserStateProvider
           .get(userId, REFRESH_TOKEN_DISK)
-          .update((_) => refreshToken);
+          .update(() => refreshToken, {
+            shouldUpdate: (previousValue) => previousValue !== refreshToken,
+          });
 
       case TokenStorageLocation.Memory:
         return await this.singleUserStateProvider
           .get(userId, REFRESH_TOKEN_MEMORY)
-          .update((_) => refreshToken);
+          .update(() => refreshToken, {
+            shouldUpdate: (previousValue) => previousValue !== refreshToken,
+          });
     }
   }
 
@@ -686,8 +696,12 @@ export class TokenService implements TokenServiceAbstraction {
     }
 
     // Platform doesn't support secure storage, so use state provider implementation
-    await this.singleUserStateProvider.get(userId, REFRESH_TOKEN_MEMORY).update((_) => null);
-    await this.singleUserStateProvider.get(userId, REFRESH_TOKEN_DISK).update((_) => null);
+    await this.singleUserStateProvider.get(userId, REFRESH_TOKEN_MEMORY).update(() => null, {
+      shouldUpdate: (previousValue) => previousValue !== null,
+    });
+    await this.singleUserStateProvider.get(userId, REFRESH_TOKEN_DISK).update(() => null, {
+      shouldUpdate: (previousValue) => previousValue !== null,
+    });
   }
 
   async setClientId(
