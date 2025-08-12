@@ -8,7 +8,6 @@ import {
   booleanAttribute,
   inject,
   ElementRef,
-  DestroyRef,
 } from "@angular/core";
 import { toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { debounce, interval } from "rxjs";
@@ -99,7 +98,7 @@ export class ButtonComponent implements ButtonLikeAbstraction {
 
   protected disabledAttr = computed(() => {
     const disabled = this.disabled() != null && this.disabled() !== false;
-    return disabled || this.loading() ? true : undefined;
+    return disabled || this.loading();
   });
 
   /**
@@ -142,6 +141,6 @@ export class ButtonComponent implements ButtonLikeAbstraction {
   private el = inject(ElementRef<HTMLButtonElement>);
 
   constructor() {
-    ariaDisableElement(this.el.nativeElement, this.disabledAttr, inject(DestroyRef));
+    ariaDisableElement(this.el.nativeElement, this.disabledAttr);
   }
 }

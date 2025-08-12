@@ -1,16 +1,7 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
 import { NgClass } from "@angular/common";
-import {
-  Component,
-  computed,
-  DestroyRef,
-  ElementRef,
-  HostBinding,
-  inject,
-  input,
-  model,
-} from "@angular/core";
+import { Component, computed, ElementRef, HostBinding, inject, input, model } from "@angular/core";
 import { toObservable, toSignal } from "@angular/core/rxjs-interop";
 import { debounce, interval } from "rxjs";
 
@@ -133,7 +124,7 @@ export class BitIconButtonComponent implements ButtonLikeAbstraction, FocusableE
 
   protected disabledAttr = computed(() => {
     const disabled = this.disabled() != null && this.disabled() !== false;
-    return disabled || this.loading() ? true : null;
+    return disabled || this.loading();
   });
 
   /**
@@ -177,6 +168,6 @@ export class BitIconButtonComponent implements ButtonLikeAbstraction, FocusableE
   constructor() {
     const element = this.elementRef.nativeElement;
 
-    ariaDisableElement(element, this.disabledAttr, inject(DestroyRef));
+    ariaDisableElement(element, this.disabledAttr);
   }
 }
