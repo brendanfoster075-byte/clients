@@ -263,12 +263,13 @@ export class DesktopFido2UserInterfaceSession implements Fido2UserInterfaceSessi
   private async showUi(
     route: string,
     position?: { x: number; y: number },
-    showTrafficButtons?: boolean,
+    showTrafficButtons: boolean = false,
     disableRedirect?: boolean,
   ): Promise<void> {
     // Load the UI:
     await this.desktopSettingsService.setModalMode(true, showTrafficButtons, position);
-    await this.accountService.setShowHeader(false);
+    await this.centerOffscreenPopup();
+    await this.accountService.setShowHeader(showTrafficButtons);
     await this.router.navigate([
       route,
       {
@@ -337,8 +338,8 @@ export class DesktopFido2UserInterfaceSession implements Fido2UserInterfaceSessi
     // make the cipherIds available to the UI.
     this.availableCipherIdsSubject.next(existingCipherIds);
 
+    await this.accountService.setShowHeader(false);
     await this.showUi("/fido2-excluded", this.windowObject.windowXy, false);
-    await this.accountService.setShowHeader(true);
   }
 
   async ensureUnlockedVault(): Promise<void> {
@@ -359,6 +360,10 @@ export class DesktopFido2UserInterfaceSession implements Fido2UserInterfaceSessi
         );
       } catch (error) {
         this.logService.warning("Error while waiting for vault to unlock", error);
+      }
+
+      if (status2 === AuthenticationStatus.Unlocked) {
+        await this.router.navigate(["/"]);
       }
 
       if (status2 !== AuthenticationStatus.Unlocked) {
