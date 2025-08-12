@@ -47,7 +47,14 @@ export class BadgeService {
           await this.updateBadge(activeTab, serviceState, activeTab?.tabId);
         }),
       )
-      .subscribe();
+      .subscribe({
+        error: (error) => {
+          this.logService.error(
+            "Fatal error in badge service observable, badge will fail to update",
+            error,
+          );
+        },
+      });
   }
 
   /**
