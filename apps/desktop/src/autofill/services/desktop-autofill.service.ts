@@ -411,8 +411,6 @@ export class DesktopAutofillService implements OnDestroy {
 }
 
 function normalizePosition(position: { x: number; y: number }): { x: number; y: number } {
-  // eslint-disable-next-line no-console
-  console.log("Normalizing position", position);
   // if macOS, the position we're sending is too far left and too far down.
   // It's the left bottom corner of the parent window.
   // so we need to add half of the estimated width of the nativeOS dialog to the x position
