@@ -1,25 +1,36 @@
+import { Jsonify } from "type-fest";
+
+import {
+  GlobalState,
+  GlobalStateProvider,
+  KeyDefinition,
+  SEND_ACCESS_DISK,
+} from "@bitwarden/state";
+
 import { SendPasswordService } from "../../../key-management/sends/abstractions/send-password.service";
 import {
   SendHashedPassword,
   SendPasswordKeyMaterial,
 } from "../../../key-management/sends/types/send-hashed-password.type";
+import { SdkService } from "../../../platform/abstractions/sdk/sdk.service";
 import { Utils } from "../../../platform/misc/utils";
 import { SendTokenService as SendTokenServiceAbstraction } from "../abstractions/send-token.service";
+import { SendAccessToken } from "../models/send-access-token";
 import { SendHashedPasswordB64 } from "../types/send-hashed-password-b64.type";
 
 // import { SendTokenApiError } from "./send-token-api.service";
 
 // TODO: add JSDocs
 // TODO: add tests for this service.
-// export const SEND_ACCESS_TOKEN_DICT = KeyDefinition.record<SendAccessToken, string>(
-//   SEND_ACCESS_DISK,
-//   "accessTokenDict",
-//   {
-//     deserializer: (sendAccessTokenJson: Jsonify<SendAccessToken>) => {
-//       return SendAccessToken.fromJson(sendAccessTokenJson);
-//     },
-//   },
-// );
+export const SEND_ACCESS_TOKEN_DICT = KeyDefinition.record<SendAccessToken, string>(
+  SEND_ACCESS_DISK,
+  "accessTokenDict",
+  {
+    deserializer: (sendAccessTokenJson: Jsonify<SendAccessToken>) => {
+      return SendAccessToken.fromJson(sendAccessTokenJson);
+    },
+  },
+);
 
 // type CredentialsRequiredApiError = Extract<
 //   SendTokenApiError,
@@ -48,19 +59,19 @@ import { SendHashedPasswordB64 } from "../types/send-hashed-password-b64.type";
 // }
 
 export class DefaultSendTokenService implements SendTokenServiceAbstraction {
-  // private sendAccessTokenDictGlobalState: GlobalState<Record<string, SendAccessToken>> | undefined;
+  private sendAccessTokenDictGlobalState: GlobalState<Record<string, SendAccessToken>> | undefined;
 
   constructor(
-    // private globalStateProvider: GlobalStateProvider,
-    // private sendTokenApiService: SendTokenApiService,
+    private globalStateProvider: GlobalStateProvider,
+    private sdkService: SdkService,
     private sendPasswordService: SendPasswordService,
   ) {
-    // this.initializeState();
+    this.initializeState();
   }
 
-  // private initializeState(): void {
-  //   this.sendAccessTokenDictGlobalState = this.globalStateProvider.get(SEND_ACCESS_TOKEN_DICT);
-  // }
+  private initializeState(): void {
+    this.sendAccessTokenDictGlobalState = this.globalStateProvider.get(SEND_ACCESS_TOKEN_DICT);
+  }
 
   // tryGetSendAccessToken$(sendId: string): Observable<SendAccessToken | TryGetSendAccessTokenError> {
   //   // Defer the execution to ensure that a cold observable is returned.
