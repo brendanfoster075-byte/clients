@@ -1,5 +1,5 @@
 <main
-  class="tw-flex tw-w-full tw-mx-auto tw-flex-col tw-bg-background-alt tw-px-6 tw-py-4 tw-text-main"
+  class="tw-relative tw-flex tw-w-full tw-mx-auto tw-flex-col tw-bg-background-alt tw-px-6 tw-py-4 tw-text-main"
   [ngClass]="{
     'tw-min-h-screen': clientType === 'web',
     'tw-min-h-full': clientType === 'browser' || clientType === 'desktop',
@@ -33,7 +33,7 @@
   </div>
 
   <div
-    class="tw-grow tw-w-full tw-mx-auto tw-flex tw-flex-col tw-items-center sm:tw-min-w-[28rem]"
+    class="tw-z-10 tw-grow tw-w-full tw-mx-auto tw-flex tw-flex-col tw-items-center sm:tw-min-w-[28rem]"
     [ngClass]="maxWidthClass"
   >
     @if (hideCardWrapper()) {
@@ -62,6 +62,17 @@
       <div bitTypography="body2">{{ version }}</div>
     </ng-container>
   </footer>
+
+  <div
+    class="tw-absolute tw-z-[1] tw-opacity-[.11] tw-bottom-0 tw-start-0 tw-w-[30%] [&_svg]:tw-w-full"
+  >
+    <bit-icon [icon]="leftIllustration"></bit-icon>
+  </div>
+  <div
+    class="tw-absolute tw-z-[1] tw-opacity-[.11] tw-bottom-0 tw-end-0 tw-w-[30%] [&_svg]:tw-w-full"
+  >
+    <bit-icon [icon]="rightIllustration"></bit-icon>
+  </div>
 </main>
 
 <ng-template #defaultContent>
