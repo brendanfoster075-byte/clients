@@ -250,7 +250,8 @@ export class VaultFilterService implements VaultFilterServiceAbstraction {
     }
 
     collections.forEach((c) => {
-      const collectionCopy = cloneCollection(new CollectionView({ ...c }));
+      const collectionCopy = cloneCollection(new CollectionView({ ...c })) as CollectionFilter;
+      collectionCopy.icon = "bwi-collection-shared";
       const parts = c.name != null ? c.name.replace(/^\/+|\/+$/g, "").split(NestingDelimiter) : [];
       ServiceUtils.nestedTraverse(nodes, 0, parts, collectionCopy, null, NestingDelimiter);
     });

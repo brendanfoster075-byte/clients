@@ -1,6 +1,6 @@
 // FIXME: Update this file to be type safe and remove this and next line
 // @ts-strict-ignore
-import { firstValueFrom, map } from "rxjs";
+import { concatMap, firstValueFrom, map } from "rxjs";
 
 // This import has been flagged as unallowed for this class. It may be involved in a circular dependency loop.
 // eslint-disable-next-line no-restricted-imports
@@ -214,12 +214,12 @@ export class BitwardenJsonImporter extends BaseImporter implements Importer {
             organizationId: this.organizationId,
           }),
         );
-        const orgKey = await firstValueFrom(
-          this.keyService.activeUserOrgKeys$.pipe(
-            map((orgKeys) => orgKeys[c.organizationId as OrganizationId]),
-          ),
+        const collection$ = this.keyService.activeUserOrgKeys$.pipe(
+          // FIXME: replace type assertion with narrowing
+          map((keys) => keys[c.organizationId as OrganizationId]),
+          concatMap((key) => collection.decrypt(key, this.encryptService)),
         );
-        collectionView = await collection.decrypt(orgKey, this.encryptService);
+        collectionView = await firstValueFrom(collection$);
       } else {
         collectionView = CollectionWithIdExport.toView(c);
         collectionView.organizationId = null;

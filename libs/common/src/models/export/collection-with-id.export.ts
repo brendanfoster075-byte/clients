@@ -15,7 +15,7 @@ export class CollectionWithIdExport extends CollectionExport {
   }
 
   static toDomain(req: CollectionWithIdExport, domain: CollectionDomain) {
-    domain.id = req.id as CollectionId;
+    domain.id = req.id;
     return super.toDomain(req, domain);
   }
 

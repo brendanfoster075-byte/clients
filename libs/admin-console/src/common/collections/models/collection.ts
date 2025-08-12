@@ -55,7 +55,7 @@ export class Collection extends Domain {
     encryptService: EncryptService,
     orgKey: OrgKey,
   ): Promise<Collection> {
-    const collection = Object.assign(
+    return Object.assign(
       new Collection({
         name: await encryptService.encryptString(view.name, orgKey),
         id: view.id,
@@ -63,14 +63,15 @@ export class Collection extends Domain {
       }),
       view,
     );
-
-    collection.readOnly = view.readOnly;
-    collection.externalId = view.externalId;
-
-    return collection;
   }
 
   decrypt(orgKey: OrgKey, encryptService: EncryptService): Promise<CollectionView> {
     return CollectionView.fromCollection(this, encryptService, orgKey);
+  }
+
+  // @TODO: This would be better off in Collection.Utils. Move this there when
+  // refactoring to a shared lib.
+  static isCollectionId(id: any): id is CollectionId {
+    return typeof id === "string" && id != null;
   }
 }
