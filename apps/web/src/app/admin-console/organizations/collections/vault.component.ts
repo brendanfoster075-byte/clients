@@ -180,7 +180,10 @@ export class VaultComponent implements OnInit, OnDestroy {
   protected processingEvent = false;
   protected organization$: Observable<Organization>;
   protected allGroups$: Observable<GroupView[]>;
-  protected ciphers: CipherView[];
+  protected ciphers$: Observable<CipherView[]>;
+  protected allCiphers$: Observable<CipherView[]>;
+  protected showCollectionAccessRestricted$: Observable<boolean>;
+
   protected isEmpty: boolean;
   private hasSubscription$ = new BehaviorSubject<boolean>(false);
   protected useOrganizationWarningsService$: Observable<boolean>;
@@ -209,7 +212,7 @@ export class VaultComponent implements OnInit, OnDestroy {
   protected allCollections$: Observable<CollectionAdminView[]>;
   protected showCollectionAccessRestricted: boolean;
   protected collections: CollectionAdminView[];
-  protected selectedCollection: TreeNode<CollectionAdminView> | undefined;
+  protected selectedCollection$: Observable<TreeNode<CollectionAdminView> | undefined>;
   private nestedCollections$: Observable<TreeNode<CollectionAdminView>[]>;
 
   @ViewChild("vaultItems", { static: false }) vaultItemsComponent: VaultItemsComponent<CipherView>;
@@ -279,6 +282,7 @@ export class VaultComponent implements OnInit, OnDestroy {
   ) {
     this.userId$ = this.accountService.activeAccount$.pipe(getUserId);
     this.filter$ = this.routedVaultFilterService.filter$;
+    this.currentSearchText$ = this.route.queryParams.pipe(map((queryParams) => queryParams.search));
 
     this.organization$ = combineLatest([this.getOrganizationId(), this.userId$]).pipe(
       switchMap(([orgId, userId]) =>
@@ -326,6 +330,100 @@ export class VaultComponent implements OnInit, OnDestroy {
 
     this.allGroups$ = this.getOrganizationId().pipe(
       switchMap((organizationId) => this.groupService.getAll(organizationId)),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+
+    this.allCiphers$ = combineLatest([this.organization$, this.userId$, this.refresh$]).pipe(
+      switchMap(async ([organization, userId]) => {
+        // If user swaps organization reset the addAccessToggle
+        if (!this.showAddAccessToggle || organization) {
+          this.addAccessToggle(0);
+        }
+        let ciphers;
+
+        // Restricted providers (who are not members) do not have access org cipher endpoint below
+        // Return early to avoid 404 response
+        if (!organization.isMember && organization.isProviderUser) {
+          return [];
+        }
+
+        // If the user can edit all ciphers for the organization then fetch them ALL.
+        if (organization.canEditAllCiphers) {
+          ciphers = await this.cipherService.getAllFromApiForOrganization(organization.id);
+          ciphers?.forEach((c) => (c.edit = true));
+        } else {
+          // Otherwise, only fetch ciphers they have access to (includes unassigned for admins).
+          ciphers = await this.cipherService.getManyFromApiForOrganization(organization.id);
+        }
+
+        await this.searchService.indexCiphers(userId, ciphers, organization.id);
+        return ciphers;
+      }),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+
+    this.selectedCollection$ = combineLatest([this.nestedCollections$, this.filter$]).pipe(
+      filter(([collections, filter]) => collections != undefined && filter != undefined),
+      map(([collections, filter]) => {
+        if (
+          filter.collectionId === undefined ||
+          filter.collectionId === All ||
+          filter.collectionId === Unassigned
+        ) {
+          return undefined;
+        }
+
+        return ServiceUtils.getTreeNodeObjectFromList(collections, filter.collectionId);
+      }),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+
+    this.showCollectionAccessRestricted$ = combineLatest([
+      this.filter$,
+      this.selectedCollection$,
+      this.organization$,
+    ]).pipe(
+      map(([filter, collection, organization]) => {
+        return (
+          (filter.collectionId === Unassigned && !organization.canEditUnassignedCiphers) ||
+          (!organization.canEditAllCiphers && collection != undefined && !collection.node.assigned)
+        );
+      }),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
+
+    this.ciphers$ = combineLatest([
+      this.allCiphers$,
+      this.filter$,
+      this.currentSearchText$,
+      this.showCollectionAccessRestricted$,
+      this.userId$,
+    ]).pipe(
+      filter(([ciphers, filter]) => ciphers != undefined && filter != undefined),
+      concatMap(async ([ciphers, filter, searchText, showCollectionAccessRestricted, userId]) => {
+        if (filter.collectionId === undefined && filter.type === undefined) {
+          return [];
+        }
+
+        if (showCollectionAccessRestricted) {
+          // Do not show ciphers for restricted collections
+          // Ciphers belonging to multiple collections may still be present in $allCiphers and shouldn't be visible
+          return [];
+        }
+
+        const filterFunction = createFilterFunction(filter);
+
+        if (await this.searchService.isSearchable(userId, searchText)) {
+          return await this.searchService.searchCiphers<CipherView>(
+            userId,
+            searchText,
+            [filterFunction],
+            ciphers,
+          );
+        }
+
+        return ciphers.filter(filterFunction);
+      }),
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
   }
@@ -393,8 +491,6 @@ export class VaultComponent implements OnInit, OnDestroy {
         }),
       );
 
-    this.currentSearchText$ = this.route.queryParams.pipe(map((queryParams) => queryParams.search));
-
     this.editableCollections$ = combineLatest([
       this.allCollectionsWithoutUnassigned$,
       this.organization$,
@@ -409,36 +505,7 @@ export class VaultComponent implements OnInit, OnDestroy {
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
-    const allCiphers$ = combineLatest([this.organization$, this.userId$, this.refresh$]).pipe(
-      switchMap(async ([organization, userId]) => {
-        // If user swaps organization reset the addAccessToggle
-        if (!this.showAddAccessToggle || organization) {
-          this.addAccessToggle(0);
-        }
-        let ciphers;
-
-        // Restricted providers (who are not members) do not have access org cipher endpoint below
-        // Return early to avoid 404 response
-        if (!organization.isMember && organization.isProviderUser) {
-          return [];
-        }
-
-        // If the user can edit all ciphers for the organization then fetch them ALL.
-        if (organization.canEditAllCiphers) {
-          ciphers = await this.cipherService.getAllFromApiForOrganization(organization.id);
-          ciphers?.forEach((c) => (c.edit = true));
-        } else {
-          // Otherwise, only fetch ciphers they have access to (includes unassigned for admins).
-          ciphers = await this.cipherService.getManyFromApiForOrganization(organization.id);
-        }
-
-        await this.searchService.indexCiphers(userId, ciphers, organization.id);
-        return ciphers;
-      }),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
-    const allCipherMap$ = allCiphers$.pipe(
+    const allCipherMap$ = this.allCiphers$.pipe(
       map((ciphers) => {
         return Object.fromEntries(ciphers.map((c) => [c.id, c]));
       }),
@@ -514,71 +581,6 @@ export class VaultComponent implements OnInit, OnDestroy {
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
-    const selectedCollection$ = combineLatest([this.nestedCollections$, this.filter$]).pipe(
-      filter(([collections, filter]) => collections != undefined && filter != undefined),
-      map(([collections, filter]) => {
-        if (
-          filter.collectionId === undefined ||
-          filter.collectionId === All ||
-          filter.collectionId === Unassigned
-        ) {
-          return undefined;
-        }
-
-        return ServiceUtils.getTreeNodeObjectFromList(collections, filter.collectionId);
-      }),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
-    const showCollectionAccessRestricted$ = combineLatest([
-      this.filter$,
-      selectedCollection$,
-      this.organization$,
-    ]).pipe(
-      map(([filter, collection, organization]) => {
-        return (
-          (filter.collectionId === Unassigned && !organization.canEditUnassignedCiphers) ||
-          (!organization.canEditAllCiphers && collection != undefined && !collection.node.assigned)
-        );
-      }),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
-    const ciphers$ = combineLatest([
-      allCiphers$,
-      this.filter$,
-      this.currentSearchText$,
-      showCollectionAccessRestricted$,
-      this.userId$,
-    ]).pipe(
-      filter(([ciphers, filter]) => ciphers != undefined && filter != undefined),
-      concatMap(async ([ciphers, filter, searchText, showCollectionAccessRestricted, userId]) => {
-        if (filter.collectionId === undefined && filter.type === undefined) {
-          return [];
-        }
-
-        if (showCollectionAccessRestricted) {
-          // Do not show ciphers for restricted collections
-          // Ciphers belonging to multiple collections may still be present in $allCiphers and shouldn't be visible
-          return [];
-        }
-
-        const filterFunction = createFilterFunction(filter);
-
-        if (await this.searchService.isSearchable(userId, searchText)) {
-          return await this.searchService.searchCiphers<CipherView>(
-            userId,
-            searchText,
-            [filterFunction],
-            ciphers,
-          );
-        }
-
-        return ciphers.filter(filterFunction);
-      }),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
-
     firstSetup$
       .pipe(
         switchMap(() => combineLatest([this.route.queryParams, allCipherMap$])),
@@ -641,7 +643,9 @@ export class VaultComponent implements OnInit, OnDestroy {
 
     firstSetup$
       .pipe(
-        switchMap(() => combineLatest([this.route.queryParams, this.organization$, allCiphers$])),
+        switchMap(() =>
+          combineLatest([this.route.queryParams, this.organization$, this.allCiphers$]),
+        ),
         switchMap(async ([qParams, organization, allCiphers$]) => {
           const cipherId = qParams.viewEvents;
           if (!cipherId) {
@@ -738,40 +742,21 @@ export class VaultComponent implements OnInit, OnDestroy {
       .pipe(
         switchMap(() => this.refresh$),
         tap(() => (this.refreshing = true)),
-        switchMap(() =>
-          combineLatest([
-            this.allCollections$,
-            ciphers$,
-            collections$,
-            selectedCollection$,
-            showCollectionAccessRestricted$,
-          ]),
-        ),
+        switchMap(() => combineLatest([this.allCollections$, this.ciphers$, collections$])),
         takeUntil(this.destroy$),
       )
-      .subscribe(
-        ([
-          allCollections,
-          ciphers,
-          collections,
-          selectedCollection,
-          showCollectionAccessRestricted,
-        ]) => {
-          this.ciphers = ciphers;
-          this.collections = collections;
-          this.selectedCollection = selectedCollection;
-          this.showCollectionAccessRestricted = showCollectionAccessRestricted;
+      .subscribe(([allCollections, ciphers, collections]) => {
+        this.collections = collections;
 
-          this.isEmpty = collections?.length === 0 && ciphers?.length === 0;
+        this.isEmpty = collections?.length === 0 && ciphers?.length === 0;
 
-          // This is a temporary fix to avoid double fetching collections.
-          // TODO: Remove when implementing new VVR menu
-          this.vaultFilterService.reloadCollections(allCollections);
+        // This is a temporary fix to avoid double fetching collections.
+        // TODO: Remove when implementing new VVR menu
+        this.vaultFilterService.reloadCollections(allCollections);
 
-          this.refreshing = false;
-          this.performingInitialLoad = false;
-        },
-      );
+        this.refreshing = false;
+        this.performingInitialLoad = false;
+      });
   }
 
   async navigateToPaymentMethod() {
@@ -1184,9 +1169,10 @@ export class VaultComponent implements OnInit, OnDestroy {
       await this.cipherService.clear();
 
       // Navigate away if we deleted the collection we were viewing
-      if (this.selectedCollection?.node.id === collection.id) {
+      const selectedCollection = await firstValueFrom(this.selectedCollection$);
+      if (selectedCollection?.node.id === collection.id) {
         void this.router.navigate([], {
-          queryParams: { collectionId: this.selectedCollection.parent?.node.id ?? null },
+          queryParams: { collectionId: selectedCollection?.parent?.node.id ?? null },
           queryParamsHandling: "merge",
           replaceUrl: true,
         });
@@ -1312,10 +1298,11 @@ export class VaultComponent implements OnInit, OnDestroy {
 
   async addCollection(): Promise<void> {
     const organization = await firstValueFrom(this.organization$);
+    const selectedCollection = await firstValueFrom(this.selectedCollection$);
     const dialog = openCollectionDialog(this.dialogService, {
       data: {
         organizationId: organization?.id,
-        parentCollectionId: this.selectedCollection?.node.id,
+        parentCollectionId: selectedCollection?.node.id,
         limitNestedCollections: !organization.canEditAnyCollection,
         isAdminConsoleActive: true,
       },
@@ -1355,13 +1342,14 @@ export class VaultComponent implements OnInit, OnDestroy {
     ) {
       this.refresh();
 
+      const selectedCollection = await firstValueFrom(this.selectedCollection$);
       // If we deleted the selected collection, navigate up/away
       if (
         result.action === CollectionDialogAction.Deleted &&
-        this.selectedCollection?.node.id === c?.id
+        selectedCollection?.node.id === c?.id
       ) {
         void this.router.navigate([], {
-          queryParams: { collectionId: this.selectedCollection.parent?.node.id ?? null },
+          queryParams: { collectionId: selectedCollection?.parent?.node.id ?? null },
           queryParamsHandling: "merge",
           replaceUrl: true,
         });

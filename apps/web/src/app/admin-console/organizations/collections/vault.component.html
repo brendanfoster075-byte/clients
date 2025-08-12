@@ -1,4 +1,6 @@
 @let organization = organization$ | async;
+@let selectedCollection = selectedCollection$ | async;
+
 <app-organization-free-trial-warning
   *ngIf="useOrganizationWarningsService$ | async"
   [organization]="organization"
@@ -87,7 +89,7 @@
     </bit-callout>
     <app-vault-items
       #vaultItems
-      [ciphers]="ciphers"
+      [ciphers]="ciphers$ | async"
       [collections]="collections"
       [allCollections]="allCollections$ | async"
       [allOrganizations]="organization ? [organization] : []"
