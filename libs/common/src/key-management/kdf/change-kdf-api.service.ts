@@ -1,6 +1,9 @@
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { KdfRequest } from "@bitwarden/common/models/request/kdf.request";
 
+/**
+ * @internal
+ */
 export class ChangeKdfApiService {
   constructor(private apiService: ApiService) {}
 
