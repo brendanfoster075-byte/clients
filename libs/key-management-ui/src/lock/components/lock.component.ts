@@ -16,7 +16,7 @@ import {
 } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
-import { LogoutService, PinServiceAbstraction } from "@bitwarden/auth/common";
+import { LogoutService } from "@bitwarden/auth/common";
 import { InternalPolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { MasterPasswordPolicyOptions } from "@bitwarden/common/admin-console/models/domain/master-password-policy-options";
 import { Account, AccountService } from "@bitwarden/common/auth/abstractions/account.service";
@@ -30,8 +30,8 @@ import {
 } from "@bitwarden/common/auth/types/verification";
 import { ClientType, DeviceType } from "@bitwarden/common/enums";
 import { DeviceTrustServiceAbstraction } from "@bitwarden/common/key-management/device-trust/abstractions/device-trust.service.abstraction";
-import { EncryptedMigrator } from "@bitwarden/common/key-management/encrypted-migrator/encrypted-migrator.abstraction";
 import { InternalMasterPasswordServiceAbstraction } from "@bitwarden/common/key-management/master-password/abstractions/master-password.service.abstraction";
+import { PinServiceAbstraction } from "@bitwarden/common/key-management/pin/pin.service.abstraction";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
@@ -75,6 +75,7 @@ const clientTypeToSuccessRouteRecord: Partial<Record<ClientType, string>> = {
 /// The minimum amount of time to wait after a process reload for a biometrics auto prompt to be possible
 /// Fixes safari autoprompt behavior
 const AUTOPROMPT_BIOMETRICS_PROCESS_RELOAD_DELAY = 5000;
+
 @Component({
   selector: "bit-lock",
   templateUrl: "lock.component.html",
@@ -124,7 +125,7 @@ export class LockComponent implements OnInit, OnDestroy {
   formGroup: FormGroup | null = null;
 
   // Browser extension properties:
-  private shouldClosePopout = false;
+  shouldClosePopout = false;
 
   // Desktop properties:
   private deferFocus: boolean | null = null;
@@ -155,17 +156,14 @@ export class LockComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private toastService: ToastService,
     private userAsymmetricKeysRegenerationService: UserAsymmetricKeysRegenerationService,
-
     private biometricService: BiometricsService,
     private logoutService: LogoutService,
-
     private lockComponentService: LockComponentService,
     private anonLayoutWrapperDataService: AnonLayoutWrapperDataService,
-    private encryptedMigrator: EncryptedMigrator,
 
     // desktop deps
     private broadcasterService: BroadcasterService,
-  ) { }
+  ) {}
 
   async ngOnInit() {
     this.listenForActiveUnlockOptionChanges();
@@ -213,7 +211,7 @@ export class LockComponent implements OnInit, OnDestroy {
       });
   }
 
-  private buildMasterPasswordForm() {
+  buildMasterPasswordForm() {
     this.formGroup = this.formBuilder.group(
       {
         masterPassword: ["", [Validators.required]],
@@ -514,7 +512,7 @@ export class LockComponent implements OnInit, OnDestroy {
     return true;
   }
 
-  private async unlockViaMasterPassword() {
+  async unlockViaMasterPassword() {
     if (!this.validateMasterPassword() || this.formGroup == null || this.activeAccount == null) {
       return;
     }

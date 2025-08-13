@@ -79,13 +79,16 @@ export class MasterPasswordService implements InternalMasterPasswordServiceAbstr
     private cryptoFunctionService: CryptoFunctionService,
     private accountService: AccountService,
     private keyConnectorService: KeyConnectorService,
-  ) { }
+  ) {}
 
   async userHasMasterPassword(userId: UserId): Promise<boolean> {
     assertNonNullish(userId, "userId");
     // A user has a master-password if they have a master-key encrypted user key *but* are not a key connector user
-    return await firstValueFrom(this.stateProvider.getUser(userId, MASTER_KEY_ENCRYPTED_USER_KEY).state$)
-      && !await this.keyConnectorService.getUsesKeyConnector(userId);
+    return (
+      (await firstValueFrom(
+        this.stateProvider.getUser(userId, MASTER_KEY_ENCRYPTED_USER_KEY).state$,
+      )) && !(await this.keyConnectorService.getUsesKeyConnector(userId))
+    );
   }
 
   saltForUser$(userId: UserId): Observable<MasterPasswordSalt> {
@@ -250,6 +253,9 @@ export class MasterPasswordService implements InternalMasterPasswordServiceAbstr
     assertNonNullish(password, "password");
     assertNonNullish(kdf, "kdf");
     assertNonNullish(salt, "salt");
+    if (password === "") {
+      throw new Error("Master password cannot be empty.");
+    }
 
     // We don't trust callers to use masterpasswordsalt correctly. They may type assert incorrectly.
     salt = salt.toLowerCase().trim() as MasterPasswordSalt;
@@ -295,6 +301,9 @@ export class MasterPasswordService implements InternalMasterPasswordServiceAbstr
     assertNonNullish(kdf, "kdf");
     assertNonNullish(salt, "salt");
     assertNonNullish(userKey, "userKey");
+    if (password === "") {
+      throw new Error("Master password cannot be empty.");
+    }
 
     // We don't trust callers to use masterpasswordsalt correctly. They may type assert incorrectly.
     salt = salt.toLowerCase().trim() as MasterPasswordSalt;

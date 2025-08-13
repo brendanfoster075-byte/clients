@@ -18,7 +18,6 @@ import {
 // This import has been flagged as unallowed for this class. It may be involved in a circular dependency loop.
 // eslint-disable-next-line no-restricted-imports
 import {
-  DefaultLoginApprovalComponentService,
   DefaultLoginComponentService,
   DefaultLoginDecryptionOptionsService,
   DefaultRegistrationFinishService,
@@ -40,7 +39,6 @@ import {
   DefaultLoginSuccessHandlerService,
   DefaultLogoutService,
   InternalUserDecryptionOptionsServiceAbstraction,
-  LoginApprovalComponentServiceAbstraction,
   LoginEmailService,
   LoginEmailServiceAbstraction,
   LoginStrategyService,
@@ -48,8 +46,6 @@ import {
   LoginSuccessHandlerService,
   LogoutReason,
   LogoutService,
-  PinService,
-  PinServiceAbstraction,
   UserDecryptionOptionsService,
   UserDecryptionOptionsServiceAbstraction,
 } from "@bitwarden/auth/common";
@@ -161,8 +157,10 @@ import { DeviceTrustServiceAbstraction } from "@bitwarden/common/key-management/
 import { DeviceTrustService } from "@bitwarden/common/key-management/device-trust/services/device-trust.service.implementation";
 import { DefaultEncryptedMigrator } from "@bitwarden/common/key-management/encrypted-migrator/default-encrypted-migrator";
 import { EncryptedMigrator } from "@bitwarden/common/key-management/encrypted-migrator/encrypted-migrator.abstraction";
-import { ChangeKdfServiceAbstraction } from "@bitwarden/common/key-management/kdf/abstractions/change-kdf-service";
-import { ChangeKdfService } from "@bitwarden/common/key-management/kdf/services/change-kdf-service";
+import { DefaultChangeKdfApiService } from "@bitwarden/common/key-management/kdf/change-kdf-api.service";
+import { ChangeKdfApiService } from "@bitwarden/common/key-management/kdf/change-kdf-api.service.abstraction";
+import { DefaultChangeKdfService } from "@bitwarden/common/key-management/kdf/change-kdf-service";
+import { ChangeKdfService } from "@bitwarden/common/key-management/kdf/change-kdf-service.abstraction";
 import { KeyConnectorService as KeyConnectorServiceAbstraction } from "@bitwarden/common/key-management/key-connector/abstractions/key-connector.service";
 import { KeyConnectorService } from "@bitwarden/common/key-management/key-connector/services/key-connector.service";
 import {
@@ -170,6 +168,8 @@ import {
   MasterPasswordServiceAbstraction,
 } from "@bitwarden/common/key-management/master-password/abstractions/master-password.service.abstraction";
 import { MasterPasswordService } from "@bitwarden/common/key-management/master-password/services/master-password.service";
+import { PinServiceAbstraction } from "@bitwarden/common/key-management/pin/pin.service.abstraction";
+import { PinService } from "@bitwarden/common/key-management/pin/pin.service.implementation";
 import {
   SendPasswordService,
   DefaultSendPasswordService,
@@ -347,6 +347,8 @@ import {
   VaultExportServiceAbstraction,
 } from "@bitwarden/vault-export-core";
 
+import { DefaultLoginApprovalDialogComponentService } from "../auth/login-approval/default-login-approval-dialog-component.service";
+import { LoginApprovalDialogComponentServiceAbstraction } from "../auth/login-approval/login-approval-dialog-component.service.abstraction";
 import { DefaultSetInitialPasswordService } from "../auth/password-management/set-initial-password/default-set-initial-password.service.implementation";
 import { SetInitialPasswordService } from "../auth/password-management/set-initial-password/set-initial-password.service.abstraction";
 import { DeviceTrustToastService as DeviceTrustToastServiceAbstraction } from "../auth/services/device-trust-toast.service.abstraction";
@@ -425,11 +427,11 @@ const safeProviders: SafeProvider[] = [
     provide: LOGOUT_CALLBACK,
     useFactory:
       (messagingService: MessagingServiceAbstraction) =>
-        async (logoutReason: LogoutReason, userId?: string) => {
-          return Promise.resolve(
-            messagingService.send("logout", { logoutReason: logoutReason, userId: userId }),
-          );
-        },
+      async (logoutReason: LogoutReason, userId?: string) => {
+        return Promise.resolve(
+          messagingService.send("logout", { logoutReason: logoutReason, userId: userId }),
+        );
+      },
     deps: [MessagingServiceAbstraction],
   }),
   safeProvider({
@@ -478,20 +480,25 @@ const safeProviders: SafeProvider[] = [
     ],
   }),
   safeProvider({
-    provide: ChangeKdfServiceAbstraction,
-    useClass: ChangeKdfService,
+    provide: ChangeKdfService,
+    useClass: DefaultChangeKdfService,
     deps: [
-      ApiServiceAbstraction,
       InternalMasterPasswordServiceAbstraction,
       KeyService,
       KdfConfigService,
-      LogService,
+      ChangeKdfApiService,
     ],
   }),
   safeProvider({
     provide: EncryptedMigrator,
     useClass: DefaultEncryptedMigrator,
-    deps: [KdfConfigService, ChangeKdfServiceAbstraction, LogService, ConfigService, MasterPasswordServiceAbstraction],
+    deps: [
+      KdfConfigService,
+      ChangeKdfService,
+      LogService,
+      ConfigService,
+      MasterPasswordServiceAbstraction,
+    ],
   }),
   safeProvider({
     provide: LoginStrategyServiceAbstraction,
@@ -557,6 +564,7 @@ const safeProviders: SafeProvider[] = [
       accountService: AccountServiceAbstraction,
       logService: LogService,
       cipherEncryptionService: CipherEncryptionService,
+      messagingService: MessagingServiceAbstraction,
     ) =>
       new CipherService(
         keyService,
@@ -573,6 +581,7 @@ const safeProviders: SafeProvider[] = [
         accountService,
         logService,
         cipherEncryptionService,
+        messagingService,
       ),
     deps: [
       KeyService,
@@ -589,6 +598,7 @@ const safeProviders: SafeProvider[] = [
       AccountServiceAbstraction,
       LogService,
       CipherEncryptionService,
+      MessagingServiceAbstraction,
     ],
   }),
   safeProvider({
@@ -1228,6 +1238,16 @@ const safeProviders: SafeProvider[] = [
     ],
   }),
   safeProvider({
+    provide: ChangeKdfApiService,
+    useClass: DefaultChangeKdfApiService,
+    deps: [ApiServiceAbstraction],
+  }),
+  safeProvider({
+    provide: ChangeKdfService,
+    useClass: DefaultChangeKdfService,
+    deps: [MasterPasswordServiceAbstraction, KeyService, KdfConfigService, ChangeKdfApiService],
+  }),
+  safeProvider({
     provide: AuthRequestServiceAbstraction,
     useClass: AuthRequestService,
     deps: [
@@ -1515,8 +1535,8 @@ const safeProviders: SafeProvider[] = [
     deps: [CryptoFunctionServiceAbstraction],
   }),
   safeProvider({
-    provide: LoginApprovalComponentServiceAbstraction,
-    useClass: DefaultLoginApprovalComponentService,
+    provide: LoginApprovalDialogComponentServiceAbstraction,
+    useClass: DefaultLoginApprovalDialogComponentService,
     deps: [],
   }),
   safeProvider({
@@ -1545,7 +1565,12 @@ const safeProviders: SafeProvider[] = [
   safeProvider({
     provide: LoginSuccessHandlerService,
     useClass: DefaultLoginSuccessHandlerService,
-    deps: [SyncService, UserAsymmetricKeysRegenerationService, LoginEmailService, EncryptedMigrator],
+    deps: [
+      SyncService,
+      UserAsymmetricKeysRegenerationService,
+      LoginEmailService,
+      EncryptedMigrator,
+    ],
   }),
   safeProvider({
     provide: TaskService,
@@ -1616,4 +1641,4 @@ const safeProviders: SafeProvider[] = [
   // Do not register your dependency here! Add it to the typesafeProviders array using the helper function
   providers: safeProviders,
 })
-export class JslibServicesModule { }
+export class JslibServicesModule {}
