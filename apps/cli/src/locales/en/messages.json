@@ -216,6 +216,9 @@
   "youHaveBeenLoggedOut": {
     "message": "You have been logged out."
   },
+  "myItems": {
+    "message": "My Items"
+  },
   "organizationUsingKeyConnectorConfirmLoggedOut": {
     "message": "An organization you are a member of is using Key Connector. In order to access the vault, you must confirm the Key Connector domain now via the web vault. You have been logged out."
   },
