@@ -108,6 +108,13 @@ export class CollectionAdminView extends CollectionView {
   ): Promise<CollectionAdminView> {
     const view = new CollectionAdminView({ ...collection });
     view.name = await encryptService.decryptString(new EncString(view.name), orgKey);
+    view.assigned = collection.assigned;
+    view.readOnly = collection.readOnly;
+    view.hidePasswords = collection.hidePasswords;
+    view.manage = collection.manage;
+    view.unmanaged = collection.unmanaged;
+    view.type = collection.type;
+    view.externalId = collection.externalId;
 
     view.groups = collection.groups
       ? collection.groups.map((g) => new CollectionAccessSelectionView(g))

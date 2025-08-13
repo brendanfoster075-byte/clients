@@ -3,7 +3,6 @@ import { combineLatest, firstValueFrom, from, map, Observable, of, switchMap } f
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { SelectionReadOnlyRequest } from "@bitwarden/common/admin-console/models/request/selection-read-only.request";
 import { EncryptService } from "@bitwarden/common/key-management/crypto/abstractions/encrypt.service";
-import { EncString } from "@bitwarden/common/key-management/crypto/models/enc-string";
 import { CollectionId, OrganizationId, UserId } from "@bitwarden/common/types/guid";
 import { OrgKey } from "@bitwarden/common/types/key";
 import { KeyService } from "@bitwarden/key-management";
@@ -112,18 +111,11 @@ export class DefaultCollectionAdminService implements CollectionAdminService {
         );
       }
 
-      const collectionAdminView = new CollectionAdminView({
-        id: c.id,
-        name: await this.encryptService.decryptString(
-          new EncString(c.name),
-          orgKeys[organizationId as OrganizationId],
-        ),
-        organizationId: c.organizationId,
-      });
-
-      collectionAdminView.externalId = c.externalId;
-
-      return collectionAdminView;
+      return await CollectionAdminView.fromCollectionResponse(
+        c,
+        this.encryptService,
+        orgKeys[organizationId as OrganizationId],
+      );
     });
 
     return await Promise.all(promises);
