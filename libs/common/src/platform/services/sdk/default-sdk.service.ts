@@ -12,9 +12,9 @@ import {
   of,
   takeWhile,
   throwIfEmpty,
+  firstValueFrom,
 } from "rxjs";
 
-import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 // This import has been flagged as unallowed for this class. It may be involved in a circular dependency loop.
 // eslint-disable-next-line no-restricted-imports
@@ -251,13 +251,15 @@ export class DefaultSdkService implements SdkService {
   }
 
   private async loadFeatureFlags(client: BitwardenClient) {
-    const cipherKeyEncryptionEnabled = await this.configService.getFeatureFlag(
-      FeatureFlag.CipherKeyEncryption,
+    const serverConfig = await firstValueFrom(this.configService.serverConfig$);
+
+    const featureFlagMap = new Map(
+      Object.entries(serverConfig?.featureStates ?? {})
+        .filter(([, value]) => typeof value === "boolean") // The SDK only supports boolean feature flags at this time
+        .map(([key, value]) => [key, value] as [string, boolean]),
     );
 
-    client
-      .platform()
-      .load_flags(new Map([["enableCipherKeyEncryption", cipherKeyEncryptionEnabled]]));
+    client.platform().load_flags(featureFlagMap);
   }
 
   private toSettings(env: Environment): ClientSettings {
