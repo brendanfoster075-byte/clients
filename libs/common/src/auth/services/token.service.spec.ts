@@ -1478,6 +1478,14 @@ describe("TokenService", () => {
 
         it("does not error and fallback to disk storage when passed a null value for the refresh token", async () => {
           // Arrange
+          singleUserStateProvider
+            .getFake(userIdFromAccessToken, REFRESH_TOKEN_DISK)
+            .nextState(refreshToken);
+
+          singleUserStateProvider
+            .getFake(userIdFromAccessToken, REFRESH_TOKEN_MEMORY)
+            .nextState(refreshToken);
+
           secureStorageService.get.mockResolvedValue(null);
 
           // Act
