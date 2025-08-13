@@ -65,7 +65,7 @@ export class DesktopAutofillService implements OnDestroy {
       .getFeatureFlag$(FeatureFlag.MacOsNativeCredentialSync)
       .pipe(
         distinctUntilChanged(),
-        //filter((enabled) => enabled === true), // Only proceed if feature is enabled
+        filter((enabled) => enabled === true), // Only proceed if feature is enabled
         switchMap(() => {
           return combineLatest([
             this.accountService.activeAccount$.pipe(
