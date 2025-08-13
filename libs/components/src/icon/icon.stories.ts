@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/angular";
 
-import * as GenericIcons from "@bitwarden/assets/svg";
+import * as SvgIcons from "@bitwarden/assets/svg";
 
 import { BitIconComponent } from "./icon.component";
 
@@ -17,14 +17,18 @@ export default {
 
 type Story = StoryObj<BitIconComponent>;
 
+// Filtering out the few non-icons in the libs/assets/svg import
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const { DynamicContentNotAllowedError, isIcon, svgIcon, ...Icons } = SvgIcons;
+
 export const Default: Story = {
   args: {
-    icon: GenericIcons.NoAccess,
+    icon: Icons.NoAccess,
   },
   argTypes: {
     icon: {
-      options: Object.keys(GenericIcons),
-      mapping: GenericIcons,
+      options: Object.keys(Icons),
+      mapping: Icons,
       control: { type: "select" },
     },
     ariaLabel: {

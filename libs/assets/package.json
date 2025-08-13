@@ -10,5 +10,6 @@
   "author": "ui-foundation",
   "scripts": {
     "test": "jest"
-  }
+  },
+  "sideEffects": false
 }
