@@ -5,7 +5,7 @@ import { UserId } from "@bitwarden/common/types/guid";
 import { KdfConfigService } from "@bitwarden/key-management";
 import { LogService } from "@bitwarden/logging";
 
-import { ChangeKdfServiceAbstraction } from "../kdf/abstractions/change-kdf-service";
+import { ChangeKdfService } from "../kdf/change-kdf-service.abstraction";
 import { MasterPasswordServiceAbstraction } from "../master-password/abstractions/master-password.service.abstraction";
 
 import { EncryptedMigrator } from "./encrypted-migrator.abstraction";
@@ -18,7 +18,7 @@ export class DefaultEncryptedMigrator implements EncryptedMigrator {
 
   constructor(
     readonly kdfConfigService: KdfConfigService,
-    readonly changeKdfService: ChangeKdfServiceAbstraction,
+    readonly changeKdfService: ChangeKdfService,
     private readonly logService: LogService,
     readonly configService: ConfigService,
     readonly masterPasswordService: MasterPasswordServiceAbstraction,
@@ -36,21 +36,21 @@ export class DefaultEncryptedMigrator implements EncryptedMigrator {
     });
   }
 
-  async runMigrations(userId: UserId, masterPassword: string | null = null): Promise<void> {
+  async runMigrations(userId: UserId, masterPassword: string | null): Promise<void> {
     assertNonNullish(userId, "userId");
 
     // Ensure that the requirements for running all migrations are met
     const needsMigration = await this.needsMigrations(userId);
     if (needsMigration === "noMigrationNeeded") {
       return;
-    } else if (needsMigration === "needsMigrationWithMasterPassword" && !masterPassword) {
-      throw new Error("Master password is required to run migrations");
+    } else if (needsMigration === "needsMigrationWithMasterPassword" && masterPassword == null) {
+      return;
     }
 
     try {
       // No concurrent migrations allowed, so acquire a service-wide lock
       if (this.isRunningMigration) {
-        throw new Error("Migrations are already running");
+        return;
       }
       this.isRunningMigration = true;
 
@@ -68,7 +68,10 @@ export class DefaultEncryptedMigrator implements EncryptedMigrator {
       this.logService.mark("[Encrypted Migrator] Finish");
       this.logService.info(`[Encrypted Migrator] Completed migrations for user: ${userId}`);
     } catch (error) {
-      this.logService.error(`[Encrypted Migrator] Error running migrations for user: ${userId}`, error);
+      this.logService.error(
+        `[Encrypted Migrator] Error running migrations for user: ${userId}`,
+        error,
+      );
       throw error; // Re-throw the error to be handled by the caller
     } finally {
       this.isRunningMigration = false;

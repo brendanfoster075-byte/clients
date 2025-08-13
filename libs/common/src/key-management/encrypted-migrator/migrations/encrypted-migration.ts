@@ -1,6 +1,7 @@
 import { UserId } from "@bitwarden/common/types/guid";
 
 /**
+ * @internal
  * IMPORTANT: Please read this when implementing new migrations.
  *
  * An encrypted migration defines an online migration that mutates the persistent state of the user on the server, or locally.

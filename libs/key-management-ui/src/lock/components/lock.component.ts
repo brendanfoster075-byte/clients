@@ -30,6 +30,7 @@ import {
 } from "@bitwarden/common/auth/types/verification";
 import { ClientType, DeviceType } from "@bitwarden/common/enums";
 import { DeviceTrustServiceAbstraction } from "@bitwarden/common/key-management/device-trust/abstractions/device-trust.service.abstraction";
+import { EncryptedMigrator } from "@bitwarden/common/key-management/encrypted-migrator/encrypted-migrator.abstraction";
 import { InternalMasterPasswordServiceAbstraction } from "@bitwarden/common/key-management/master-password/abstractions/master-password.service.abstraction";
 import { PinServiceAbstraction } from "@bitwarden/common/key-management/pin/pin.service.abstraction";
 import { BroadcasterService } from "@bitwarden/common/platform/abstractions/broadcaster.service";
@@ -160,6 +161,7 @@ export class LockComponent implements OnInit, OnDestroy {
     private logoutService: LogoutService,
     private lockComponentService: LockComponentService,
     private anonLayoutWrapperDataService: AnonLayoutWrapperDataService,
+    private encryptedMigrator: EncryptedMigrator,
 
     // desktop deps
     private broadcasterService: BroadcasterService,
@@ -606,7 +608,7 @@ export class LockComponent implements OnInit, OnDestroy {
 
     await this.biometricStateService.resetUserPromptCancelled();
 
-    //await this.encryptedMigrator.runMigrations(this.activeAccount.id, masterPassword);
+    await this.encryptedMigrator.runMigrations(this.activeAccount.id, masterPassword);
 
     this.messagingService.send("unlocked");
 

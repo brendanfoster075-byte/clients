@@ -13,6 +13,7 @@ export class DefaultLoginSuccessHandlerService implements LoginSuccessHandlerSer
     private loginEmailService: LoginEmailService,
     private encryptedMigrator: EncryptedMigrator,
   ) {}
+
   async run(userId: UserId, masterPassword?: string): Promise<void> {
     await this.syncService.fullSync(true, { skipTokenRefresh: true });
     await this.userAsymmetricKeysRegenerationService.regenerateIfNeeded(userId);

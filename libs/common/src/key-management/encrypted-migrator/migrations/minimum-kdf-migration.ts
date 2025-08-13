@@ -11,19 +11,20 @@ import {
 } from "@bitwarden/key-management";
 import { LogService } from "@bitwarden/logging";
 
-import { ChangeKdfServiceAbstraction } from "../../kdf/abstractions/change-kdf-service";
+import { ChangeKdfService } from "../../kdf/change-kdf-service.abstraction";
 import { MasterPasswordServiceAbstraction } from "../../master-password/abstractions/master-password.service.abstraction";
 
 import { EncryptedMigration, MigrationRequirement } from "./encrypted-migration";
 
 /**
+ * @internal
  * This migrator ensures the user's account has a minimum PBKDF2 iteration count.
  * It will update the entire account, logging out old clients if necessary.
  */
 export class MinimumKdfMigration implements EncryptedMigration {
   constructor(
     private readonly kdfConfigService: KdfConfigService,
-    private readonly changeKdfService: ChangeKdfServiceAbstraction,
+    private readonly changeKdfService: ChangeKdfService,
     private readonly logService: LogService,
     private readonly configService: ConfigService,
     private readonly masterPasswordService: MasterPasswordServiceAbstraction,
