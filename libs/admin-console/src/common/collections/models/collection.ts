@@ -22,7 +22,7 @@ export class Collection extends Domain {
   hidePasswords: boolean = false;
   manage: boolean = false;
   type: CollectionType = CollectionTypes.SharedCollection;
-  userDefaultCollectionEmail: string | undefined;
+  defaultUserCollectionEmail: string | undefined;
 
   constructor(obj?: CollectionData | null) {
     super();
@@ -42,7 +42,7 @@ export class Collection extends Domain {
         hidePasswords: null,
         manage: null,
         type: null,
-        userDefaultCollectionEmail: null,
+        defaultUserCollectionEmail: null,
       },
       [
         "id",
@@ -51,7 +51,7 @@ export class Collection extends Domain {
         "hidePasswords",
         "manage",
         "type",
-        "userDefaultCollectionEmail",
+        "defaultUserCollectionEmail",
       ],
     );
   }

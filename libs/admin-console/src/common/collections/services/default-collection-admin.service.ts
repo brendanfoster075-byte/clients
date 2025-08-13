@@ -121,6 +121,7 @@ export class DefaultCollectionAdminService implements CollectionAdminService {
       view.name = await this.encryptService.decryptString(new EncString(c.name), orgKey);
       view.externalId = c.externalId;
       view.organizationId = c.organizationId;
+      view.defaultUserCollectionEmail = c.defaultUserCollectionEmail;
 
       if (isCollectionAccessDetailsResponse(c)) {
         view.groups = c.groups;
@@ -135,7 +136,8 @@ export class DefaultCollectionAdminService implements CollectionAdminService {
       return view;
     });
 
-    return await Promise.all(promises);
+    const r = await Promise.all(promises);
+    return r;
   }
 
   private async encrypt(model: CollectionAdminView): Promise<CollectionRequest> {

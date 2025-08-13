@@ -14,7 +14,7 @@ export class CollectionData {
   manage: boolean;
   hidePasswords: boolean;
   type: CollectionType;
-  userDefaultCollectionEmail: string;
+  defaultUserCollectionEmail: string;
 
   constructor(response: CollectionDetailsResponse) {
     this.id = response.id;
@@ -25,7 +25,7 @@ export class CollectionData {
     this.manage = response.manage;
     this.hidePasswords = response.hidePasswords;
     this.type = response.type;
-    this.userDefaultCollectionEmail = response.userDefaultCollectionEmail;
+    this.defaultUserCollectionEmail = response.defaultUserCollectionEmail;
   }
 
   static fromJSON(obj: Jsonify<CollectionData | null>): CollectionData | null {

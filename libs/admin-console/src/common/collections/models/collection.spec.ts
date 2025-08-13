@@ -18,7 +18,7 @@ describe("Collection", () => {
       manage: true,
       hidePasswords: true,
       type: CollectionTypes.DefaultUserCollection,
-      userDefaultCollectionEmail: "defaultCollectionEmail",
+      defaultUserCollectionEmail: "defaultCollectionEmail",
     };
   });
 
@@ -35,7 +35,7 @@ describe("Collection", () => {
       readOnly: null,
       manage: null,
       type: null,
-      userDefaultCollectionEmail: null,
+      defaultUserCollectionEmail: null,
     });
   });
 
@@ -51,7 +51,7 @@ describe("Collection", () => {
       manage: true,
       hidePasswords: true,
       type: CollectionTypes.DefaultUserCollection,
-      userDefaultCollectionEmail: "defaultCollectionEmail",
+      defaultUserCollectionEmail: "defaultCollectionEmail",
     });
   });
 
@@ -65,7 +65,7 @@ describe("Collection", () => {
     collection.hidePasswords = false;
     collection.manage = true;
     collection.type = CollectionTypes.DefaultUserCollection;
-    collection.userDefaultCollectionEmail = "defaultCollectionEmail";
+    collection.defaultUserCollectionEmail = "defaultCollectionEmail";
 
     const key = makeSymmetricCryptoKey<OrgKey>();
 
@@ -81,7 +81,7 @@ describe("Collection", () => {
       manage: true,
       assigned: true,
       type: CollectionTypes.DefaultUserCollection,
-      userDefaultCollectionEmail: "defaultCollectionEmail",
+      defaultUserCollectionEmail: "defaultCollectionEmail",
     });
   });
 });

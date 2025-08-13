@@ -125,6 +125,6 @@ export class CollectionAdminView extends CollectionView {
    * Do not edit or remove this unless you understand why.
    */
   override canEditName(org: Organization): boolean {
-    return (this.canEdit(org) && !this.userDefaultCollectionEmail) || super.canEditName(org);
+    return (this.canEdit(org) && !this.defaultUserCollectionEmail) || super.canEditName(org);
   }
 }

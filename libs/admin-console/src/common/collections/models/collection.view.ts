@@ -20,7 +20,7 @@ export class CollectionView implements View, ITreeNodeObject {
   manage: boolean = false;
   assigned: boolean = false;
   type: CollectionType = CollectionTypes.SharedCollection;
-  userDefaultCollectionEmail: string | undefined;
+  defaultUserCollectionEmail: string | undefined;
 
   private _name: string | undefined;
 
@@ -42,7 +42,7 @@ export class CollectionView implements View, ITreeNodeObject {
       this.assigned = c.assigned;
     }
     this.type = c.type;
-    this.userDefaultCollectionEmail = c.userDefaultCollectionEmail;
+    this.defaultUserCollectionEmail = c.defaultUserCollectionEmail;
   }
 
   set name(name: string) {
@@ -50,7 +50,7 @@ export class CollectionView implements View, ITreeNodeObject {
   }
 
   get name(): string {
-    return this.userDefaultCollectionEmail ?? this._name;
+    return this.defaultUserCollectionEmail ?? this._name;
   }
 
   canEditItems(org: Organization): boolean {
@@ -114,7 +114,7 @@ export class CollectionView implements View, ITreeNodeObject {
    * Do not edit or remove this unless you understand why.
    */
   canEditName(org: Organization): boolean {
-    return this.canEdit(org) && !this.userDefaultCollectionEmail;
+    return this.canEdit(org) && !this.defaultUserCollectionEmail;
   }
 
   static fromJSON(obj: Jsonify<CollectionView>) {
