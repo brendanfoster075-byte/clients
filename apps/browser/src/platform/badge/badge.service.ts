@@ -48,7 +48,7 @@ export class BadgeService {
         }),
       )
       .subscribe({
-        error: (error) => {
+        error: (error: unknown) => {
           this.logService.error(
             "Fatal error in badge service observable, badge will fail to update",
             error,
