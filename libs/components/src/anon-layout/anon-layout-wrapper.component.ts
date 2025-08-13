@@ -6,9 +6,9 @@ import { ActivatedRoute, Data, NavigationEnd, Router, RouterModule } from "@angu
 import { filter, switchMap, tap } from "rxjs";
 
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
+import { Icon } from "@bitwarden/icons";
 
 import { Translation } from "../dialog";
-import { Icon } from "../icon";
 
 import { AnonLayoutWrapperDataService } from "./anon-layout-wrapper-data.service";
 import { AnonLayoutComponent, AnonLayoutMaxWidth } from "./anon-layout.component";

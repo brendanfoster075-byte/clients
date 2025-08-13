@@ -2,7 +2,7 @@
 // @ts-strict-ignore
 import { Component, Input } from "@angular/core";
 
-import { Icon } from "@bitwarden/components";
+import { Icon } from "@bitwarden/icons";
 
 import { ReportVariant } from "../models/report-variant";
 

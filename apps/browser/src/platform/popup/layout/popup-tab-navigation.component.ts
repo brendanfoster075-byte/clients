@@ -4,7 +4,8 @@ import { RouterModule } from "@angular/router";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { Icon, IconModule, LinkModule } from "@bitwarden/components";
+import { IconModule, LinkModule } from "@bitwarden/components";
+import { Icon } from "@bitwarden/icons";
 
 export type NavButton = {
   label: string;
