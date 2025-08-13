@@ -4,11 +4,24 @@ import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { FolderView } from "@bitwarden/common/vault/models/view/folder.view";
 
 import { CollectionView } from "../../content/components/common-types";
-import { NotificationQueueMessageTypes } from "../../enums/notification-queue-message-type.enum";
+import { NotificationType, NotificationTypes } from "../../enums/notification-type.enum";
 import AutofillPageDetails from "../../models/autofill-page-details";
 
+// @AFTODO Remove Standard_ label when implemented as standard NotificationQueueMessage.
+export interface Standard_NotificationQueueMessage<T, D> {
+  // universal notification properties
+  domain: string;
+  tab: chrome.tabs.Tab;
+  launchTimestamp: number;
+  expires: Date;
+  wasVaultLocked: boolean;
+
+  type: T; // NotificationType
+  data: D; // notification-specific data
+}
+
 interface NotificationQueueMessage {
-  type: NotificationQueueMessageTypes;
+  type: NotificationTypes;
   domain: string;
   tab: chrome.tabs.Tab;
   launchTimestamp: number;
@@ -16,11 +29,15 @@ interface NotificationQueueMessage {
   wasVaultLocked: boolean;
 }
 
-interface AddChangePasswordQueueMessage extends NotificationQueueMessage {
-  type: "change";
+type ChangePasswordNotificationData = {
   cipherId: CipherView["id"];
   newPassword: string;
-}
+};
+
+type AddChangePasswordNotificationQueueMessage = Standard_NotificationQueueMessage<
+  typeof NotificationType.ChangePassword,
+  ChangePasswordNotificationData
+>;
 
 interface AddLoginQueueMessage extends NotificationQueueMessage {
   type: "add";
@@ -41,7 +58,7 @@ interface AtRiskPasswordQueueMessage extends NotificationQueueMessage {
 
 type NotificationQueueMessageItem =
   | AddLoginQueueMessage
-  | AddChangePasswordQueueMessage
+  | AddChangePasswordNotificationQueueMessage
   | AddUnlockVaultQueueMessage
   | AtRiskPasswordQueueMessage;
 
@@ -126,7 +143,7 @@ type NotificationBackgroundExtensionMessageHandlers = {
 };
 
 export {
-  AddChangePasswordQueueMessage,
+  AddChangePasswordNotificationQueueMessage,
   AddLoginQueueMessage,
   AddUnlockVaultQueueMessage,
   NotificationQueueMessageItem,
