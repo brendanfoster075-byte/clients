@@ -18,6 +18,7 @@ import {
 } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { NoResults } from "@bitwarden/assets/svg";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { getUserId } from "@bitwarden/common/auth/services/account.service";
 import { DomainSettingsService } from "@bitwarden/common/autofill/services/domain-settings.service";
@@ -42,7 +43,6 @@ import {
   SectionComponent,
   SectionHeaderComponent,
 } from "@bitwarden/components";
-import { NoResults } from "@bitwarden/icons";
 import { PasswordRepromptService } from "@bitwarden/vault";
 
 import { ZonedMessageListenerService } from "../../../platform/browser/zoned-message-listener.service";

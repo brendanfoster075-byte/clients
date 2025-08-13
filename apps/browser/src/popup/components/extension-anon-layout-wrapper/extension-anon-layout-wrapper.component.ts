@@ -5,6 +5,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Data, NavigationEnd, Router, RouterModule } from "@angular/router";
 import { Subject, filter, switchMap, takeUntil, tap } from "rxjs";
 
+import { ExtensionBitwardenLogo, Icon } from "@bitwarden/assets/svg";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import {
   IconModule,
@@ -13,7 +14,6 @@ import {
   AnonLayoutWrapperData,
   AnonLayoutWrapperDataService,
 } from "@bitwarden/components";
-import { ExtensionBitwardenLogo, Icon } from "@bitwarden/icons";
 import { I18nPipe } from "@bitwarden/ui-common";
 
 import { CurrentAccountComponent } from "../../../auth/popup/account-switching/current-account.component";

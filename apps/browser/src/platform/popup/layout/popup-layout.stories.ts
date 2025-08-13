@@ -4,6 +4,16 @@ import { Component, importProvidersFrom } from "@angular/core";
 import { RouterModule } from "@angular/router";
 import { Meta, StoryObj, applicationConfig, moduleMetadata } from "@storybook/angular";
 
+import {
+  GeneratorActive,
+  GeneratorInactive,
+  SendActive,
+  SendInactive,
+  SettingsActive,
+  SettingsInactive,
+  VaultActive,
+  VaultInactive,
+} from "@bitwarden/assets/svg";
 import { PolicyService } from "@bitwarden/common/admin-console/abstractions/policy/policy.service.abstraction";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { SendService } from "@bitwarden/common/tools/send/services/send.service.abstraction";
@@ -20,16 +30,6 @@ import {
   SectionComponent,
   ScrollLayoutDirective,
 } from "@bitwarden/components";
-import {
-  GeneratorActive,
-  GeneratorInactive,
-  SendActive,
-  SendInactive,
-  SettingsActive,
-  SettingsInactive,
-  VaultActive,
-  VaultInactive,
-} from "@bitwarden/icons";
 
 import { PopupRouterCacheService } from "../view-cache/popup-router-cache.service";
 

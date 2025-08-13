@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 
-import { partnerTrustIcon } from "@bitwarden/icons";
+import { partnerTrustIcon } from "@bitwarden/assets/svg";
 
 @Component({
   selector: "app-no-invoices",

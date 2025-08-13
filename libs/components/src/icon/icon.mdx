@@ -23,7 +23,8 @@ import { IconModule } from "@bitwarden/components";
      [SVG Formatter Beautifier](https://codebeautify.org/svg-formatter-beautifier) to make applying
      classes easier.
 
-2. **Rename the file** as a `<name>.icon.ts` TypeScript file and place it in the `libs/icons` lib.
+2. **Rename the file** as a `<name>.icon.ts` TypeScript file and place it in the `libs/assets/svg`
+   lib.
 
 3. **Import** `svgIcon` from `./icon-service`.
 
@@ -83,7 +84,7 @@ import { IconModule } from "@bitwarden/components";
        ```typescript
        import { Component } from "@angular/core";
        import { IconModule } from '@bitwarden/components';
-       import { ExampleIcon, Example2Icon } from "@bitwarden/icons";
+       import { ExampleIcon, Example2Icon } from "@bitwarden/assets/svg";
 
        @Component({
          selector: "app-example",

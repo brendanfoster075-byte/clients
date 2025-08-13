@@ -16,6 +16,16 @@ import {
 } from "@bitwarden/angular/auth/guards";
 import { ChangePasswordComponent } from "@bitwarden/angular/auth/password-management/change-password";
 import {
+  DevicesIcon,
+  RegistrationLockAltIcon,
+  RegistrationUserAddIcon,
+  TwoFactorTimeoutIcon,
+  DeviceVerificationIcon,
+  UserLockIcon,
+  VaultIcon,
+  LockIcon,
+} from "@bitwarden/assets/svg";
+import {
   LoginComponent,
   LoginSecondaryContentComponent,
   LoginViaAuthRequestComponent,
@@ -31,16 +41,6 @@ import {
   NewDeviceVerificationComponent,
 } from "@bitwarden/auth/angular";
 import { AnonLayoutWrapperComponent, AnonLayoutWrapperData } from "@bitwarden/components";
-import {
-  DevicesIcon,
-  RegistrationLockAltIcon,
-  RegistrationUserAddIcon,
-  TwoFactorTimeoutIcon,
-  DeviceVerificationIcon,
-  UserLockIcon,
-  VaultIcon,
-  LockIcon,
-} from "@bitwarden/icons";
 import { LockComponent } from "@bitwarden/key-management-ui";
 
 import { maxAccountsGuardFn } from "../auth/guards/max-accounts.guard";

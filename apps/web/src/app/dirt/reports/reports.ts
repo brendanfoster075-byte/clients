@@ -6,7 +6,7 @@ import {
   ReportReusedPasswords,
   ReportUnsecuredWebsites,
   ReportWeakPasswords,
-} from "@bitwarden/icons";
+} from "@bitwarden/assets/svg";
 
 import { ReportEntry } from "./shared";
 

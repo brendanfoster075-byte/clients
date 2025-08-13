@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
+import { BitwardenIcon } from "@bitwarden/assets/svg";
 import { IconModule } from "@bitwarden/components";
-import { BitwardenIcon } from "@bitwarden/icons";
 import { I18nPipe } from "@bitwarden/ui-common";
 
 @Component({

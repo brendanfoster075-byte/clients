@@ -3,11 +3,11 @@
 import { Component, inject } from "@angular/core";
 import { Params } from "@angular/router";
 
+import { BitwardenLogo } from "@bitwarden/assets/svg";
 import { PolicyApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/policy/policy-api.service.abstraction";
 import { OrganizationSponsorshipResponse } from "@bitwarden/common/admin-console/models/response/organization-sponsorship.response";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
 import { ToastService } from "@bitwarden/components";
-import { BitwardenLogo } from "@bitwarden/icons";
 
 import { BaseAcceptComponent } from "../../../common/base.accept.component";
 

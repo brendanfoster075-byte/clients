@@ -3,6 +3,13 @@ import { Component, OnInit } from "@angular/core";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import {
+  TwoFactorAuthAuthenticatorIcon,
+  TwoFactorAuthDuoIcon,
+  TwoFactorAuthEmailIcon,
+  TwoFactorAuthWebAuthnIcon,
+  TwoFactorAuthYubicoIcon,
+} from "@bitwarden/assets/svg";
+import {
   TwoFactorProviderDetails,
   TwoFactorService,
 } from "@bitwarden/common/auth/abstractions/two-factor.service";
@@ -18,13 +25,6 @@ import {
   ItemModule,
   TypographyModule,
 } from "@bitwarden/components";
-import {
-  TwoFactorAuthAuthenticatorIcon,
-  TwoFactorAuthDuoIcon,
-  TwoFactorAuthEmailIcon,
-  TwoFactorAuthWebAuthnIcon,
-  TwoFactorAuthYubicoIcon,
-} from "@bitwarden/icons";
 
 export type TwoFactorOptionsDialogResult = {
   type: TwoFactorProviderType;

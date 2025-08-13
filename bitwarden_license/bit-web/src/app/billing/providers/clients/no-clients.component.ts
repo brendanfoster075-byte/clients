@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
-import { gearIcon } from "@bitwarden/icons";
+import { gearIcon } from "@bitwarden/assets/svg";
 import { SharedOrganizationModule } from "@bitwarden/web-vault/app/admin-console/organizations/shared";
 
 @Component({

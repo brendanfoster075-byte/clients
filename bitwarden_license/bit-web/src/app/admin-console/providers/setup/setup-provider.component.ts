@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { Params } from "@angular/router";
 
-import { BitwardenLogo } from "@bitwarden/icons";
+import { BitwardenLogo } from "@bitwarden/assets/svg";
 import { BaseAcceptComponent } from "@bitwarden/web-vault/app/common/base.accept.component";
 
 @Component({

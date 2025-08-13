@@ -3,6 +3,7 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { firstValueFrom } from "rxjs";
 
+import { NoAccess } from "@bitwarden/assets/svg";
 // This import has been flagged as unallowed for this class. It may be involved in a circular dependency loop.
 // eslint-disable-next-line no-restricted-imports
 import {
@@ -35,7 +36,6 @@ import {
   DialogService,
   ToastService,
 } from "@bitwarden/components";
-import { NoAccess } from "@bitwarden/icons";
 import { I18nPipe } from "@bitwarden/ui-common";
 
 import {

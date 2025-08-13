@@ -2,8 +2,8 @@ import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { SecurityHandshake, LoginCards, SecureUser, SecureDevices } from "@bitwarden/assets/svg";
 import { ButtonModule, DialogModule, IconModule, TypographyModule } from "@bitwarden/components";
-import { SecurityHandshake, LoginCards, SecureUser, SecureDevices } from "@bitwarden/icons";
 import { I18nPipe } from "@bitwarden/ui-common";
 import { VaultCarouselModule } from "@bitwarden/vault";
 

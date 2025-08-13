@@ -5,6 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { firstValueFrom, lastValueFrom, Subject } from "rxjs";
 
 import { OrganizationUserApiService } from "@bitwarden/admin-console/common";
+import { SubscriptionHiddenIcon } from "@bitwarden/assets/svg";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { OrganizationApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/organization/organization-api.service.abstraction";
 import {
@@ -26,7 +27,6 @@ import { ConfigService } from "@bitwarden/common/platform/abstractions/config/co
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { DialogService, ToastService } from "@bitwarden/components";
-import { SubscriptionHiddenIcon } from "@bitwarden/icons";
 
 import {
   AdjustStorageDialogComponent,

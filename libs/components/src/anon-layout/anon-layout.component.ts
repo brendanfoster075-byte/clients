@@ -13,10 +13,10 @@ import {
 import { RouterModule } from "@angular/router";
 import { firstValueFrom } from "rxjs";
 
+import { AnonLayoutBitwardenShield, BitwardenLogo, Icon } from "@bitwarden/assets/svg";
 import { ClientType } from "@bitwarden/common/enums";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { AnonLayoutBitwardenShield, BitwardenLogo, Icon } from "@bitwarden/icons";
 
 import { IconModule } from "../icon";
 import { SharedModule } from "../shared";

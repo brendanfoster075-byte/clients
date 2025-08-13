@@ -2,11 +2,11 @@ import { ActivatedRoute, RouterModule } from "@angular/router";
 import { Meta, StoryObj, moduleMetadata } from "@storybook/angular";
 import { BehaviorSubject, of } from "rxjs";
 
+import { Icon, LockIcon } from "@bitwarden/assets/svg";
 import { ClientType } from "@bitwarden/common/enums";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { Icon, LockIcon } from "@bitwarden/icons";
 
 import { ButtonModule } from "../button";
 import { I18nMockService } from "../utils/i18n-mock.service";

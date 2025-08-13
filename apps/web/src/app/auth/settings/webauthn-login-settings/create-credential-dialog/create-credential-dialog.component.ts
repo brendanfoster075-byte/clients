@@ -4,6 +4,7 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { firstValueFrom, map, Observable } from "rxjs";
 
+import { CreatePasskeyFailedIcon, CreatePasskeyIcon } from "@bitwarden/assets/svg";
 import { PrfKeySet } from "@bitwarden/auth/common";
 import { Verification } from "@bitwarden/common/auth/types/verification";
 import { ErrorResponse } from "@bitwarden/common/models/response/error.response";
@@ -11,7 +12,6 @@ import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.servic
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
 import { DialogConfig, DialogRef, DialogService, ToastService } from "@bitwarden/components";
-import { CreatePasskeyFailedIcon, CreatePasskeyIcon } from "@bitwarden/icons";
 
 import { WebauthnLoginAdminService } from "../../../core";
 import { CredentialCreateOptionsView } from "../../../core/views/credential-create-options.view";

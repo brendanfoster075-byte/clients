@@ -1,6 +1,6 @@
 import { Component, input } from "@angular/core";
 
-import { Search } from "@bitwarden/icons";
+import { Search } from "@bitwarden/assets/svg";
 
 import { BitIconComponent } from "../icon/icon.component";
 

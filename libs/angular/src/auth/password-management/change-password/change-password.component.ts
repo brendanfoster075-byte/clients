@@ -2,6 +2,7 @@ import { CommonModule } from "@angular/common";
 import { Component, Input, OnInit } from "@angular/core";
 import { firstValueFrom } from "rxjs";
 
+import { LockIcon } from "@bitwarden/assets/svg";
 // This import has been flagged as unallowed for this class. It may be involved in a circular dependency loop.
 // eslint-disable-next-line no-restricted-imports
 import {
@@ -26,7 +27,6 @@ import {
   ToastService,
   CalloutComponent,
 } from "@bitwarden/components";
-import { LockIcon } from "@bitwarden/icons";
 import { I18nPipe } from "@bitwarden/ui-common";
 
 import { ChangePasswordService } from "./change-password.service.abstraction";

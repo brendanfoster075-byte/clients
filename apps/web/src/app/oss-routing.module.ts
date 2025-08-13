@@ -13,6 +13,19 @@ import {
 import { ChangePasswordComponent } from "@bitwarden/angular/auth/password-management/change-password";
 import { SetInitialPasswordComponent } from "@bitwarden/angular/auth/password-management/set-initial-password/set-initial-password.component";
 import {
+  DevicesIcon,
+  RegistrationLockAltIcon,
+  RegistrationUserAddIcon,
+  TwoFactorTimeoutIcon,
+  DeviceVerificationIcon,
+  UserLockIcon,
+  VaultIcon,
+  RegistrationExpiredLinkIcon,
+  SsoKeyIcon,
+  LockIcon,
+  BrowserExtensionIcon,
+} from "@bitwarden/assets/svg";
+import {
   PasswordHintComponent,
   RegistrationFinishComponent,
   RegistrationStartComponent,
@@ -29,19 +42,6 @@ import {
   NewDeviceVerificationComponent,
 } from "@bitwarden/auth/angular";
 import { AnonLayoutWrapperComponent, AnonLayoutWrapperData } from "@bitwarden/components";
-import {
-  DevicesIcon,
-  RegistrationLockAltIcon,
-  RegistrationUserAddIcon,
-  TwoFactorTimeoutIcon,
-  DeviceVerificationIcon,
-  UserLockIcon,
-  VaultIcon,
-  RegistrationExpiredLinkIcon,
-  SsoKeyIcon,
-  LockIcon,
-  BrowserExtensionIcon,
-} from "@bitwarden/icons";
 import { LockComponent } from "@bitwarden/key-management-ui";
 
 import { flagEnabled, Flags } from "../utils/flags";

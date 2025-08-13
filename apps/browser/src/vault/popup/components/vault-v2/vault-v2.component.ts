@@ -18,6 +18,7 @@ import {
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { NudgesService, NudgeType } from "@bitwarden/angular/vault";
 import { SpotlightComponent } from "@bitwarden/angular/vault/components/spotlight/spotlight.component";
+import { DeactivatedOrg, NoResults, Vault2 } from "@bitwarden/assets/svg";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { getUserId } from "@bitwarden/common/auth/services/account.service";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
@@ -31,7 +32,6 @@ import {
   NoItemsModule,
   TypographyModule,
 } from "@bitwarden/components";
-import { DeactivatedOrg, NoResults, Vault2 } from "@bitwarden/icons";
 import { DecryptionFailureDialogComponent } from "@bitwarden/vault";
 
 import { CurrentAccountComponent } from "../../../../auth/popup/account-switching/current-account.component";

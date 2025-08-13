@@ -3,6 +3,7 @@ import { Component } from "@angular/core";
 import { filter, map, Observable, switchMap } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { NoFolders } from "@bitwarden/assets/svg";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { UserId } from "@bitwarden/common/types/guid";
 import { FolderService } from "@bitwarden/common/vault/abstractions/folder/folder.service.abstraction";
@@ -15,7 +16,6 @@ import {
   ItemModule,
   NoItemsModule,
 } from "@bitwarden/components";
-import { NoFolders } from "@bitwarden/icons";
 import { AddEditFolderDialogComponent } from "@bitwarden/vault";
 
 import { PopOutComponent } from "../../../platform/popup/components/pop-out.component";

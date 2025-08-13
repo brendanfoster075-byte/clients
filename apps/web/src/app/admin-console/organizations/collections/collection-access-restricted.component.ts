@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
+import { RestrictedView } from "@bitwarden/assets/svg";
 import { ButtonModule, NoItemsModule } from "@bitwarden/components";
-import { RestrictedView } from "@bitwarden/icons";
 
 import { SharedModule } from "../../../shared";
 import { CollectionDialogTabType } from "../shared/components/collection-dialog";

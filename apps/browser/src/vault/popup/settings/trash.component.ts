@@ -2,8 +2,8 @@ import { CommonModule } from "@angular/common";
 import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { EmptyTrash } from "@bitwarden/assets/svg";
 import { CalloutModule, NoItemsModule } from "@bitwarden/components";
-import { EmptyTrash } from "@bitwarden/icons";
 
 import { PopOutComponent } from "../../../platform/popup/components/pop-out.component";
 import { PopupHeaderComponent } from "../../../platform/popup/layout/popup-header.component";

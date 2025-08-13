@@ -6,6 +6,7 @@ import { FormControl } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { combineLatest, debounceTime, map, switchMap } from "rxjs";
 
+import { Security } from "@bitwarden/assets/svg";
 import {
   CriticalAppsService,
   RiskInsightsDataService,
@@ -22,7 +23,6 @@ import { CipherId, OrganizationId } from "@bitwarden/common/types/guid";
 import { SecurityTaskType } from "@bitwarden/common/vault/tasks";
 import { NoItemsModule, SearchModule, TableDataSource, ToastService } from "@bitwarden/components";
 import { CardComponent } from "@bitwarden/dirt-card";
-import { Security } from "@bitwarden/icons";
 import { HeaderModule } from "@bitwarden/web-vault/app/layouts/header/header.module";
 import { SharedModule } from "@bitwarden/web-vault/app/shared";
 import { PipesModule } from "@bitwarden/web-vault/app/vault/individual-vault/pipes/pipes.module";

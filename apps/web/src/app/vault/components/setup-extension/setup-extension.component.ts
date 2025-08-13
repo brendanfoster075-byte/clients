@@ -5,6 +5,7 @@ import { Router, RouterModule } from "@angular/router";
 import { firstValueFrom, pairwise, startWith } from "rxjs";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
+import { BrowserExtensionIcon, Party } from "@bitwarden/assets/svg";
 import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { getUserId } from "@bitwarden/common/auth/services/account.service";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
@@ -22,7 +23,6 @@ import {
   IconModule,
   LinkModule,
 } from "@bitwarden/components";
-import { BrowserExtensionIcon, Party } from "@bitwarden/icons";
 
 import { SETUP_EXTENSION_DISMISSED } from "../../guards/setup-extension-redirect.guard";
 import { WebBrowserInteractionService } from "../../services/web-browser-interaction.service";

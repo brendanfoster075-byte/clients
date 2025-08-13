@@ -11,8 +11,8 @@ import {
   getAllByLabelText,
 } from "@storybook/test";
 
+import { PasswordManagerLogo } from "@bitwarden/assets/svg";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { PasswordManagerLogo } from "@bitwarden/icons";
 
 import { LayoutComponent } from "../../layout";
 import { I18nMockService } from "../../utils/i18n-mock.service";

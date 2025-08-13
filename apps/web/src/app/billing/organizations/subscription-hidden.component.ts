@@ -2,7 +2,7 @@
 // @ts-strict-ignore
 import { Component, Input } from "@angular/core";
 
-import { SubscriptionHiddenIcon } from "@bitwarden/icons";
+import { SubscriptionHiddenIcon } from "@bitwarden/assets/svg";
 
 @Component({
   selector: "app-org-subscription-hidden",

@@ -5,8 +5,8 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, Data, NavigationEnd, Router, RouterModule } from "@angular/router";
 import { filter, switchMap, tap } from "rxjs";
 
+import { Icon } from "@bitwarden/assets/svg";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
-import { Icon } from "@bitwarden/icons";
 
 import { Translation } from "../dialog";
 
