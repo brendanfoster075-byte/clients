@@ -3,6 +3,7 @@
 @let filter = filter$ | async;
 @let refreshing = refreshing$ | async;
 @let loading = loading$ | async;
+@let showCollectionAccessRestricted = showCollectionAccessRestricted$ | async;
 
 <app-organization-free-trial-warning
   *ngIf="useOrganizationWarningsService$ | async"

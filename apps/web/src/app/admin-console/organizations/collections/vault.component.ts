@@ -64,6 +64,10 @@ import { TreeNode } from "@bitwarden/common/vault/models/domain/tree-node";
 import { CipherView } from "@bitwarden/common/vault/models/view/cipher.view";
 import { ServiceUtils } from "@bitwarden/common/vault/service-utils";
 import {
+  CipherViewLike,
+  CipherViewLikeUtils,
+} from "@bitwarden/common/vault/utils/cipher-view-like-utils";
+import {
   BannerModule,
   DialogRef,
   DialogService,
@@ -197,7 +201,7 @@ export class VaultComponent implements OnInit, OnDestroy {
   protected filter$: Observable<RoutedVaultFilterModel>;
 
   private searchText$ = new Subject<string>();
-  private refresh$ = new BehaviorSubject<void>(null);
+  private refresh$ = new BehaviorSubject<void>(undefined);
   private refreshingSubject$ = new BehaviorSubject<boolean>(false);
   private destroy$ = new Subject<void>();
   protected addAccessStatus$ = new BehaviorSubject<AddAccessStatusType>(0);
@@ -210,7 +214,6 @@ export class VaultComponent implements OnInit, OnDestroy {
   protected editableCollections$: Observable<CollectionAdminView[]>;
   protected allCollectionsWithoutUnassigned$: Observable<CollectionAdminView[]>;
   protected allCollections$: Observable<CollectionAdminView[]>;
-  protected showCollectionAccessRestricted: boolean;
   protected collections$: Observable<CollectionAdminView[]> = of([]);
   protected selectedCollection$: Observable<TreeNode<CollectionAdminView> | undefined>;
   private nestedCollections$: Observable<TreeNode<CollectionAdminView>[]>;
@@ -433,6 +436,76 @@ export class VaultComponent implements OnInit, OnDestroy {
       }),
       shareReplay({ refCount: true, bufferSize: 1 }),
     );
+
+    // Billing Warnings
+    this.useOrganizationWarningsService$ = this.configService.getFeatureFlag$(
+      FeatureFlag.UseOrganizationWarningsService,
+    );
+
+    this.freeTrialWhenWarningsServiceDisabled$ = this.useOrganizationWarningsService$.pipe(
+      filter((enabled) => !enabled),
+      switchMap(() => freeTrial$),
+    );
+
+    const freeTrial$ = combineLatest([
+      this.organization$,
+      this.hasSubscription$.pipe(filter((hasSubscription) => hasSubscription !== null)),
+    ]).pipe(
+      filter(
+        ([org, hasSubscription]) => org.isOwner && hasSubscription && org.canViewBillingHistory,
+      ),
+      switchMap(([org]) =>
+        combineLatest([
+          of(org),
+          this.organizationApiService.getSubscription(org.id),
+          from(this.organizationBillingService.getPaymentSource(org.id)).pipe(
+            map((paymentSource) => {
+              if (paymentSource == null) {
+                throw new Error("@TODO");
+              }
+              return paymentSource;
+            }),
+          ),
+        ]),
+      ),
+      map(([org, sub, paymentSource]) =>
+        this.trialFlowService.checkForOrgsWithUpcomingPaymentIssues(org, sub, paymentSource),
+      ),
+      filter((result) => result !== null),
+      catchError((error: unknown) => {
+        this.billingNotificationService.handleError(error);
+        return of();
+      }),
+    );
+
+    this.resellerWarningWhenWarningsServiceDisabled$ = combineLatest([
+      this.organization$,
+      this.useOrganizationWarningsService$,
+    ]).pipe(
+      filter(([org, enabled]) => !enabled && org.isOwner),
+      switchMap(([org]) =>
+        from(this.billingApiService.getOrganizationBillingMetadata(org.id)).pipe(
+          map((metadata) => ({ org, metadata })),
+        ),
+      ),
+      map(({ org, metadata }) => this.resellerWarningService.getWarning(org, metadata)),
+    );
+
+    // End Billing Warnings
+
+    this.editableCollections$ = combineLatest([
+      this.allCollectionsWithoutUnassigned$,
+      this.organization$,
+    ]).pipe(
+      map(([collections, organization]) => {
+        // Users that can edit all ciphers can implicitly add to / edit within any collection
+        if (organization.canEditAllCiphers) {
+          return collections;
+        }
+        return collections.filter((c) => c.assigned);
+      }),
+      shareReplay({ refCount: true, bufferSize: 1 }),
+    );
   }
 
   getOrganizationId(): Observable<OrganizationId> {
@@ -497,20 +570,6 @@ export class VaultComponent implements OnInit, OnDestroy {
           replaceUrl: true,
         }),
       );
-
-    this.editableCollections$ = combineLatest([
-      this.allCollectionsWithoutUnassigned$,
-      this.organization$,
-    ]).pipe(
-      map(([collections, organization]) => {
-        // Users that can edit all ciphers can implicitly add to / edit within any collection
-        if (organization.canEditAllCiphers) {
-          return collections;
-        }
-        return collections.filter((c) => c.assigned);
-      }),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    );
 
     const allCipherMap$ = this.allCiphers$.pipe(
       map((ciphers) => {
@@ -677,11 +736,6 @@ export class VaultComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    // Billing Warnings
-    this.useOrganizationWarningsService$ = this.configService.getFeatureFlag$(
-      FeatureFlag.UseOrganizationWarningsService,
-    );
-
     combineLatest([this.useOrganizationWarningsService$, this.organization$])
       .pipe(
         switchMap(([enabled, organization]) =>
@@ -693,58 +747,6 @@ export class VaultComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    const freeTrial$ = combineLatest([
-      this.organization$,
-      this.hasSubscription$.pipe(filter((hasSubscription) => hasSubscription !== null)),
-    ]).pipe(
-      filter(
-        ([org, hasSubscription]) => org.isOwner && hasSubscription && org.canViewBillingHistory,
-      ),
-      switchMap(([org]) =>
-        combineLatest([
-          of(org),
-          this.organizationApiService.getSubscription(org.id),
-          from(this.organizationBillingService.getPaymentSource(org.id)).pipe(
-            map((paymentSource) => {
-              if (paymentSource == null) {
-                throw new Error("@TODO");
-              }
-              return paymentSource;
-            }),
-          ),
-        ]),
-      ),
-      map(([org, sub, paymentSource]) =>
-        this.trialFlowService.checkForOrgsWithUpcomingPaymentIssues(org, sub, paymentSource),
-      ),
-      filter((result) => result !== null),
-      catchError((error: unknown) => {
-        this.billingNotificationService.handleError(error);
-        return of();
-      }),
-    );
-
-    this.freeTrialWhenWarningsServiceDisabled$ = this.useOrganizationWarningsService$.pipe(
-      filter((enabled) => !enabled),
-      switchMap(() => freeTrial$),
-    );
-
-    const resellerWarning$ = this.organization$.pipe(
-      filter((org) => org.isOwner),
-      switchMap((org) =>
-        from(this.billingApiService.getOrganizationBillingMetadata(org.id)).pipe(
-          map((metadata) => ({ org, metadata })),
-        ),
-      ),
-      map(({ org, metadata }) => this.resellerWarningService.getWarning(org, metadata)),
-    );
-
-    this.resellerWarningWhenWarningsServiceDisabled$ = this.useOrganizationWarningsService$.pipe(
-      filter((enabled) => !enabled),
-      switchMap(() => resellerWarning$),
-    );
-    // End Billing Warnings
-
     firstSetup$
       .pipe(
         switchMap(() => this.refresh$),
@@ -755,7 +757,9 @@ export class VaultComponent implements OnInit, OnDestroy {
       .subscribe((allCollections) => {
         // This is a temporary fix to avoid double fetching collections.
         // TODO: Remove when implementing new VVR menu
-        this.vaultFilterService.reloadCollections(allCollections);
+        if (this.vaultFilterService.reloadCollections) {
+          this.vaultFilterService.reloadCollections(allCollections);
+        }
 
         this.refreshingSubject$.next(false);
       });
@@ -809,10 +813,12 @@ export class VaultComponent implements OnInit, OnDestroy {
         case "delete": {
           const ciphers = event.items
             .filter((i) => i.collection === undefined)
-            .map((i) => i.cipher);
+            .map((i) => i.cipher)
+            .filter((c) => c != null);
           const collections = event.items
             .filter((i) => i.cipher === undefined)
-            .map((i) => i.collection);
+            .map((i) => i.collection)
+            .filter((c) => c != null);
           if (ciphers.length === 1 && collections.length === 0) {
             await this.deleteCipher(ciphers[0]);
           } else if (ciphers.length === 0 && collections.length === 1) {
@@ -879,8 +885,8 @@ export class VaultComponent implements OnInit, OnDestroy {
     const result = await firstValueFrom(dialogRef.closed);
 
     if (
-      result.action === AttachmentDialogResult.Removed ||
-      result.action === AttachmentDialogResult.Uploaded
+      result?.action === AttachmentDialogResult.Removed ||
+      result?.action === AttachmentDialogResult.Uploaded
     ) {
       this.refresh();
     }
@@ -890,7 +896,7 @@ export class VaultComponent implements OnInit, OnDestroy {
   async addCipher(cipherType?: CipherType) {
     const cipherFormConfig = await this.cipherFormConfigService.buildConfig(
       "add",
-      null,
+      undefined,
       cipherType,
     );
 
@@ -910,7 +916,7 @@ export class VaultComponent implements OnInit, OnDestroy {
    * @param cipherView - When set, the cipher to be edited
    * @param cloneCipher - `true` when the cipher should be cloned.
    */
-  async editCipher(cipher: CipherView | null, cloneCipher: boolean) {
+  async editCipher(cipher: CipherView | undefined, cloneCipher: boolean) {
     if (
       cipher &&
       cipher.reprompt !== 0 &&
@@ -923,7 +929,7 @@ export class VaultComponent implements OnInit, OnDestroy {
 
     const cipherFormConfig = await this.cipherFormConfigService.buildConfig(
       cloneCipher ? "clone" : "edit",
-      cipher?.id as CipherId | null,
+      cipher?.id as CipherId | undefined,
     );
 
     await this.openVaultItemDialog("form", cipherFormConfig, cipher);
@@ -1009,7 +1015,11 @@ export class VaultComponent implements OnInit, OnDestroy {
     await this.editCipher(cipher, true);
   }
 
-  restore = async (c: CipherView): Promise<boolean> => {
+  restore = async (c: CipherViewLike): Promise<boolean> => {
+    if (!CipherViewLikeUtils.isCipherView(c)) {
+      throw new Error("CipherViewLike is not a CipherView");
+    }
+
     const organization = await firstValueFrom(this.organization$);
     if (!c.isDeleted) {
       return false;
@@ -1160,7 +1170,8 @@ export class VaultComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      await this.apiService.deleteCollection(organization?.id, collection.id);
+      //FIXME: Collection model ts-strict work will remove the need for the ! here.
+      await this.apiService.deleteCollection(organization?.id, collection.id!);
       await this.collectionService.delete([collection.id as CollectionId], userId);
       this.toastService.showToast({
         variant: "success",
@@ -1314,8 +1325,8 @@ export class VaultComponent implements OnInit, OnDestroy {
 
     const result = await lastValueFrom(dialog.closed);
     if (
-      result.action === CollectionDialogAction.Saved ||
-      result.action === CollectionDialogAction.Deleted
+      result?.action === CollectionDialogAction.Saved ||
+      result?.action === CollectionDialogAction.Deleted
     ) {
       this.refresh();
     }
@@ -1341,15 +1352,15 @@ export class VaultComponent implements OnInit, OnDestroy {
 
     const result = await lastValueFrom(dialog.closed);
     if (
-      result.action === CollectionDialogAction.Saved ||
-      result.action === CollectionDialogAction.Deleted
+      result?.action === CollectionDialogAction.Saved ||
+      result?.action === CollectionDialogAction.Deleted
     ) {
       this.refresh();
 
       const selectedCollection = await firstValueFrom(this.selectedCollection$);
       // If we deleted the selected collection, navigate up/away
       if (
-        result.action === CollectionDialogAction.Deleted &&
+        result?.action === CollectionDialogAction.Deleted &&
         selectedCollection?.node.id === c?.id
       ) {
         void this.router.navigate([], {
