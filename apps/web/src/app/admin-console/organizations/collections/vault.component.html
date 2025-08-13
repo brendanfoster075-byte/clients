@@ -1,5 +1,6 @@
 @let organization = organization$ | async;
 @let selectedCollection = selectedCollection$ | async;
+@let filter = filter$ | async;
 
 <app-organization-free-trial-warning
   *ngIf="useOrganizationWarningsService$ | async"

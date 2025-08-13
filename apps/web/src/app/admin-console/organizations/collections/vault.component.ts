@@ -192,10 +192,9 @@ export class VaultComponent implements OnInit, OnDestroy {
   protected prevCipherId: string | null = null;
   protected userId$: Observable<UserId>;
 
-  protected filter: RoutedVaultFilterModel = {};
   protected hideVaultFilter$: Observable<boolean>;
   protected currentSearchText$: Observable<string>;
-  private filter$: Observable<RoutedVaultFilterModel>;
+  protected filter$: Observable<RoutedVaultFilterModel>;
 
   private searchText$ = new Subject<string>();
   private refresh$ = new BehaviorSubject<void>(null);
@@ -1225,9 +1224,10 @@ export class VaultComponent implements OnInit, OnDestroy {
       return;
     }
 
+    const filter = await firstValueFrom(this.filter$);
     const dialog = openBulkDeleteDialog(this.dialogService, {
       data: {
-        permanent: this.filter.type === "trash",
+        permanent: filter.type === "trash",
         cipherIds: assignedCiphers,
         collections: collections,
         organization,
