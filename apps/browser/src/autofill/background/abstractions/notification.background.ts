@@ -7,7 +7,9 @@ import { CollectionView } from "../../content/components/common-types";
 import { NotificationType, NotificationTypes } from "../../enums/notification-type.enum";
 import AutofillPageDetails from "../../models/autofill-page-details";
 
-// @AFTODO Remove Standard_ label when implemented as standard NotificationQueueMessage.
+/**
+ * @todo Remove Standard_ label when implemented as standard NotificationQueueMessage.
+ */
 export interface Standard_NotificationQueueMessage<T, D> {
   // universal notification properties
   domain: string;
@@ -20,6 +22,9 @@ export interface Standard_NotificationQueueMessage<T, D> {
   data: D; // notification-specific data
 }
 
+/**
+ * @todo Deprecate in favor of Standard_NotificationQueueMessage.
+ */
 interface NotificationQueueMessage {
   type: NotificationTypes;
   domain: string;
@@ -89,6 +94,11 @@ type UnlockVaultMessageData = {
   skipNotification?: boolean;
 };
 
+/**
+ * @todo Extend generics to this type, see Standard_NotificationQueueMessage
+ * - use new `data` types as generic
+ * - eliminate optional status of properties as needed per Notification Type
+ */
 type NotificationBackgroundExtensionMessage = {
   [key: string]: any;
   command: string;
