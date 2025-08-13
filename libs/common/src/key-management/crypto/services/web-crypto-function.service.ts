@@ -1,6 +1,6 @@
-import * as argon2 from "argon2-browser";
 import * as forge from "node-forge";
 
+import { EncryptionType } from "../../../platform/enums";
 import { Utils } from "../../../platform/misc/utils";
 import {
   CbcDecryptParameters,
@@ -13,7 +13,6 @@ import { CryptoFunctionService } from "../abstractions/crypto-function.service";
 export class WebCryptoFunctionService implements CryptoFunctionService {
   private crypto: Crypto;
   private subtle: SubtleCrypto;
-  private wasmSupported: boolean;
 
   constructor(globalContext: { crypto: Crypto }) {
     if (globalContext?.crypto?.subtle == null) {
@@ -23,7 +22,6 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     }
     this.crypto = globalContext.crypto;
     this.subtle = this.crypto.subtle;
-    this.wasmSupported = this.checkIfWasmSupported();
   }
 
   async pbkdf2(
@@ -52,33 +50,6 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     );
     const buffer = await this.subtle.deriveBits(pbkdf2Params as any, impKey, wcLen);
     return new Uint8Array(buffer);
-  }
-
-  async argon2(
-    password: string | Uint8Array,
-    salt: string | Uint8Array,
-    iterations: number,
-    memory: number,
-    parallelism: number,
-  ): Promise<Uint8Array> {
-    if (!this.wasmSupported) {
-      throw "Webassembly support is required for the Argon2 KDF feature.";
-    }
-
-    const passwordArr = new Uint8Array(this.toBuf(password));
-    const saltArr = new Uint8Array(this.toBuf(salt));
-
-    const result = await argon2.hash({
-      pass: passwordArr,
-      salt: saltArr,
-      time: iterations,
-      mem: memory,
-      parallelism: parallelism,
-      hashLen: 32,
-      type: argon2.ArgonType.Argon2id,
-    });
-    argon2.unloadRuntime();
-    return result.hash;
   }
 
   async hkdf(
@@ -175,34 +146,6 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     return new Uint8Array(buffer);
   }
 
-  // Safely compare two values in a way that protects against timing attacks (Double HMAC Verification).
-  // ref: https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2011/february/double-hmac-verification/
-  // ref: https://paragonie.com/blog/2015/11/preventing-timing-attacks-on-string-comparison-with-double-hmac-strategy
-  async compare(a: Uint8Array, b: Uint8Array): Promise<boolean> {
-    const macKey = await this.randomBytes(32);
-    const signingAlgorithm = {
-      name: "HMAC",
-      hash: { name: "SHA-256" },
-    };
-    const impKey = await this.subtle.importKey("raw", macKey, signingAlgorithm, false, ["sign"]);
-    const mac1 = await this.subtle.sign(signingAlgorithm, impKey, a);
-    const mac2 = await this.subtle.sign(signingAlgorithm, impKey, b);
-
-    if (mac1.byteLength !== mac2.byteLength) {
-      return false;
-    }
-
-    const arr1 = new Uint8Array(mac1);
-    const arr2 = new Uint8Array(mac2);
-    for (let i = 0; i < arr2.length; i++) {
-      if (arr1[i] !== arr2[i]) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
   hmacFast(value: string, key: string, algorithm: "sha1" | "sha256" | "sha512"): Promise<string> {
     const hmac = forge.hmac.create();
     hmac.start(algorithm, key);
@@ -211,6 +154,9 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     return Promise.resolve(bytes);
   }
 
+  // Safely compare two values in a way that protects against timing attacks (Double HMAC Verification).
+  // ref: https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2011/february/double-hmac-verification/
+  // ref: https://paragonie.com/blog/2015/11/preventing-timing-attacks-on-string-comparison-with-double-hmac-strategy
   async compareFast(a: string, b: string): Promise<boolean> {
     const rand = await this.randomBytes(32);
     const bytes = new Uint32Array(rand);
@@ -233,51 +179,32 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
     return equals;
   }
 
-  async aesEncrypt(data: Uint8Array, iv: Uint8Array, key: Uint8Array): Promise<Uint8Array> {
-    const impKey = await this.subtle.importKey("raw", key, { name: "AES-CBC" } as any, false, [
-      "encrypt",
-    ]);
-    const buffer = await this.subtle.encrypt({ name: "AES-CBC", iv: iv }, impKey, data);
-    return new Uint8Array(buffer);
-  }
-
   aesDecryptFastParameters(
     data: string,
     iv: string,
     mac: string | null,
     key: SymmetricCryptoKey,
   ): CbcDecryptParameters<string> {
-    const p = {} as CbcDecryptParameters<string>;
-    if (key.meta != null) {
-      p.encKey = key.meta.encKeyByteString;
-      p.macKey = key.meta.macKeyByteString;
+    const innerKey = key.inner();
+    if (innerKey.type === EncryptionType.AesCbc256_B64) {
+      return {
+        iv: forge.util.decode64(iv),
+        data: forge.util.decode64(data),
+        encKey: forge.util.createBuffer(innerKey.encryptionKey).getBytes(),
+      } as CbcDecryptParameters<string>;
+    } else if (innerKey.type === EncryptionType.AesCbc256_HmacSha256_B64) {
+      const macData = forge.util.decode64(iv) + forge.util.decode64(data);
+      return {
+        iv: forge.util.decode64(iv),
+        data: forge.util.decode64(data),
+        encKey: forge.util.createBuffer(innerKey.encryptionKey).getBytes(),
+        macKey: forge.util.createBuffer(innerKey.authenticationKey).getBytes(),
+        mac: forge.util.decode64(mac!),
+        macData,
+      } as CbcDecryptParameters<string>;
+    } else {
+      throw new Error("Unsupported encryption type.");
     }
-
-    if (p.encKey == null) {
-      p.encKey = forge.util.decode64(key.encKeyB64);
-    }
-    p.data = forge.util.decode64(data);
-    p.iv = forge.util.decode64(iv);
-    p.macData = p.iv + p.data;
-    if (p.macKey == null && key.macKeyB64 != null) {
-      p.macKey = forge.util.decode64(key.macKeyB64);
-    }
-    if (mac != null) {
-      p.mac = forge.util.decode64(mac);
-    }
-
-    // cache byte string keys for later
-    if (key.meta == null) {
-      key.meta = {};
-    }
-    if (key.meta.encKeyByteString == null) {
-      key.meta.encKeyByteString = p.encKey;
-    }
-    if (p.macKey != null && key.meta.macKeyByteString == null) {
-      key.meta.macKeyByteString = p.macKey;
-    }
-
-    return p;
   }
 
   aesDecryptFast({
@@ -451,22 +378,5 @@ export class WebCryptoFunctionService implements CryptoFunctionService {
 
   private toWebCryptoAesMode(mode: "cbc" | "ecb"): string {
     return mode === "cbc" ? "AES-CBC" : "AES-ECB";
-  }
-
-  // ref: https://stackoverflow.com/a/47880734/1090359
-  private checkIfWasmSupported(): boolean {
-    try {
-      if (typeof WebAssembly === "object" && typeof WebAssembly.instantiate === "function") {
-        const module = new WebAssembly.Module(
-          Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00),
-        );
-        if (module instanceof WebAssembly.Module) {
-          return new WebAssembly.Instance(module) instanceof WebAssembly.Instance;
-        }
-      }
-    } catch {
-      return false;
-    }
-    return false;
   }
 }
