@@ -3,6 +3,7 @@ import { MockProxy, mock } from "jest-mock-extended";
 import { ApiService } from "@bitwarden/common/abstractions/api.service";
 import { ProviderApiServiceAbstraction } from "@bitwarden/common/admin-console/abstractions/provider/provider-api.service.abstraction";
 import { OrganizationKeysRequest } from "@bitwarden/common/admin-console/models/request/organization-keys.request";
+import { AccountService } from "@bitwarden/common/auth/abstractions/account.service";
 import { BillingApiServiceAbstraction } from "@bitwarden/common/billing/abstractions/billing-api.service.abstraction";
 import { PlanType } from "@bitwarden/common/billing/enums";
 import { EncryptService } from "@bitwarden/common/key-management/crypto/abstractions/encrypt.service";
@@ -28,6 +29,7 @@ describe("WebProviderService", () => {
   let billingApiService: MockProxy<BillingApiServiceAbstraction>;
   let stateProvider: MockProxy<StateProvider>;
   let providerApiService: MockProxy<ProviderApiServiceAbstraction>;
+  let accountService: MockProxy<AccountService>;
 
   beforeEach(() => {
     keyService = mock();
@@ -38,6 +40,7 @@ describe("WebProviderService", () => {
     billingApiService = mock();
     stateProvider = mock();
     providerApiService = mock();
+    accountService = mock();
 
     sut = new WebProviderService(
       keyService,
@@ -48,6 +51,7 @@ describe("WebProviderService", () => {
       billingApiService,
       stateProvider,
       providerApiService,
+      accountService,
     );
   });
 
