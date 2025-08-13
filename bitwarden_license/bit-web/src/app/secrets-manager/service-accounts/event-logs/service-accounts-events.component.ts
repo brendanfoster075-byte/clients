@@ -57,6 +57,7 @@ export class ServiceAccountEventsComponent
   }
 
   async ngOnInit() {
+    this.initBase();
     // eslint-disable-next-line rxjs/no-async-subscribe
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe(async (params) => {
       this.serviceAccountId = params.serviceAccountId;
