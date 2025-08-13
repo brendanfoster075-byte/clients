@@ -2478,6 +2478,7 @@ export default class AutofillService implements AutofillServiceInterface {
     }
     return usernameField;
   }
+
   /**
    * Accepts a pageDetails object with a list of fields and returns a list of
    * fields that are likely to be TOTP fields.
