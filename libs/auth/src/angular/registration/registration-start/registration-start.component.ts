@@ -19,13 +19,12 @@ import {
   ButtonModule,
   CheckboxModule,
   FormFieldModule,
-  Icons,
   IconModule,
   LinkModule,
 } from "@bitwarden/components";
+import { RegistrationCheckEmailIcon, RegistrationUserAddIcon } from "@bitwarden/icons";
 
 import { LoginEmailService } from "../../../common";
-import { RegistrationUserAddIcon } from "../../icons";
 import { RegistrationEnvSelectorComponent } from "../registration-env-selector/registration-env-selector.component";
 
 // FIXME: update to use a const object instead of a typescript enum
@@ -170,7 +169,7 @@ export class RegistrationStartComponent implements OnInit, OnDestroy {
       pageTitle: {
         key: "checkYourEmail",
       },
-      pageIcon: Icons.RegistrationCheckEmailIcon,
+      pageIcon: RegistrationCheckEmailIcon,
     });
     this.registrationStartStateChange.emit(this.state);
   };

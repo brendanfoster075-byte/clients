@@ -43,8 +43,7 @@ import {
   LinkModule,
   ToastService,
 } from "@bitwarden/components";
-
-import { VaultIcon, WaveIcon } from "../icons";
+import { VaultIcon, WaveIcon } from "@bitwarden/icons";
 
 import { LoginComponentService, PasswordPolicies } from "./login-component.service";
 

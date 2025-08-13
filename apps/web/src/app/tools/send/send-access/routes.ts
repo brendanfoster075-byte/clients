@@ -1,7 +1,7 @@
 import { Routes } from "@angular/router";
 
 import { AnonLayoutWrapperData } from "@bitwarden/components";
-import { ActiveSendIcon } from "@bitwarden/send-ui";
+import { ActiveSendIcon } from "@bitwarden/icons";
 
 import { RouteDataProperties } from "../../../core";
 

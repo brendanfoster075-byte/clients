@@ -6,7 +6,16 @@ import { AccountService } from "@bitwarden/common/auth/abstractions/account.serv
 import { getUserId } from "@bitwarden/common/auth/services/account.service";
 import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
 import { ConfigService } from "@bitwarden/common/platform/abstractions/config/config.service";
-import { Icons } from "@bitwarden/components";
+import {
+  VaultInactive,
+  VaultActive,
+  GeneratorInactive,
+  GeneratorActive,
+  SendInactive,
+  SendActive,
+  SettingsInactive,
+  SettingsActive,
+} from "@bitwarden/icons";
 
 import { NavButton } from "../platform/popup/layout/popup-tab-navigation.component";
 
@@ -29,26 +38,26 @@ export class TabsV2Component {
         {
           label: "vault",
           page: "/tabs/vault",
-          icon: Icons.VaultInactive,
-          iconActive: Icons.VaultActive,
+          icon: VaultInactive,
+          iconActive: VaultActive,
         },
         {
           label: "generator",
           page: "/tabs/generator",
-          icon: Icons.GeneratorInactive,
-          iconActive: Icons.GeneratorActive,
+          icon: GeneratorInactive,
+          iconActive: GeneratorActive,
         },
         {
           label: "send",
           page: "/tabs/send",
-          icon: Icons.SendInactive,
-          iconActive: Icons.SendActive,
+          icon: SendInactive,
+          iconActive: SendActive,
         },
         {
           label: "settings",
           page: "/tabs/settings",
-          icon: Icons.SettingsInactive,
-          iconActive: Icons.SettingsActive,
+          icon: SettingsInactive,
+          iconActive: SettingsActive,
           showBerry: onboardingFeatureEnabled && hasBadges,
         },
       ];

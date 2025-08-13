@@ -15,7 +15,8 @@ import {
   ItemModule,
   NoItemsModule,
 } from "@bitwarden/components";
-import { AddEditFolderDialogComponent, VaultIcons } from "@bitwarden/vault";
+import { NoFolders } from "@bitwarden/icons";
+import { AddEditFolderDialogComponent } from "@bitwarden/vault";
 
 import { PopOutComponent } from "../../../platform/popup/components/pop-out.component";
 import { PopupHeaderComponent } from "../../../platform/popup/layout/popup-header.component";
@@ -39,7 +40,7 @@ import { PopupPageComponent } from "../../../platform/popup/layout/popup-page.co
 export class FoldersV2Component {
   folders$: Observable<FolderView[]>;
 
-  NoFoldersIcon = VaultIcons.NoFolders;
+  NoFoldersIcon = NoFolders;
   private activeUserId$ = this.accountService.activeAccount$.pipe(map((a) => a?.id));
 
   constructor(

@@ -1,7 +1,8 @@
 import { Meta, StoryObj } from "@storybook/angular";
 
+import * as GenericIcons from "@bitwarden/icons";
+
 import { BitIconComponent } from "./icon.component";
-import * as GenericIcons from "./icons";
 
 export default {
   title: "Component Library/Icon",

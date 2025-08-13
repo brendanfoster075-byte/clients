@@ -36,13 +36,13 @@ import { SecureNoteView } from "@bitwarden/common/vault/models/view/secure-note.
 import {
   ButtonModule,
   DialogService,
-  Icons,
   ItemModule,
   NoItemsModule,
   SearchModule,
   SectionComponent,
   SectionHeaderComponent,
 } from "@bitwarden/components";
+import { NoResults } from "@bitwarden/icons";
 import { PasswordRepromptService } from "@bitwarden/vault";
 
 import { ZonedMessageListenerService } from "../../../platform/browser/zoned-message-listener.service";
@@ -102,7 +102,7 @@ export class Fido2Component implements OnInit, OnDestroy {
   protected equivalentDomainsURL: string;
   protected hostname: string;
   protected loading = false;
-  protected noResultsIcon = Icons.NoResults;
+  protected noResultsIcon = NoResults;
   protected passkeyAction: PasskeyActionValue = PasskeyActions.Register;
   protected PasskeyActions = PasskeyActions;
   protected hasSearched = false;

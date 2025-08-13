@@ -20,14 +20,9 @@ import { ConfigService } from "@bitwarden/common/platform/abstractions/config/co
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { CipherId, OrganizationId } from "@bitwarden/common/types/guid";
 import { SecurityTaskType } from "@bitwarden/common/vault/tasks";
-import {
-  Icons,
-  NoItemsModule,
-  SearchModule,
-  TableDataSource,
-  ToastService,
-} from "@bitwarden/components";
+import { NoItemsModule, SearchModule, TableDataSource, ToastService } from "@bitwarden/components";
 import { CardComponent } from "@bitwarden/dirt-card";
+import { Security } from "@bitwarden/icons";
 import { HeaderModule } from "@bitwarden/web-vault/app/layouts/header/header.module";
 import { SharedModule } from "@bitwarden/web-vault/app/shared";
 import { PipesModule } from "@bitwarden/web-vault/app/vault/individual-vault/pipes/pipes.module";
@@ -61,7 +56,7 @@ export class CriticalApplicationsComponent implements OnInit {
   protected loading = false;
   protected organizationId: string;
   protected applicationSummary = {} as ApplicationHealthReportSummary;
-  noItemsIcon = Icons.Security;
+  noItemsIcon = Security;
   enableRequestPasswordChange = false;
 
   async ngOnInit() {

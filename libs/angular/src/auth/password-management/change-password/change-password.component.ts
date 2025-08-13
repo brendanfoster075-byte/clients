@@ -24,9 +24,9 @@ import {
   AnonLayoutWrapperDataService,
   DialogService,
   ToastService,
-  Icons,
   CalloutComponent,
 } from "@bitwarden/components";
+import { LockIcon } from "@bitwarden/icons";
 import { I18nPipe } from "@bitwarden/ui-common";
 
 import { ChangePasswordService } from "./change-password.service.abstraction";
@@ -97,13 +97,13 @@ export class ChangePasswordComponent implements OnInit {
 
     if (this.forceSetPasswordReason === ForceSetPasswordReason.AdminForcePasswordReset) {
       this.anonLayoutWrapperDataService.setAnonLayoutWrapperData({
-        pageIcon: Icons.LockIcon,
+        pageIcon: LockIcon,
         pageTitle: { key: "updateMasterPassword" },
         pageSubtitle: { key: "accountRecoveryUpdateMasterPasswordSubtitle" },
       });
     } else if (this.forceSetPasswordReason === ForceSetPasswordReason.WeakMasterPassword) {
       this.anonLayoutWrapperDataService.setAnonLayoutWrapperData({
-        pageIcon: Icons.LockIcon,
+        pageIcon: LockIcon,
         pageTitle: { key: "updateMasterPassword" },
         pageSubtitle: { key: "updateMasterPasswordSubtitle" },
         maxWidth: "lg",

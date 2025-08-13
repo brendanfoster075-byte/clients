@@ -24,9 +24,9 @@ import {
   TableDataSource,
   ToastService,
 } from "@bitwarden/components";
+import { NoSendsIcon } from "@bitwarden/icons";
 import {
   DefaultSendFormConfigService,
-  NoSendsIcon,
   SendFormConfig,
   SendAddEditDialogComponent,
   SendItemDialogResult,

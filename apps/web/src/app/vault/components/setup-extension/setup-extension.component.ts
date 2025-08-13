@@ -22,7 +22,7 @@ import {
   IconModule,
   LinkModule,
 } from "@bitwarden/components";
-import { VaultIcons } from "@bitwarden/vault";
+import { BrowserExtensionIcon, Party } from "@bitwarden/icons";
 
 import { SETUP_EXTENSION_DISMISSED } from "../../guards/setup-extension-redirect.guard";
 import { WebBrowserInteractionService } from "../../services/web-browser-interaction.service";
@@ -70,7 +70,7 @@ export class SetupExtensionComponent implements OnInit, OnDestroy {
   private anonLayoutWrapperDataService = inject(AnonLayoutWrapperDataService);
 
   protected SetupExtensionState = SetupExtensionState;
-  protected PartyIcon = VaultIcons.Party;
+  protected PartyIcon = Party;
 
   /** The current state of the setup extension component. */
   protected state: SetupExtensionState = SetupExtensionState.Loading;
@@ -167,7 +167,7 @@ export class SetupExtensionComponent implements OnInit, OnDestroy {
         pageTitle: {
           key: "somethingWentWrong",
         },
-        pageIcon: VaultIcons.BrowserExtensionIcon,
+        pageIcon: BrowserExtensionIcon,
         hideIcon: false,
         hideCardWrapper: false,
         maxWidth: "md",

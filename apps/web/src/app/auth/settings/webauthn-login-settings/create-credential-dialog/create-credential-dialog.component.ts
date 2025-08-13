@@ -10,7 +10,8 @@ import { ErrorResponse } from "@bitwarden/common/models/response/error.response"
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { LogService } from "@bitwarden/common/platform/abstractions/log.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { DialogConfig, DialogRef, DialogService, Icons, ToastService } from "@bitwarden/components";
+import { DialogConfig, DialogRef, DialogService, ToastService } from "@bitwarden/components";
+import { CreatePasskeyFailedIcon, CreatePasskeyIcon } from "@bitwarden/icons";
 
 import { WebauthnLoginAdminService } from "../../../core";
 import { CredentialCreateOptionsView } from "../../../core/views/credential-create-options.view";
@@ -36,8 +37,8 @@ export class CreateCredentialDialogComponent implements OnInit {
   protected readonly NameMaxCharacters = 50;
   protected readonly CreateCredentialDialogResult = CreateCredentialDialogResult;
   protected readonly Icons = {
-    CreatePasskeyIcon: Icons.CreatePasskeyIcon,
-    CreatePasskeyFailedIcon: Icons.CreatePasskeyFailedIcon,
+    CreatePasskeyIcon,
+    CreatePasskeyFailedIcon,
   };
 
   protected currentStep: Step = "userVerification";

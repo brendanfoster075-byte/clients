@@ -12,7 +12,7 @@ import { StateProvider } from "@bitwarden/common/platform/state";
 import { SyncService } from "@bitwarden/common/platform/sync";
 import { OrganizationId } from "@bitwarden/common/types/guid";
 import { ProviderKey } from "@bitwarden/common/types/key";
-import { Icons } from "@bitwarden/components";
+import { BitwardenLogo } from "@bitwarden/icons";
 import { KeyService } from "@bitwarden/key-management";
 import { BillingNotificationService } from "@bitwarden/web-vault/app/billing/services/billing-notification.service";
 import { BaseAcceptComponent } from "@bitwarden/web-vault/app/common/base.accept.component";
@@ -22,7 +22,7 @@ import { BaseAcceptComponent } from "@bitwarden/web-vault/app/common/base.accept
   standalone: false,
 })
 export class SetupBusinessUnitComponent extends BaseAcceptComponent {
-  protected bitwardenLogo = Icons.BitwardenLogo;
+  protected bitwardenLogo = BitwardenLogo;
 
   failedMessage = "emergencyInviteAcceptFailed";
   failedShortMessage = "emergencyInviteAcceptFailedShort";

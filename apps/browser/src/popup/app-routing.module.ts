@@ -20,29 +20,32 @@ import { ChangePasswordComponent } from "@bitwarden/angular/auth/password-manage
 import { SetInitialPasswordComponent } from "@bitwarden/angular/auth/password-management/set-initial-password/set-initial-password.component";
 import { canAccessFeature } from "@bitwarden/angular/platform/guard/feature-flag.guard";
 import {
-  DevicesIcon,
   LoginComponent,
   LoginDecryptionOptionsComponent,
   LoginSecondaryContentComponent,
   LoginViaAuthRequestComponent,
   PasswordHintComponent,
   RegistrationFinishComponent,
-  RegistrationLockAltIcon,
   RegistrationStartComponent,
   RegistrationStartSecondaryComponent,
   RegistrationStartSecondaryComponentData,
-  RegistrationUserAddIcon,
   SsoComponent,
-  TwoFactorTimeoutIcon,
   TwoFactorAuthComponent,
   TwoFactorAuthGuard,
   NewDeviceVerificationComponent,
+} from "@bitwarden/auth/angular";
+import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
+import { AnonLayoutWrapperData } from "@bitwarden/components";
+import {
+  DevicesIcon,
+  RegistrationLockAltIcon,
+  RegistrationUserAddIcon,
+  TwoFactorTimeoutIcon,
   DeviceVerificationIcon,
   UserLockIcon,
   VaultIcon,
-} from "@bitwarden/auth/angular";
-import { FeatureFlag } from "@bitwarden/common/enums/feature-flag.enum";
-import { AnonLayoutWrapperData, Icons } from "@bitwarden/components";
+  LockIcon,
+} from "@bitwarden/icons";
 import { LockComponent } from "@bitwarden/key-management-ui";
 
 import { AccountSwitcherComponent } from "../auth/popup/account-switching/account-switcher.component";
@@ -510,7 +513,7 @@ const routes: Routes = [
         path: "lock",
         canActivate: [lockGuard()],
         data: {
-          pageIcon: Icons.LockIcon,
+          pageIcon: LockIcon,
           pageTitle: {
             key: "yourVaultIsLockedV2",
           },

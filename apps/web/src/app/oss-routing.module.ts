@@ -21,25 +21,28 @@ import {
   RegistrationLinkExpiredComponent,
   LoginComponent,
   LoginSecondaryContentComponent,
-  TwoFactorTimeoutIcon,
-  UserLockIcon,
-  SsoKeyIcon,
   LoginViaAuthRequestComponent,
-  DevicesIcon,
-  RegistrationUserAddIcon,
-  RegistrationLockAltIcon,
-  RegistrationExpiredLinkIcon,
   SsoComponent,
-  VaultIcon,
   LoginDecryptionOptionsComponent,
   TwoFactorAuthComponent,
   TwoFactorAuthGuard,
   NewDeviceVerificationComponent,
-  DeviceVerificationIcon,
 } from "@bitwarden/auth/angular";
-import { AnonLayoutWrapperComponent, AnonLayoutWrapperData, Icons } from "@bitwarden/components";
+import { AnonLayoutWrapperComponent, AnonLayoutWrapperData } from "@bitwarden/components";
+import {
+  DevicesIcon,
+  RegistrationLockAltIcon,
+  RegistrationUserAddIcon,
+  TwoFactorTimeoutIcon,
+  DeviceVerificationIcon,
+  UserLockIcon,
+  VaultIcon,
+  RegistrationExpiredLinkIcon,
+  SsoKeyIcon,
+  LockIcon,
+  BrowserExtensionIcon,
+} from "@bitwarden/icons";
 import { LockComponent } from "@bitwarden/key-management-ui";
-import { VaultIcons } from "@bitwarden/vault";
 
 import { flagEnabled, Flags } from "../utils/flags";
 
@@ -374,7 +377,7 @@ const routes: Routes = [
           pageTitle: {
             key: "yourVaultIsLockedV2",
           },
-          pageIcon: Icons.LockIcon,
+          pageIcon: LockIcon,
           showReadonlyHostname: true,
         } satisfies AnonLayoutWrapperData,
       },
@@ -533,7 +536,7 @@ const routes: Routes = [
       {
         path: "browser-extension-prompt",
         data: {
-          pageIcon: VaultIcons.BrowserExtensionIcon,
+          pageIcon: BrowserExtensionIcon,
         } satisfies AnonLayoutWrapperData,
         children: [
           {

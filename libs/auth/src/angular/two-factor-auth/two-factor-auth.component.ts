@@ -48,14 +48,13 @@ import {
   FormFieldModule,
   ToastService,
 } from "@bitwarden/components";
-
 import {
   TwoFactorAuthAuthenticatorIcon,
   TwoFactorAuthEmailIcon,
   TwoFactorAuthWebAuthnIcon,
   TwoFactorAuthSecurityKeyIcon,
   TwoFactorAuthDuoIcon,
-} from "../icons/two-factor-auth";
+} from "@bitwarden/icons";
 
 import { TwoFactorAuthAuthenticatorComponent } from "./child-components/two-factor-auth-authenticator/two-factor-auth-authenticator.component";
 import { TwoFactorAuthDuoComponent } from "./child-components/two-factor-auth-duo/two-factor-auth-duo.component";

@@ -7,14 +7,13 @@ import { Subject, filter, switchMap, takeUntil, tap } from "rxjs";
 
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import {
-  Icon,
-  Icons,
   IconModule,
   Translation,
   AnonLayoutComponent,
   AnonLayoutWrapperData,
   AnonLayoutWrapperDataService,
 } from "@bitwarden/components";
+import { ExtensionBitwardenLogo, Icon } from "@bitwarden/icons";
 import { I18nPipe } from "@bitwarden/ui-common";
 
 import { CurrentAccountComponent } from "../../../auth/popup/account-switching/current-account.component";
@@ -63,7 +62,7 @@ export class ExtensionAnonLayoutWrapperComponent implements OnInit, OnDestroy {
   protected hideCardWrapper: boolean = false;
 
   protected theme: string;
-  protected logo = Icons.ExtensionBitwardenLogo;
+  protected logo = ExtensionBitwardenLogo;
 
   constructor(
     private router: Router,

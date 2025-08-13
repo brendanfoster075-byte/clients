@@ -13,7 +13,6 @@ import {
   BannerModule,
   ButtonModule,
   I18nMockService,
-  Icons,
   IconButtonModule,
   ItemModule,
   NoItemsModule,
@@ -21,6 +20,16 @@ import {
   SectionComponent,
   ScrollLayoutDirective,
 } from "@bitwarden/components";
+import {
+  GeneratorActive,
+  GeneratorInactive,
+  SendActive,
+  SendInactive,
+  SettingsActive,
+  SettingsInactive,
+  VaultActive,
+  VaultInactive,
+} from "@bitwarden/icons";
 
 import { PopupRouterCacheService } from "../view-cache/popup-router-cache.service";
 
@@ -408,26 +417,26 @@ const navButtons = (showBerry = false) => [
   {
     label: "vault",
     page: "/tabs/vault",
-    icon: Icons.VaultInactive,
-    iconActive: Icons.VaultActive,
+    icon: VaultInactive,
+    iconActive: VaultActive,
   },
   {
     label: "generator",
     page: "/tabs/generator",
-    icon: Icons.GeneratorInactive,
-    iconActive: Icons.GeneratorActive,
+    icon: GeneratorInactive,
+    iconActive: GeneratorActive,
   },
   {
     label: "send",
     page: "/tabs/send",
-    icon: Icons.SendInactive,
-    iconActive: Icons.SendActive,
+    icon: SendInactive,
+    iconActive: SendActive,
   },
   {
     label: "settings",
     page: "/tabs/settings",
-    icon: Icons.SettingsInactive,
-    iconActive: Icons.SettingsActive,
+    icon: SettingsInactive,
+    iconActive: SettingsActive,
     showBerry: showBerry,
   },
 ];

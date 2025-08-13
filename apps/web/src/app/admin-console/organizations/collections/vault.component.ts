@@ -66,10 +66,10 @@ import {
   BannerModule,
   DialogRef,
   DialogService,
-  Icons,
   NoItemsModule,
   ToastService,
 } from "@bitwarden/components";
+import { Search } from "@bitwarden/icons";
 import {
   AttachmentDialogResult,
   AttachmentsV2Component,
@@ -168,7 +168,7 @@ export class VaultComponent implements OnInit, OnDestroy {
   activeFilter: VaultFilter = new VaultFilter();
 
   protected showAddAccessToggle = false;
-  protected noItemIcon = Icons.Search;
+  protected noItemIcon = Search;
   protected performingInitialLoad = true;
   protected refreshing = false;
   protected processingEvent = false;

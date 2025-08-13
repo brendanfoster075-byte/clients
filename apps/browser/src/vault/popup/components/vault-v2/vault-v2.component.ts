@@ -28,11 +28,11 @@ import { UnionOfValues } from "@bitwarden/common/vault/types/union-of-values";
 import {
   ButtonModule,
   DialogService,
-  Icons,
   NoItemsModule,
   TypographyModule,
 } from "@bitwarden/components";
-import { DecryptionFailureDialogComponent, VaultIcons } from "@bitwarden/vault";
+import { DeactivatedOrg, NoResults, Vault2 } from "@bitwarden/icons";
+import { DecryptionFailureDialogComponent } from "@bitwarden/vault";
 
 import { CurrentAccountComponent } from "../../../../auth/popup/account-switching/current-account.component";
 import { BrowserApi } from "../../../../platform/browser/browser-api";
@@ -136,9 +136,9 @@ export class VaultV2Component implements OnInit, AfterViewInit, OnDestroy {
   /** Visual state of the vault */
   protected vaultState: VaultState | null = null;
 
-  protected vaultIcon = VaultIcons.Vault;
-  protected deactivatedIcon = VaultIcons.DeactivatedOrg;
-  protected noResultsIcon = Icons.NoResults;
+  protected vaultIcon = Vault2;
+  protected deactivatedIcon = DeactivatedOrg;
+  protected noResultsIcon = NoResults;
 
   protected VaultStateEnum = VaultState;
 

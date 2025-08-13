@@ -16,9 +16,9 @@ import {
 } from "@bitwarden/common/platform/abstractions/environment.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
+import { LockIcon, RegistrationCheckEmailIcon } from "@bitwarden/icons";
 
 import { ButtonModule } from "../button";
-import { LockIcon, RegistrationCheckEmailIcon } from "../icon/icons";
 import { I18nMockService } from "../utils";
 
 import { AnonLayoutWrapperDataService } from "./anon-layout-wrapper-data.service";

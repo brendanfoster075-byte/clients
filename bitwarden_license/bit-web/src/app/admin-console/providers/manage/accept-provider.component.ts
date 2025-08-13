@@ -8,7 +8,7 @@ import { ProviderUserAcceptRequest } from "@bitwarden/common/admin-console/model
 import { AuthService } from "@bitwarden/common/auth/abstractions/auth.service";
 import { I18nService } from "@bitwarden/common/platform/abstractions/i18n.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { Icons } from "@bitwarden/components";
+import { BitwardenLogo } from "@bitwarden/icons";
 import { BaseAcceptComponent } from "@bitwarden/web-vault/app/common/base.accept.component";
 
 @Component({
@@ -17,7 +17,7 @@ import { BaseAcceptComponent } from "@bitwarden/web-vault/app/common/base.accept
   standalone: false,
 })
 export class AcceptProviderComponent extends BaseAcceptComponent {
-  protected logo = Icons.BitwardenLogo;
+  protected logo = BitwardenLogo;
   providerName: string;
   providerId: string;
   providerUserId: string;

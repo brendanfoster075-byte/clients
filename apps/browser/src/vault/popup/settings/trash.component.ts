@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
 
 import { JslibModule } from "@bitwarden/angular/jslib.module";
 import { CalloutModule, NoItemsModule } from "@bitwarden/components";
-import { VaultIcons } from "@bitwarden/vault";
+import { EmptyTrash } from "@bitwarden/icons";
 
 import { PopOutComponent } from "../../../platform/popup/components/pop-out.component";
 import { PopupHeaderComponent } from "../../../platform/popup/layout/popup-header.component";
@@ -29,7 +29,7 @@ import { TrashListItemsContainerComponent } from "./trash-list-items-container/t
 export class TrashComponent {
   protected deletedCiphers$ = this.vaultPopupItemsService.deletedCiphers$;
 
-  protected emptyTrashIcon = VaultIcons.EmptyTrash;
+  protected emptyTrashIcon = EmptyTrash;
 
   constructor(private vaultPopupItemsService: VaultPopupItemsService) {}
 }

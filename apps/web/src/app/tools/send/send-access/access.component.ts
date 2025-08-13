@@ -17,8 +17,8 @@ import { SendAccessView } from "@bitwarden/common/tools/send/models/view/send-ac
 import { SEND_KDF_ITERATIONS } from "@bitwarden/common/tools/send/send-kdf";
 import { SendApiService } from "@bitwarden/common/tools/send/services/send-api.service.abstraction";
 import { AnonLayoutWrapperDataService, NoItemsModule, ToastService } from "@bitwarden/components";
+import { ExpiredSendIcon } from "@bitwarden/icons";
 import { KeyService } from "@bitwarden/key-management";
-import { ExpiredSendIcon } from "@bitwarden/send-ui";
 
 import { SharedModule } from "../../../shared";
 

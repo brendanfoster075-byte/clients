@@ -16,10 +16,9 @@ import { firstValueFrom } from "rxjs";
 import { ClientType } from "@bitwarden/common/enums";
 import { EnvironmentService } from "@bitwarden/common/platform/abstractions/environment.service";
 import { PlatformUtilsService } from "@bitwarden/common/platform/abstractions/platform-utils.service";
-import { AnonLayoutBitwardenShield, Icon } from "@bitwarden/icons";
+import { AnonLayoutBitwardenShield, BitwardenLogo, Icon } from "@bitwarden/icons";
 
 import { IconModule } from "../icon";
-import { BitwardenLogo } from "../icon/icons";
 import { SharedModule } from "../shared";
 import { TypographyModule } from "../typography";
 

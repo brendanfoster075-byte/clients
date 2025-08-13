@@ -30,8 +30,7 @@ import {
   IconModule,
   LinkModule,
 } from "@bitwarden/components";
-
-import { UserVerificationBiometricsIcon } from "../icons";
+import { UserVerificationBiometricsIcon } from "@bitwarden/icons";
 
 import { ActiveClientVerificationOption } from "./active-client-verification-option.enum";
 

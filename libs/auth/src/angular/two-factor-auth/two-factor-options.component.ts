@@ -18,14 +18,13 @@ import {
   ItemModule,
   TypographyModule,
 } from "@bitwarden/components";
-
 import {
   TwoFactorAuthAuthenticatorIcon,
   TwoFactorAuthDuoIcon,
   TwoFactorAuthEmailIcon,
   TwoFactorAuthWebAuthnIcon,
   TwoFactorAuthYubicoIcon,
-} from "../icons/two-factor-auth";
+} from "@bitwarden/icons";
 
 export type TwoFactorOptionsDialogResult = {
   type: TwoFactorProviderType;

@@ -72,7 +72,8 @@ import {
   CipherViewLikeUtils,
 } from "@bitwarden/common/vault/utils/cipher-view-like-utils";
 import { filterOutNullish } from "@bitwarden/common/vault/utils/observable-utilities";
-import { DialogRef, DialogService, Icons, ToastService } from "@bitwarden/components";
+import { DialogRef, DialogService, ToastService } from "@bitwarden/components";
+import { Search } from "@bitwarden/icons";
 import { CipherListView } from "@bitwarden/sdk-internal";
 import {
   AddEditFolderDialogComponent,
@@ -163,7 +164,7 @@ export class VaultComponent<C extends CipherViewLike> implements OnInit, OnDestr
   kdfIterations: number;
   activeFilter: VaultFilter = new VaultFilter();
 
-  protected noItemIcon = Icons.Search;
+  protected noItemIcon = Search;
   protected performingInitialLoad = true;
   protected refreshing = false;
   protected processingEvent = false;

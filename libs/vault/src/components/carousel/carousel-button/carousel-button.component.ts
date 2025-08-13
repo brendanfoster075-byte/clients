@@ -3,8 +3,8 @@ import { CommonModule } from "@angular/common";
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 
 import { IconModule } from "@bitwarden/components";
+import { CarouselIcon } from "@bitwarden/icons";
 
-import { CarouselIcon } from "../carousel-icons/carousel-icon";
 import { VaultCarouselSlideComponent } from "../carousel-slide/carousel-slide.component";
 
 @Component({
