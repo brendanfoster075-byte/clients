@@ -1,6 +1,8 @@
 @let organization = organization$ | async;
 @let selectedCollection = selectedCollection$ | async;
 @let filter = filter$ | async;
+@let refreshing = refreshing$ | async;
+@let loading = loading$ | async;
 
 <app-organization-free-trial-warning
   *ngIf="useOrganizationWarningsService$ | async"
@@ -91,7 +93,7 @@
     <app-vault-items
       #vaultItems
       [ciphers]="ciphers$ | async"
-      [collections]="collections"
+      [collections]="collections$ | async"
       [allCollections]="allCollections$ | async"
       [allOrganizations]="organization ? [organization] : []"
       [allGroups]="allGroups$ | async"
@@ -118,7 +120,7 @@
       [activeCollection]="selectedCollection?.node"
     >
     </app-vault-items>
-    <ng-container *ngIf="!performingInitialLoad && isEmpty">
+    <ng-container *ngIf="!refreshing && (isEmpty$ | async)">
       <bit-no-items *ngIf="!showCollectionAccessRestricted">
         <span slot="title" class="tw-mt-4 tw-block">{{ "noItemsInList" | i18n }}</span>
         <button
@@ -148,7 +150,7 @@
     </ng-container>
     <div
       class="tw-mt-6 tw-flex tw-h-full tw-flex-col tw-items-center tw-justify-start"
-      *ngIf="performingInitialLoad"
+      *ngIf="refreshing"
     >
       <i
         class="bwi bwi-spinner bwi-spin tw-text-muted"

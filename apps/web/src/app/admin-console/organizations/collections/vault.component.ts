@@ -175,16 +175,16 @@ export class VaultComponent implements OnInit, OnDestroy {
 
   protected showAddAccessToggle = false;
   protected noItemIcon = Icons.Search;
-  protected performingInitialLoad = true;
-  protected refreshing = false;
-  protected processingEvent = false;
+  protected refreshing$: Observable<boolean>;
+  protected loading$: Observable<boolean>;
+  protected processingEvent$ = new BehaviorSubject<boolean>(false);
   protected organization$: Observable<Organization>;
   protected allGroups$: Observable<GroupView[]>;
   protected ciphers$: Observable<CipherView[]>;
   protected allCiphers$: Observable<CipherView[]>;
   protected showCollectionAccessRestricted$: Observable<boolean>;
 
-  protected isEmpty: boolean;
+  protected isEmpty$: Observable<boolean> = of(false);
   private hasSubscription$ = new BehaviorSubject<boolean>(false);
   protected useOrganizationWarningsService$: Observable<boolean>;
   protected freeTrialWhenWarningsServiceDisabled$: Observable<FreeTrial>;
@@ -198,6 +198,7 @@ export class VaultComponent implements OnInit, OnDestroy {
 
   private searchText$ = new Subject<string>();
   private refresh$ = new BehaviorSubject<void>(null);
+  private refreshingSubject$ = new BehaviorSubject<boolean>(false);
   private destroy$ = new Subject<void>();
   protected addAccessStatus$ = new BehaviorSubject<AddAccessStatusType>(0);
   private vaultItemDialogRef?: DialogRef<VaultItemDialogResult> | undefined;
@@ -210,11 +211,13 @@ export class VaultComponent implements OnInit, OnDestroy {
   protected allCollectionsWithoutUnassigned$: Observable<CollectionAdminView[]>;
   protected allCollections$: Observable<CollectionAdminView[]>;
   protected showCollectionAccessRestricted: boolean;
-  protected collections: CollectionAdminView[];
+  protected collections$: Observable<CollectionAdminView[]> = of([]);
   protected selectedCollection$: Observable<TreeNode<CollectionAdminView> | undefined>;
   private nestedCollections$: Observable<TreeNode<CollectionAdminView>[]>;
 
-  @ViewChild("vaultItems", { static: false }) vaultItemsComponent: VaultItemsComponent<CipherView>;
+  @ViewChild("vaultItems", { static: false }) vaultItemsComponent:
+    | VaultItemsComponent<CipherView>
+    | undefined;
 
   private readonly unpaidSubscriptionDialog$ = this.accountService.activeAccount$.pipe(
     getUserId,
@@ -282,6 +285,11 @@ export class VaultComponent implements OnInit, OnDestroy {
     this.userId$ = this.accountService.activeAccount$.pipe(getUserId);
     this.filter$ = this.routedVaultFilterService.filter$;
     this.currentSearchText$ = this.route.queryParams.pipe(map((queryParams) => queryParams.search));
+
+    this.refreshing$ = this.refreshingSubject$.asObservable();
+    this.loading$ = combineLatest([this.refreshing$, this.processingEvent$]).pipe(
+      map(([refreshing, processing]) => refreshing || processing),
+    );
 
     this.organization$ = combineLatest([this.getOrganizationId(), this.userId$]).pipe(
       switchMap(([orgId, userId]) =>
@@ -510,7 +518,7 @@ export class VaultComponent implements OnInit, OnDestroy {
       }),
     );
 
-    const collections$ = combineLatest([
+    this.collections$ = combineLatest([
       this.nestedCollections$,
       this.filter$,
       this.currentSearchText$,
@@ -740,22 +748,22 @@ export class VaultComponent implements OnInit, OnDestroy {
     firstSetup$
       .pipe(
         switchMap(() => this.refresh$),
-        tap(() => (this.refreshing = true)),
-        switchMap(() => combineLatest([this.allCollections$, this.ciphers$, collections$])),
+        tap(() => this.refreshingSubject$.next(true)),
+        switchMap(() => this.allCollections$),
         takeUntil(this.destroy$),
       )
-      .subscribe(([allCollections, ciphers, collections]) => {
-        this.collections = collections;
-
-        this.isEmpty = collections?.length === 0 && ciphers?.length === 0;
-
+      .subscribe((allCollections) => {
         // This is a temporary fix to avoid double fetching collections.
         // TODO: Remove when implementing new VVR menu
         this.vaultFilterService.reloadCollections(allCollections);
 
-        this.refreshing = false;
-        this.performingInitialLoad = false;
+        this.refreshingSubject$.next(false);
       });
+
+    this.isEmpty$ = firstSetup$.pipe(
+      switchMap(() => combineLatest([this.ciphers$, this.collections$])),
+      map(([ciphers, collections]) => collections?.length === 0 && ciphers?.length === 0),
+    );
   }
 
   async navigateToPaymentMethod() {
@@ -773,10 +781,6 @@ export class VaultComponent implements OnInit, OnDestroy {
     this.addAccessStatus$.next(e);
   }
 
-  get loading() {
-    return this.refreshing || this.processingEvent;
-  }
-
   ngOnDestroy() {
     this.broadcasterService.unsubscribe(BroadcasterSubscriptionId);
     this.destroy$.next();
@@ -784,7 +788,7 @@ export class VaultComponent implements OnInit, OnDestroy {
   }
 
   async onVaultItemsEvent(event: VaultItemEvent<CipherView>) {
-    this.processingEvent = true;
+    this.processingEvent$.next(true);
 
     try {
       const organization = await firstValueFrom(this.organization$);
@@ -846,7 +850,7 @@ export class VaultComponent implements OnInit, OnDestroy {
           break;
       }
     } finally {
-      this.processingEvent = false;
+      this.processingEvent$.next(false);
     }
   }
 
