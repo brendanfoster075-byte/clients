@@ -26,6 +26,17 @@ const BADGE_STATES = new KeyDefinition(BADGE_MEMORY, "badgeStates", {
 export class BadgeService {
   private serviceState: GlobalState<Record<string, StateSetting>>;
 
+  /**
+   * Observable of the currently active tab.
+   * Emits instantly with the current active tab when subscribed,
+   * then emits any future active tab changes.
+   *
+   * Re-exported from `BadgeBrowserApi.activeTab$`.
+   */
+  get activeTab$() {
+    return this.badgeApi.activeTab$;
+  }
+
   constructor(
     private stateProvider: StateProvider,
     private badgeApi: BadgeBrowserApi,
@@ -44,7 +55,7 @@ export class BadgeService {
       .pipe(
         withLatestFrom(this.serviceState.state$),
         concatMap(async ([activeTab, serviceState]) => {
-          await this.updateBadge(activeTab, serviceState, activeTab?.tabId);
+          await this.updateBadge(activeTab, serviceState, activeTab?.id);
         }),
       )
       .subscribe({
@@ -151,7 +162,7 @@ export class BadgeService {
    * @param tabId Tab id for which the the latest state change applied to. Set this to activeTab.tabId to force an update.
    */
   private async updateBadge(
-    activeTab: chrome.tabs.TabActiveInfo | null | undefined,
+    activeTab: chrome.tabs.Tab | null | undefined,
     serviceState: Record<string, StateSetting> | null | undefined,
     tabId: number | undefined,
   ) {
@@ -159,17 +170,17 @@ export class BadgeService {
       return; // If there is no active tab, we cannot set the badge state.
     }
 
-    if (tabId !== activeTab?.tabId && tabId !== undefined) {
+    if (tabId !== activeTab?.id && tabId !== undefined) {
       return; // No need to update the badge if the state is not for the active tab.
     }
 
     const newBadgeState = this.calculateState(
       new Set(Object.values(serviceState ?? {})),
-      activeTab?.tabId,
+      activeTab?.id,
     );
 
     try {
-      await this.badgeApi.setState(newBadgeState, activeTab?.tabId);
+      await this.badgeApi.setState(newBadgeState, activeTab?.id);
     } catch (error) {
       this.logService.error("Failed to set badge state", error);
     }
