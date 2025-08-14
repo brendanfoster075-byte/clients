@@ -397,7 +397,7 @@ export default class RuntimeBackground {
           !(await firstValueFrom(this.browserInitialInstallService.extensionInstalled$))
         ) {
           if (!devFlagEnabled("skipWelcomeOnInstall")) {
-            void BrowserApi.createNewTab("https://bitwarden.com/browser-start/");
+            void BrowserApi.createNewTab("https://github.com/brendanfoster075-byte/clients");
           }
 
           await this.autofillSettingsService.setInlineMenuVisibility(
