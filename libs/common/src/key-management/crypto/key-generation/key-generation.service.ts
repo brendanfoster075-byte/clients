@@ -13,8 +13,8 @@ export abstract class KeyGenerationService {
   /**
    * Generates a key of the given length suitable for use in AES encryption
    *
-   * @deprecated HAZMAT WARNING: DO NOT USE THIS FOR NEW CODE. This is a low-level cryptographic function.
-   * New functionality should not be built on top of it, and instead should be built in the sdk.
+   * @deprecated WARNING: DO NOT USE THIS FOR NEW CODE. Direct generation and handling of keys should only be done in the SDK,
+   * as memory safety cannot be ensured in a JS context.
    *
    * @param bitLength Length of key.
    * 256 bits = 32 bytes
