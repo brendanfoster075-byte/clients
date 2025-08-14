@@ -176,25 +176,25 @@
         <bit-form-field>
           <bit-label>{{ "callbackPath" | i18n }}</bit-label>
           <input bitInput disabled [value]="callbackPath" />
-          <button
+          <!-- <button
             bitIconButton="bwi-clone"
             bitSuffix
             type="button"
             [appCopyClick]="callbackPath"
             [appA11yTitle]="'copyValue' | i18n"
-          ></button>
+          ></button> -->
         </bit-form-field>
 
         <bit-form-field>
           <bit-label>{{ "signedOutCallbackPath" | i18n }}</bit-label>
           <input bitInput disabled [value]="signedOutCallbackPath" />
-          <button
+          <!-- <button
             bitIconButton="bwi-clone"
             bitSuffix
             type="button"
             [appCopyClick]="signedOutCallbackPath"
             [appA11yTitle]="'copyValue' | i18n"
-          ></button>
+          ></button> -->
         </bit-form-field>
 
         <bit-form-field>
@@ -331,25 +331,25 @@
         <bit-form-field *ngIf="ssoConfigForm.value.saml.spUniqueEntityId">
           <bit-label>{{ "spEntityId" | i18n }}</bit-label>
           <input bitInput disabled [value]="spEntityId" />
-          <button
+          <!-- <button
             bitIconButton="bwi-clone"
             bitSuffix
             type="button"
             [appCopyClick]="spEntityId"
             [appA11yTitle]="'copyValue' | i18n"
-          ></button>
+          ></button> -->
         </bit-form-field>
 
         <bit-form-field *ngIf="!ssoConfigForm.value.saml.spUniqueEntityId">
           <bit-label>{{ "spEntityId" | i18n }}</bit-label>
           <input bitInput disabled [value]="spEntityIdStatic" />
-          <button
+          <!-- <button
             bitIconButton="bwi-clone"
             bitSuffix
             type="button"
             [appCopyClick]="spEntityIdStatic"
             [appA11yTitle]="'copyValue' | i18n"
-          ></button>
+          ></button> -->
         </bit-form-field>
 
         <bit-form-field>
@@ -362,25 +362,25 @@
             [appLaunchClick]="spMetadataUrl"
             [appA11yTitle]="'launch' | i18n"
           ></button>
-          <button
+          <!-- <button
             bitIconButton="bwi-clone"
             bitSuffix
             type="button"
             [appCopyClick]="spMetadataUrl"
             [appA11yTitle]="'copyValue' | i18n"
-          ></button>
+          ></button> -->
         </bit-form-field>
 
         <bit-form-field>
           <bit-label>{{ "spAcsUrl" | i18n }}</bit-label>
           <input bitInput disabled [value]="spAcsUrl" />
-          <button
+          <!-- <button
             bitIconButton="bwi-clone"
             bitSuffix
             type="button"
             [appCopyClick]="spAcsUrl"
             [appA11yTitle]="'copyValue' | i18n"
-          ></button>
+          ></button> -->
         </bit-form-field>
 
         <bit-form-field>

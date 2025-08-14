@@ -66,15 +66,15 @@
           {{ "sendTextDesc" | i18n }}
         </div>
       </div>
-      <div class="box" *ngIf="type === sendType.Text">
+      <!-- <div class="box" *ngIf="type === sendType.Text">
         <div class="box-content">
           <div class="box-content-row box-content-row-checkbox" appBoxRow>
             <label for="hideText">{{ "textHiddenByDefault" | i18n }}</label>
             <input id="hideText" name="hideText" type="checkbox" formControlName="textHidden" />
           </div>
         </div>
-      </div>
-      <div class="box">
+      </div> -->
+      <!-- <div class="box">
         <h2 class="box-header">
           <button
             type="button"
@@ -91,8 +91,8 @@
             {{ "options" | i18n }}
           </button>
         </h2>
-      </div>
-      <div [hidden]="!showOptions">
+      </div> -->
+      <!-- <div [hidden]="!showOptions">
         <div class="box">
           <div class="box-content">
             <div class="box-content-row" appBoxRow *ngIf="!editMode">
@@ -193,7 +193,7 @@
         <div class="box">
           <div class="box-content">
             <div class="box-content-row box-content-row-flex" appBoxRow>
-              <div class="row-main">
+               <div class="row-main">
                 <label for="password">{{
                   (hasPassword ? "newPassword" : "password") | i18n
                 }}</label>
@@ -205,8 +205,8 @@
                   formControlName="password"
                   appInputVerbatim
                 />
-              </div>
-              <div class="action-buttons">
+              </div> -->
+      <!-- <div class="action-buttons">
                 <button
                   type="button"
                   class="row-btn"
@@ -220,13 +220,13 @@
                     aria-hidden="true"
                     [ngClass]="{ 'bwi-eye': !showPassword, 'bwi-eye-slash': showPassword }"
                   ></i>
-                </button>
+                </button> 
               </div>
             </div>
           </div>
-          <div id="passwordHelp" class="box-footer">
+           <div id="passwordHelp" class="box-footer">
             {{ "sendPasswordDesc" | i18n }}
-          </div>
+          </div> 
         </div>
         <div class="box">
           <h2 class="box-header">
@@ -263,8 +263,8 @@
             </div>
           </div>
         </div>
-      </div>
-      <div class="box">
+      </div> -->
+      <!-- <div class="box">
         <h2 class="box-header">
           {{ "share" | i18n }}
         </h2>
@@ -278,7 +278,7 @@
             <input id="copyLink" name="copyLink" formControlName="copyLink" type="checkbox" />
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
   </div>
   <div class="footer">
@@ -290,14 +290,14 @@
       {{ "cancel" | i18n }}
     </button>
     <div class="right">
-      <button
+      <!-- <button
         type="button"
         (click)="copyLinkToClipboard(link)"
         appA11yTitle="{{ 'copySendLinkToClipboard' | i18n }}"
         *ngIf="editMode"
       >
         <i class="bwi bwi-clone bwi-lg bwi-fw" aria-hidden="true"></i>
-      </button>
+      </button> -->
       <button
         #deleteBtn
         type="button"

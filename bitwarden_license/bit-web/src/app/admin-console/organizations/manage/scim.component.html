@@ -24,13 +24,13 @@
   <bit-form-field *ngIf="showScimSettings">
     <bit-label>{{ "scimUrl" | i18n }}</bit-label>
     <input bitInput type="text" formControlName="endpointUrl" />
-    <button
+    <!-- <button
       type="button"
       bitSuffix
       bitIconButton="bwi-clone"
       [bitAction]="copyScimUrl"
       [appA11yTitle]="'copyScimUrl' | i18n"
-    ></button>
+    ></button> -->
   </bit-form-field>
 
   <bit-form-field *ngIf="showScimSettings">
@@ -41,13 +41,13 @@
       formControlName="clientSecret"
       id="clientSecret"
     />
-    <button
+    <!-- <button
       type="button"
       bitSuffix
       [bitIconButton]="showScimKey ? 'bwi-eye-slash' : 'bwi-eye'"
       [bitAction]="toggleScimKey"
       [appA11yTitle]="'toggleVisibility' | i18n"
-    ></button>
+    ></button> -->
     <button
       type="button"
       bitSuffix
@@ -56,13 +56,13 @@
       bitFormButton
       [appA11yTitle]="'rotateScimKey' | i18n"
     ></button>
-    <button
+    <!-- <button
       type="button"
       bitSuffix
       bitIconButton="bwi-clone"
       [bitAction]="copyScimKey"
       [appA11yTitle]="'copyScimKey' | i18n"
-    ></button>
+    ></button> -->
     <bit-hint>{{ "scimApiKeyHelperText" | i18n }}</bit-hint>
   </bit-form-field>
 

@@ -50,11 +50,11 @@ export class MainContextMenuHandler {
       parentId: ROOT_ID,
       title: this.i18nService.t("copyUsername"),
     },
-    {
-      id: COPY_PASSWORD_ID,
-      parentId: ROOT_ID,
-      title: this.i18nService.t("copyPassword"),
-    },
+    // {
+    //   id: COPY_PASSWORD_ID,
+    //   parentId: ROOT_ID,
+    //   title: this.i18nService.t("copyPassword"),
+    // },
     {
       id: COPY_VERIFICATION_CODE_ID,
       parentId: ROOT_ID,

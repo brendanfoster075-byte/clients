@@ -24,7 +24,6 @@ export class EditMenu implements IMenubarMenu {
       this.selectAll,
       this.separator,
       this.copyUsername,
-      this.copyPassword,
       this.copyVerificationCodeTotp,
     ];
   }
@@ -101,15 +100,15 @@ export class EditMenu implements IMenubarMenu {
     };
   }
 
-  private get copyPassword(): MenuItemConstructorOptions {
-    return {
-      label: this.localize("copyPassword"),
-      id: "copyPassword",
-      click: () => this.sendMessage("copyPassword"),
-      accelerator: "CmdOrCtrl+P",
-      enabled: !this._isLocked,
-    };
-  }
+  // private get copyPassword(): MenuItemConstructorOptions {
+  //   return {
+  //     label: this.localize("copyPassword"),
+  //     id: "copyPassword",
+  //     click: () => this.sendMessage("copyPassword"),
+  //     accelerator: "CmdOrCtrl+P",
+  //     enabled: !this._isLocked,
+  //   };
+  // }
 
   private get copyVerificationCodeTotp(): MenuItemConstructorOptions {
     return {

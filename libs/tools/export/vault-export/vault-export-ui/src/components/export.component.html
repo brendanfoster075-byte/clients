@@ -76,13 +76,13 @@
             formControlName="filePassword"
             name="password"
           />
-          <button
+          <!-- <button
             type="button"
             bitSuffix
             bitIconButton
             bitPasswordInputToggle
             [(toggled)]="showFilePassword"
-          ></button>
+          ></button> -->
           <button
             type="button"
             bitIconButton="bwi-generate"
@@ -90,7 +90,7 @@
             bitSuffix
             (click)="generatePassword()"
           ></button>
-          <button
+          <!-- <button
             type="button"
             bitIconButton="bwi-clone"
             [disabled]="!filePassword"
@@ -99,7 +99,7 @@
             [appCopyClick]="filePassword"
             [valueLabel]="'password' | i18n"
             showToast
-          ></button>
+          ></button> -->
           <bit-hint>{{ "exportPasswordDescription" | i18n }}</bit-hint>
         </bit-form-field>
         <tools-password-strength [password]="filePassword" [showText]="true">
@@ -114,13 +114,13 @@
           formControlName="confirmFilePassword"
           name="confirmFilePassword"
         />
-        <button
+        <!-- <button
           type="button"
           bitSuffix
           bitIconButton
           bitPasswordInputToggle
           [(toggled)]="showFilePassword"
-        ></button>
+        ></button> -->
       </bit-form-field>
     </ng-container>
   </ng-container>

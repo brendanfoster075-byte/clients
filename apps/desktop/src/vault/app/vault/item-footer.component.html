@@ -24,13 +24,13 @@
     >
       <i class="bwi bwi-pencil bwi-fw bwi-lg" aria-hidden="true"></i>
     </button>
-    <button
+    <!-- <button
       *ngIf="action === 'edit' || action === 'clone' || action === 'add'"
       type="button"
       (click)="cancel()"
     >
       {{ "cancel" | i18n }}
-    </button>
+    </button> -->
     <button
       type="button"
       class="primary"
@@ -40,7 +40,7 @@
     >
       <i class="bwi bwi-undo bwi-fw bwi-lg" aria-hidden="true"></i>
     </button>
-    <button
+    <!-- <button
       type="button"
       class="primary"
       *ngIf="cipher.id && !cipher?.organizationId && !cipher.isDeleted && action === 'view'"
@@ -48,7 +48,7 @@
       appA11yTitle="{{ 'clone' | i18n }}"
     >
       <i class="bwi bwi-files bwi-fw bwi-lg" aria-hidden="true"></i>
-    </button>
+    </button> -->
   </ng-container>
   <div class="right" *ngIf="cipher.permissions.delete && (action === 'edit' || action === 'view')">
     <button

@@ -72,7 +72,7 @@
             <span *ngIf="!project.linkable">{{ project.name }}</span>
             <div class="tw-text-sm tw-text-muted tw-block">
               {{ project.id }}
-              <button
+              <!-- <button
                 type="button"
                 bitIconButton="bwi-clone"
                 buttonType="main"
@@ -80,7 +80,7 @@
                 [title]="'copyUuid' | i18n"
                 [attr.aria-label]="'copyUuid' | i18n"
                 (click)="copyProjectUuidToClipboard(project.id)"
-              ></button>
+              ></button> -->
             </div>
           </div>
         </div>

@@ -105,18 +105,18 @@
     ></button>
     <bit-menu #cipherOptions>
       <ng-container *ngIf="isNotDeletedLoginCipher">
-        <button bitMenuItem type="button" (click)="copy('username')" *ngIf="hasUsernameToCopy">
+        <!-- <button bitMenuItem type="button" (click)="copy('username')" *ngIf="hasUsernameToCopy">
           <i class="bwi bwi-fw bwi-clone" aria-hidden="true"></i>
           {{ "copyUsername" | i18n }}
-        </button>
-        <button bitMenuItem type="button" (click)="copy('password')" *ngIf="hasPasswordToCopy">
+        </button> -->
+        <!-- <button bitMenuItem type="button" (click)="copy('password')" *ngIf="hasPasswordToCopy">
           <i class="bwi bwi-fw bwi-clone" aria-hidden="true"></i>
           {{ "copyPassword" | i18n }}
-        </button>
-        <button bitMenuItem type="button" (click)="copy('totp')" *ngIf="showTotpCopyButton">
+        </button> -->
+        <!-- <button bitMenuItem type="button" (click)="copy('totp')" *ngIf="showTotpCopyButton">
           <i class="bwi bwi-fw bwi-clone" aria-hidden="true"></i>
           {{ "copyVerificationCode" | i18n }}
-        </button>
+        </button> -->
         <a
           bitMenuItem
           *ngIf="canLaunch"
@@ -134,10 +134,10 @@
         <i class="bwi bwi-fw bwi-paperclip" aria-hidden="true"></i>
         {{ "attachments" | i18n }}
       </button>
-      <button bitMenuItem *ngIf="showClone" type="button" (click)="clone()">
+      <!-- <button bitMenuItem *ngIf="showClone" type="button" (click)="clone()">
         <i class="bwi bwi-fw bwi-files" aria-hidden="true"></i>
         {{ "clone" | i18n }}
-      </button>
+      </button> -->
       <button
         bitMenuItem
         *ngIf="showAssignToCollections"

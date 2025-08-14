@@ -14,14 +14,14 @@
     <bit-form-field>
       <bit-label>{{ (passwordRemoved ? "newPassword" : "password") | i18n }}</bit-label>
       <input bitInput type="password" formControlName="password" />
-      <button
+      <!-- <button
         data-testid="toggle-visibility-for-password"
         type="button"
         bitIconButton
         bitSuffix
         bitPasswordInputToggle
         *ngIf="!hasPassword"
-      ></button>
+      ></button> -->
       <button
         type="button"
         bitIconButton="bwi-generate"
@@ -32,7 +32,7 @@
         data-testid="generate-password"
         *ngIf="!hasPassword"
       ></button>
-      <button
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -42,7 +42,7 @@
         [appCopyClick]="sendOptionsForm.get('password').value"
         showToast
         *ngIf="!hasPassword"
-      ></button>
+      ></button> -->
       <button
         *ngIf="hasPassword"
         class="tw-border-l-0 last:tw-rounded-r focus-visible:tw-border-l focus-visible:tw-ml-[-1px]"

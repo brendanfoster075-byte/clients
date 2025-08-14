@@ -11,7 +11,7 @@
       ></button>
     </bit-item-action>
     <bit-item-action>
-      <button
+      <!-- <button
         *ngIf="cipher.viewPassword"
         type="button"
         bitIconButton="bwi-key"
@@ -19,7 +19,7 @@
         appCopyField="password"
         [cipher]="cipher"
         [appA11yTitle]="'copyPassword' | i18n"
-      ></button>
+      ></button> -->
     </bit-item-action>
     <bit-item-action>
       <button
@@ -35,7 +35,7 @@
 
   <ng-template #loginCopyMenu>
     <bit-item-action>
-      <button
+      <!-- <button
         *ngIf="singleCopyableLogin"
         type="button"
         bitIconButton="bwi-clone"
@@ -43,9 +43,9 @@
         [appA11yTitle]="'copyFieldCipherName' | i18n: singleCopyableLogin.key : cipher.name"
         [appCopyField]="singleCopyableLogin.field"
         [cipher]="cipher"
-      ></button>
+      ></button> -->
       <ng-container *ngIf="!singleCopyableLogin">
-        <button
+        <!-- <button
           type="button"
           bitIconButton="bwi-clone"
           size="small"
@@ -54,12 +54,12 @@
           "
           [disabled]="!hasLoginValues"
           [bitMenuTriggerFor]="loginOptions"
-        ></button>
+        ></button> -->
         <bit-menu #loginOptions>
           <button type="button" bitMenuItem appCopyField="username" [cipher]="cipher">
             {{ "copyUsername" | i18n }}
           </button>
-          <button
+          <!-- <button
             *ngIf="cipher.viewPassword"
             type="button"
             bitMenuItem
@@ -67,7 +67,7 @@
             [cipher]="cipher"
           >
             {{ "copyPassword" | i18n }}
-          </button>
+          </button> -->
           <button type="button" bitMenuItem appCopyField="totp" [cipher]="cipher">
             {{ "copyVerificationCode" | i18n }}
           </button>
@@ -102,7 +102,7 @@
   </ng-container>
   <ng-template #cardCopyMenu>
     <bit-item-action>
-      <button
+      <!-- <button
         *ngIf="singleCopyableCard"
         type="button"
         bitIconButton="bwi-clone"
@@ -111,9 +111,9 @@
         [appCopyField]="singleCopyableCard.field"
         [cipher]="cipher"
         showToast
-      ></button>
+      ></button> -->
       <ng-container *ngIf="!singleCopyableCard">
-        <button
+        <!-- <button
           type="button"
           bitIconButton="bwi-clone"
           size="small"
@@ -122,7 +122,7 @@
           "
           [disabled]="!hasCardValues"
           [bitMenuTriggerFor]="cardOptions"
-        ></button>
+        ></button> -->
         <bit-menu #cardOptions>
           <button type="button" bitMenuItem appCopyField="cardNumber" [cipher]="cipher">
             {{ "copyNumber" | i18n }}
@@ -137,7 +137,7 @@
 </ng-container>
 
 <bit-item-action *ngIf="CipherViewLikeUtils.getType(cipher) === CipherType.Identity">
-  <button
+  <!-- <button
     *ngIf="singleCopyableIdentity"
     type="button"
     bitIconButton="bwi-clone"
@@ -146,9 +146,9 @@
     [appCopyField]="singleCopyableIdentity.field"
     [cipher]="cipher"
     showToast
-  ></button>
+  ></button> -->
   <ng-container *ngIf="!singleCopyableIdentity">
-    <button
+    <!-- <button
       type="button"
       bitIconButton="bwi-clone"
       size="small"
@@ -157,7 +157,7 @@
       "
       [disabled]="!hasIdentityValues"
       [bitMenuTriggerFor]="identityOptions"
-    ></button>
+    ></button> -->
     <bit-menu #identityOptions>
       <button type="button" bitMenuItem appCopyField="username" [cipher]="cipher">
         {{ "copyUsername" | i18n }}
@@ -176,7 +176,7 @@
 </bit-item-action>
 
 <bit-item-action *ngIf="CipherViewLikeUtils.getType(cipher) === CipherType.SecureNote">
-  <button
+  <!-- <button
     type="button"
     bitIconButton="bwi-clone"
     size="small"
@@ -186,10 +186,10 @@
     appCopyField="secureNote"
     [cipher]="cipher"
   ></button>
-</bit-item-action>
+</bit-item-action> -->
 
-<bit-item-action *ngIf="CipherViewLikeUtils.getType(cipher) === CipherType.SshKey">
-  <button
+  <bit-item-action *ngIf="CipherViewLikeUtils.getType(cipher) === CipherType.SshKey">
+    <!-- <button
     type="button"
     bitIconButton="bwi-clone"
     size="small"
@@ -198,16 +198,17 @@
     "
     [disabled]="!hasSshKeyValues"
     [bitMenuTriggerFor]="sshKeyOptions"
-  ></button>
-  <bit-menu #sshKeyOptions>
-    <button type="button" bitMenuItem appCopyField="privateKey" [cipher]="cipher">
-      {{ "copyPrivateKey" | i18n }}
-    </button>
-    <button type="button" bitMenuItem appCopyField="publicKey" [cipher]="cipher">
-      {{ "copyPublicKey" | i18n }}
-    </button>
-    <button type="button" bitMenuItem appCopyField="keyFingerprint" [cipher]="cipher">
-      {{ "copyFingerprint" | i18n }}
-    </button>
-  </bit-menu>
+  ></button> -->
+    <bit-menu #sshKeyOptions>
+      <button type="button" bitMenuItem appCopyField="privateKey" [cipher]="cipher">
+        {{ "copyPrivateKey" | i18n }}
+      </button>
+      <button type="button" bitMenuItem appCopyField="publicKey" [cipher]="cipher">
+        {{ "copyPublicKey" | i18n }}
+      </button>
+      <button type="button" bitMenuItem appCopyField="keyFingerprint" [cipher]="cipher">
+        {{ "copyFingerprint" | i18n }}
+      </button>
+    </bit-menu>
+  </bit-item-action>
 </bit-item-action>

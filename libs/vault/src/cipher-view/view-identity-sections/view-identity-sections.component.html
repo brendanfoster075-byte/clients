@@ -13,7 +13,7 @@
         readonly
         data-testid="name"
       />
-      <button
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -22,7 +22,7 @@
         showToast
         [valueLabel]="'name' | i18n"
         data-testid="copy-name"
-      ></button>
+      ></button> -->
     </bit-form-field>
     <bit-form-field *ngIf="cipher.identity.username">
       <bit-label [appTextDrag]="cipher.identity.username">{{ "username" | i18n }}</bit-label>
@@ -33,7 +33,7 @@
         readonly
         data-testid="username"
       />
-      <button
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -41,7 +41,7 @@
         [appCopyClick]="cipher.identity.username"
         showToast
         [valueLabel]="'username' | i18n"
-      ></button>
+      ></button> -->
     </bit-form-field>
     <bit-form-field *ngIf="cipher.identity.company">
       <bit-label [appTextDrag]="cipher.identity.company">{{ "company" | i18n }}</bit-label>
@@ -52,7 +52,7 @@
         readonly
         data-testid="company"
       />
-      <button
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -61,7 +61,7 @@
         showToast
         [valueLabel]="'company' | i18n"
         data-testid="copy-company"
-      ></button>
+      ></button> -->
     </bit-form-field>
   </read-only-cipher-card>
 </section>
@@ -82,14 +82,14 @@
         readonly
         data-testid="ssn"
       />
-      <button
+      <!-- <button
         type="button"
         bitIconButton
         bitSuffix
         bitPasswordInputToggle
         data-testid="ssn-toggle"
-      ></button>
-      <button
+      ></button> -->
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -98,7 +98,7 @@
         showToast
         [valueLabel]="'ssn' | i18n"
         data-testid="copy-ssn"
-      ></button>
+      ></button> -->
     </bit-form-field>
     <bit-form-field *ngIf="cipher.identity.passportNumber">
       <bit-label [appTextDrag]="cipher.identity.passportNumber">{{
@@ -112,14 +112,14 @@
         readonly
         data-testid="passport"
       />
-      <button
+      <!-- <button
         type="button"
         bitIconButton
         bitSuffix
         bitPasswordInputToggle
         data-testid="passport-toggle"
-      ></button>
-      <button
+      ></button> -->
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -128,7 +128,7 @@
         showToast
         [valueLabel]="'passportNumber' | i18n"
         data-testid="copy-passport"
-      ></button>
+      ></button> -->
     </bit-form-field>
     <bit-form-field *ngIf="cipher.identity.licenseNumber">
       <bit-label [appTextDrag]="cipher.identity.licenseNumber">{{
@@ -141,7 +141,7 @@
         readonly
         data-testid="license"
       />
-      <button
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -150,7 +150,7 @@
         showToast
         [valueLabel]="'licenseNumber' | i18n"
         data-testid="copy-license"
-      ></button>
+      ></button> -->
     </bit-form-field>
   </read-only-cipher-card>
 </section>
@@ -164,7 +164,7 @@
     <bit-form-field *ngIf="cipher.identity.email">
       <bit-label [appTextDrag]="cipher.identity.email">{{ "email" | i18n }}</bit-label>
       <input bitInput id="email" [value]="cipher.identity.email" readonly data-testid="email" />
-      <button
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -173,12 +173,12 @@
         showToast
         [valueLabel]="'email' | i18n"
         data-testid="copy-email"
-      ></button>
+      ></button> -->
     </bit-form-field>
     <bit-form-field *ngIf="cipher.identity.phone">
       <bit-label [appTextDrag]="cipher.identity.phone">{{ "phone" | i18n }}</bit-label>
       <input bitInput id="phone" [value]="cipher.identity.phone" readonly data-testid="phone" />
-      <button
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -187,7 +187,7 @@
         showToast
         [valueLabel]="'phone' | i18n"
         data-testid="copy-phone"
-      ></button>
+      ></button> -->
     </bit-form-field>
     <bit-form-field *ngIf="addressFields">
       <bit-label [appTextDrag]="addressFields">{{ "address" | i18n }}</bit-label>
@@ -200,7 +200,7 @@
         readonly
         data-testid="address"
       ></textarea>
-      <button
+      <!-- <button
         type="button"
         bitIconButton="bwi-clone"
         bitSuffix
@@ -209,7 +209,7 @@
         showToast
         [valueLabel]="'address' | i18n"
         data-testid="copy-address"
-      ></button>
+      ></button> -->
     </bit-form-field>
   </read-only-cipher-card>
 </section>

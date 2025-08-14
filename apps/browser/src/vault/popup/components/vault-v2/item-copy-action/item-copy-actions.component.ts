@@ -47,7 +47,7 @@ export class ItemCopyActionsComponent {
   get singleCopyableLogin() {
     const loginItems: CipherItem[] = [
       { key: "copyUsername", field: "username" },
-      { key: "copyPassword", field: "password" },
+      // { key: "copyPassword", field: "password" },
       { key: "copyVerificationCode", field: "totp" },
     ];
     // If both the password and username are visible but the password is hidden, return the username

@@ -13,13 +13,13 @@
   <bit-form-field *ngIf="displayToken">
     <bit-label>{{ "apiKey" | i18n }}</bit-label>
     <input bitInput formControlName="token" type="password" (change)="save('password')" />
-    <button
+    <!-- <button
       type="button"
       bitIconButton
       bitSuffix
       bitPasswordInputToggle
       (change)="save('token')"
-    ></button>
+    ></button> -->
   </bit-form-field>
   <bit-form-field *ngIf="displayBaseUrl" disableMargin>
     <bit-label>{{ "selfHostBaseUrl" | i18n }}</bit-label>

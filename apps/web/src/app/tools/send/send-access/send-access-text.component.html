@@ -3,7 +3,7 @@
   <textarea id="text" bitInput rows="8" name="Text" formControlName="sendText" readonly></textarea>
 </bit-form-field>
 <div class="tw-mb-3">
-  <button
+  <!-- <button
     bitButton
     type="button"
     buttonType="secondary"
@@ -17,10 +17,10 @@
       [ngClass]="{ 'bwi-eye': !showText, 'bwi-eye-slash': showText }"
     ></i>
     {{ "toggleVisibility" | i18n }}
-  </button>
+  </button> -->
 </div>
 <div class="tw-mb-3">
-  <button bitButton type="button" buttonType="primary" [block]="true" (click)="copyText()">
+  <!-- <button bitButton type="button" buttonType="primary" [block]="true" (click)="copyText()">
     <i class="bwi bwi-clone" aria-hidden="true"></i> {{ "copyValue" | i18n }}
-  </button>
+  </button> -->
 </div>

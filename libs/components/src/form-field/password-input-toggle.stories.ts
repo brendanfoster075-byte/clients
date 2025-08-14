@@ -44,13 +44,13 @@ export const Default: Story = {
   render: (args) => ({
     props: args,
     template: /*html*/ `
-      <form>
-        <bit-form-field>
-          <bit-label>Password</bit-label>
-          <input bitInput type="password" />
-          <button type="button" bitIconButton bitSuffix bitPasswordInputToggle></button>
-        </bit-form-field>
-      </form>
+      // <form>
+      //   <bit-form-field>
+      //     <bit-label>Password</bit-label>
+      //     <input bitInput type="password" />
+      //     <button type="button" bitIconButton bitSuffix bitPasswordInputToggle></button>
+      //   </bit-form-field>
+      // </form>
     `,
   }),
 };
@@ -59,18 +59,18 @@ export const Binding: Story = {
   render: (args) => ({
     props: args,
     template: /*html*/ `
-      <form>
-        <bit-form-field>
-          <bit-label>Password</bit-label>
-          <input bitInput type="password" />
-          <button type="button" bitIconButton bitSuffix bitPasswordInputToggle [(toggled)]="toggled"></button>
-        </bit-form-field>
+      // <form>
+      //   <bit-form-field>
+      //     <bit-label>Password</bit-label>
+      //     <input bitInput type="password" />
+      //     <button type="button" bitIconButton bitSuffix bitPasswordInputToggle [(toggled)]="toggled"></button>
+      //   </bit-form-field>
   
-        <label class="tw-text-main">
-          Checked:
-          <input type="checkbox" [(ngModel)]="toggled" [ngModelOptions]="{standalone: true}" />
-        </label>
-      </form>
+      //   <label class="tw-text-main">
+      //     Checked:
+      //     <input type="checkbox" [(ngModel)]="toggled" [ngModelOptions]="{standalone: true}" />
+      //   </label>
+      // </form>
     `,
   }),
   args: {

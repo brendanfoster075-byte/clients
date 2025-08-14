@@ -276,7 +276,7 @@ export const Readonly: Story = {
       <bit-form-field>
         <bit-label>Input</bit-label>
         <input bitInput type="password" value="Foobar" [readonly]="true" />
-        <button type="button" bitIconButton bitSuffix bitPasswordInputToggle></button>
+        // <button type="button" bitIconButton bitSuffix bitPasswordInputToggle></button>
         <button type="button" bitSuffix bitIconButton="bwi-clone" [appA11yTitle]="'Clone Input'"></button>
       </bit-form-field>
 
@@ -297,7 +297,7 @@ export const Readonly: Story = {
             <bit-form-field>
               <bit-label>Input</bit-label>
               <input bitInput type="password" value="Foobar" readonly />
-              <button type="button" bitIconButton bitSuffix bitPasswordInputToggle></button>
+              // <button type="button" bitIconButton bitSuffix bitPasswordInputToggle></button>
               <button type="button" bitSuffix bitIconButton="bwi-clone" [appA11yTitle]="'Clone Input'"></button>
             </bit-form-field>
 

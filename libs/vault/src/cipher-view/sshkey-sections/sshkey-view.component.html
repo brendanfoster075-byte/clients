@@ -13,22 +13,22 @@
         type="password"
         data-testid="private-key"
       />
-      <button
+      <!-- <button
         bitSuffix
         type="button"
         bitIconButton
         bitPasswordInputToggle
         data-testid="toggle-privateKey"
         [(toggled)]="revealSshKey"
-      ></button>
-      <button
+      ></button> -->
+      <!-- <button
         bitIconButton="bwi-clone"
         bitSuffix
         type="button"
         [appCopyClick]="sshKey.privateKey"
         showToast
         [appA11yTitle]="'copyValue' | i18n"
-      ></button>
+      ></button> -->
     </bit-form-field>
     <bit-form-field>
       <bit-label>{{ "sshPublicKey" | i18n }}</bit-label>
@@ -39,14 +39,14 @@
         aria-readonly="true"
         data-testid="public-key"
       />
-      <button
+      <!-- <button
         bitIconButton="bwi-clone"
         bitSuffix
         type="button"
         [appCopyClick]="sshKey.publicKey"
         showToast
         [appA11yTitle]="'copyValue' | i18n"
-      ></button>
+      ></button> -->
     </bit-form-field>
     <bit-form-field>
       <bit-label>{{ "sshFingerprint" | i18n }}</bit-label>
@@ -57,14 +57,14 @@
         aria-readonly="true"
         data-testid="fingerprint"
       />
-      <button
+      <!-- <button
         bitIconButton="bwi-clone"
         bitSuffix
         type="button"
         [appCopyClick]="sshKey.keyFingerprint"
         showToast
         [appA11yTitle]="'copyValue' | i18n"
-      ></button>
+      ></button> -->
     </bit-form-field>
   </read-only-cipher-card>
 </section>

@@ -74,10 +74,10 @@
                 <i class="bwi bwi-ellipsis-v bwi-lg" aria-hidden="true"></i>
               </button>
               <bit-menu #orgDomainOptions>
-                <button bitMenuItem (click)="copyDnsTxt(orgDomain.txt)" type="button">
+                <!-- <button bitMenuItem (click)="copyDnsTxt(orgDomain.txt)" type="button">
                   <i class="bwi bwi-fw bwi-clone" aria-hidden="true"></i>
                   {{ "copyDnsTxtRecord" | i18n }}
-                </button>
+                </button> -->
                 <button
                   bitMenuItem
                   (click)="verifyDomain(orgDomain.id, orgDomain.domainName)"

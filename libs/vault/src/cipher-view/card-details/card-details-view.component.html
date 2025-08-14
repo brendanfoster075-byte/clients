@@ -27,7 +27,7 @@
         data-testid="cardholder-number"
         class="tw-font-mono"
       />
-      <button
+      <!-- <button
         bitSuffix
         type="button"
         bitIconButton
@@ -35,8 +35,8 @@
         data-testid="toggle-number"
         [toggled]="revealCardNumber"
         (toggledChange)="logCardEvent($event, EventType.Cipher_ClientToggledCardNumberVisible)"
-      ></button>
-      <button
+      ></button> -->
+      <!-- <button
         bitIconButton="bwi-clone"
         bitSuffix
         type="button"
@@ -45,7 +45,7 @@
         [valueLabel]="'number' | i18n"
         [appA11yTitle]="'copyNumber' | i18n"
         data-testid="copy-number"
-      ></button>
+      ></button> -->
     </bit-form-field>
     <bit-form-field *ngIf="card.expiration">
       <bit-label [appTextDrag]="card.expiration">{{ "expiration" | i18n }}</bit-label>
@@ -71,7 +71,7 @@
         data-testid="cardholder-code"
         class="tw-font-mono"
       />
-      <button
+      <!-- <button
         bitSuffix
         type="button"
         bitIconButton
@@ -79,8 +79,8 @@
         data-testid="toggle-code"
         [toggled]="revealCardCode"
         (toggledChange)="logCardEvent($event, EventType.Cipher_ClientToggledCardCodeVisible)"
-      ></button>
-      <button
+      ></button> -->
+      <!-- <button
         bitIconButton="bwi-clone"
         bitSuffix
         type="button"
@@ -90,7 +90,7 @@
         [appA11yTitle]="'copySecurityCode' | i18n"
         data-testid="copy-code"
         (click)="logCardEvent(true, EventType.Cipher_ClientCopiedCardCode)"
-      ></button>
+      ></button> -->
     </bit-form-field>
   </read-only-cipher-card>
 </section>

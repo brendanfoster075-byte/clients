@@ -564,17 +564,17 @@ export class VaultV2Component<C extends CipherViewLike>
             click: () => this.copyValue(cipher, cipher.login.username, "username", "Username"),
           });
         }
-        if (cipher.login.password != null && cipher.viewPassword) {
-          menu.push({
-            label: this.i18nService.t("copyPassword"),
-            click: () => {
-              this.copyValue(cipher, cipher.login.password, "password", "Password");
-              this.eventCollectionService
-                .collect(EventType.Cipher_ClientCopiedPassword, cipher.id)
-                .catch(() => {});
-            },
-          });
-        }
+        // if (cipher.login.password != null && cipher.viewPassword) {
+        //   menu.push({
+        //     label: this.i18nService.t("copyPassword"),
+        //     click: () => {
+        //       this.copyValue(cipher, cipher.login.password, "password", "Password");
+        //       this.eventCollectionService
+        //         .collect(EventType.Cipher_ClientCopiedPassword, cipher.id)
+        //         .catch(() => {});
+        //     },
+        //   });
+        // }
         if (cipher.login.hasTotp && (cipher.organizationUseTotp || this.userHasPremiumAccess)) {
           menu.push({
             label: this.i18nService.t("copyVerificationCodeTotp"),

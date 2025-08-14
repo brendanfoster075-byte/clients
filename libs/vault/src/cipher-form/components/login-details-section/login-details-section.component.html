@@ -50,7 +50,7 @@
         [appA11yTitle]="'checkPassword' | i18n"
         [bitAction]="checkPassword"
       ></button>
-      <button
+      <!-- <button
         type="button"
         bitIconButton
         bitSuffix
@@ -58,7 +58,7 @@
         data-testid="toggle-password-visibility"
         bitPasswordInputToggle
         (toggledChange)="logVisibleEvent($event, EventType.Cipher_ClientToggledPasswordVisible)"
-      ></button>
+      ></button> -->
       <button
         type="button"
         bitIconButton="bwi-generate"
@@ -109,7 +109,7 @@
         </bit-popover>
       </bit-label>
       <input bitInput formControlName="totp" type="password" class="tw-font-mono" />
-      <button
+      <!-- <button
         type="button"
         bitIconButton
         bitSuffix
@@ -117,7 +117,7 @@
         data-testid="toggle-totp-visibility"
         bitPasswordInputToggle
         (toggledChange)="logVisibleEvent($event, EventType.Cipher_ClientToggledTOTPSeedVisible)"
-      ></button>
+      ></button> -->
       <button
         type="button"
         bitIconButton="bwi-camera"
