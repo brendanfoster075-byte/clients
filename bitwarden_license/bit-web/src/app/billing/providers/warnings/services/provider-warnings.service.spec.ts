@@ -360,7 +360,6 @@ describe("ProviderWarningsService", () => {
             type: "danger",
             title: "Test Provider subscription suspended",
             content: "To restore access to the provider portal, contact our support team.",
-            disableClose: true,
             acceptButtonText: "Contact Support",
             cancelButtonText: null,
             acceptAction: expect.any(Function),
