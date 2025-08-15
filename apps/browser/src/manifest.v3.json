@@ -4,7 +4,7 @@
   "name": "VW-nopass-client",
   "short_name": "VW-nopass",
   "version": "1.0.1",
-  "description": "Fork of Bitwarden browser client that hides passwords and disables password copying. Designed for vaults with no password visibility.",
+  "description": "Fork of Bitwarden browser client that hides passwords and disables password copying.",
   "default_locale": "en",
   "author": "brendanfoster075-byte",
   "homepage_url": "https://github.com/brendanfoster075-byte/clients",
